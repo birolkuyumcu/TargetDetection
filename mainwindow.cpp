@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cvPutText( img, CV_VERSION, cvPoint( 200, 400 ), &font,
              cvScalar( 255, 255, 0 ) );
     cvShowImage( "My Window", img );
-    cvWaitKey();
+    cvWaitKey(500);
 
 }
 
