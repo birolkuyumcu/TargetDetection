@@ -11,8 +11,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = QtOpenCV2
 TEMPLATE = app
 
+unix{
 LIBS += `pkg-config opencv --cflags --libs`
+}
 
+CONFIG += debug_and_release
+win32:debug {
+     CONFIG += console
+INCLUDEPATH +=C:\opencv-2.4.5\opencv\build\include
+
+LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245d -lopencv_highgui245d -lopencv_imgproc245d
+
+ }
+
+win32:release {
+INCLUDEPATH +=C:\opencv-2.4.5\opencv\build\include
+LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245 -lopencv_highgui245 -lopencv_imgproc245
+
+}
 
 SOURCES += main.cpp\
         mainwindow.cpp
