@@ -1,11 +1,10 @@
-#include "mainwindow.h"
-#include <QApplication>
+#include <cvs_uavtargetdetectionapp.h>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     
-    return a.exec();
+    targetDetection.exec();
+
+    return 0;
 }

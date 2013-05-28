@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,8 +31,14 @@ LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245 -lope
 }
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    systemsettings.cpp \
+    exception.cpp \
+    cvs_uavtargetdetectionapp.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    systemsettings.h \
+    exception.h \
+    cvs_uavtargetdetectionapp.h
 
 FORMS    += mainwindow.ui
