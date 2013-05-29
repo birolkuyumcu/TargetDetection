@@ -6,6 +6,12 @@
 
 #include <exception.h>
 
+enum StreamType
+{
+    VideoStream,
+    CameraStream
+};
+
 class SystemSettings
 {
 private:
@@ -13,16 +19,20 @@ private:
     QSqlDatabase db;
     Exception    exc;
 
-    QString videoFileName;
-    int retrieveFps;
-    int viewFps;
-    int imageWidth;
-    int imageHeight;
 public:
     SystemSettings();
     void loadDefaultParameters();
     void load();
     void save();
+
+
+    QString videoFileName;
+    StreamType streamType;
+    int retrieveFps;
+    int viewFps;
+    int imageWidth;
+    int imageHeight;
+
 };
 
 #endif // SYSTEMSETTINGS_H

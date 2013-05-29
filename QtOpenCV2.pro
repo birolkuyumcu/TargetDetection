@@ -34,11 +34,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     systemsettings.cpp \
     exception.cpp \
-    cvs_uavtargetdetectionapp.cpp
+    cvs_uavtargetdetectionapp.cpp \
+    imageretrieve.cpp \
+    videoretrieve.cpp \
+    cameraretrieve.cpp
 
 HEADERS  += mainwindow.h \
     systemsettings.h \
     exception.h \
-    cvs_uavtargetdetectionapp.h
+    cvs_uavtargetdetectionapp.h \
+    imageretrieve.h \
+    videoretrieve.h \
+    cameraretrieve.h
 
 FORMS    += mainwindow.ui

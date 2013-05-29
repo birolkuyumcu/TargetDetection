@@ -6,6 +6,8 @@
 
 #include <systemsettings.h>
 #include <exception.h>
+#include <videoretrieve.h>
+#include <cameraretrieve.h>
 
 class CVS_UAVTargetDetectionApp
 {
@@ -16,6 +18,8 @@ private:
 
     SystemSettings settings;
     Exception      exc;
+
+    ImageRetrieve *imageSource;
 
 public:
     CVS_UAVTargetDetectionApp(int argc, char *argv[]);

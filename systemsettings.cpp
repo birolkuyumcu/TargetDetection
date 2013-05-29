@@ -12,6 +12,7 @@ SystemSettings::SystemSettings()
 
 void SystemSettings::loadDefaultParameters()
 {
+    streamType = VideoStream;
     videoFileName = "test.avi";
     retrieveFps = 30;
     viewFps = 30;
