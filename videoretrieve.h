@@ -2,11 +2,13 @@
 #define VIDEORETRIEVE_H
 
 #include <imageretrieve.h>
+#include <opencv2/opencv.hpp>
 
 class VideoRetrieve : public ImageRetrieve
 {
 public:
-    VideoRetrieve();
+    VideoRetrieve(ImageProcess* _pImgProcess);
+
     void run();
 };
 

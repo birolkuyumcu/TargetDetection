@@ -7,7 +7,7 @@ CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(a
 
     if(settings.streamType == VideoStream)
     {
-        imageSource = new VideoRetrieve();
+        imageSource = new VideoRetrieve(&imgProcess);
     }
     else
     {
@@ -16,6 +16,8 @@ CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(a
 
     imageSource->setFps(settings.retrieveFps);
     imageSource->start();
+
+    imgProcess.start();
 }
 
 void CVS_UAVTargetDetectionApp::exec()

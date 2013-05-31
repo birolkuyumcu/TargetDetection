@@ -1,16 +1,23 @@
 #include "videoretrieve.h"
 #include <QThread>
 
-VideoRetrieve::VideoRetrieve()
+VideoRetrieve::VideoRetrieve(ImageProcess* _pImgProcess)
 {
+    pImgProcess = _pImgProcess;
 }
 
 void VideoRetrieve::run()
 {
     while(1)
     {
-        qDebug()<<"Video Frame Query and push to processing unit";
+        //"Video Frame Query and push to processing unit";
 
-        QThread::sleep(1);
+
+        cv::Mat testImage;
+        testImage.create(100, 100, 0);
+
+        pImgProcess->pushFrame(testImage);
+
+        QThread::msleep(2);
     }
 }

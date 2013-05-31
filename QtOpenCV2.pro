@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     cvs_uavtargetdetectionapp.cpp \
     imageretrieve.cpp \
     videoretrieve.cpp \
-    cameraretrieve.cpp
+    cameraretrieve.cpp \
+    imageprocess.cpp
 
 HEADERS  += mainwindow.h \
     systemsettings.h \
@@ -45,6 +46,7 @@ HEADERS  += mainwindow.h \
     cvs_uavtargetdetectionapp.h \
     imageretrieve.h \
     videoretrieve.h \
-    cameraretrieve.h
+    cameraretrieve.h \
+    imageprocess.h
 
 FORMS    += mainwindow.ui

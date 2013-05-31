@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QDebug>
+#include <imageprocess.h>
 
 class ImageRetrieve : public QThread
 {
@@ -11,7 +12,6 @@ private:
 
 public:
     ImageRetrieve();
-
     ~ImageRetrieve();
 
     virtual void run() = 0;
@@ -20,6 +20,10 @@ public:
     {
         fps = _fps;
     }
+
+
+    ImageProcess* pImgProcess;
+
 };
 
 
