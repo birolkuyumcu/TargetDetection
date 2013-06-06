@@ -14,7 +14,7 @@ class ImageProcess : public QThread
     Q_OBJECT
 public:
     explicit ImageProcess(QObject *parent = 0);
-    void pushFrame(cv::Mat img);
+    void pushFrame(cv::Mat &img);
 
 private:
     QTimer          timer1Hz;
