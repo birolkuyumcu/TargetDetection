@@ -6,9 +6,17 @@
 
 class VideoRetrieve : public ImageRetrieve
 {
+private:
+    QString             videoFileName;
+    unsigned int        currentFrameNumber;
+    cv::Size            frameResolution;
+    cv::VideoCapture    capture;
+    cv::Mat             capturedFrame;
+    cv::Mat             resizedFrame;
 public:
     VideoRetrieve(ImageProcess* _pImgProcess);
-
+    void openVideoFile(QString _videoFileName, unsigned int _frameNum, cv::Size size_);
+    unsigned int getCurentFrameNum();
     void run();
 };
 

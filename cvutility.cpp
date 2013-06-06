@@ -4,22 +4,26 @@ void Mat2QImage(cv::Mat src, QImage& dst)
 {
     QImage::Format f;
 
-    if(src.channels()==3){
+    if(src.channels() == 3)
+    {
        // Renkli ise OpenCvnin BGR okuduğunu RGB formatına çeviriyoruz
-       cv::cvtColor(src,src,CV_BGR2RGB);
+       cv::cvtColor(src, src, CV_BGR2RGB);
        f=QImage::Format_RGB888;
     }
-    else if(src.channels()==1){
+    else if(src.channels() == 1)
+    {
        // Siyah Beyaz ise Sadece formatı değiştiriyoruz.
        f=QImage::Format_Indexed8;
     }
-    else{
+    else
+    {
         // Üsteki iki tip dışındaki formatlar gösterilmek için uygun değil...
         QMessageBox msgBox;
         msgBox.setText("Görüntü Kanal sayısı uyumsuz !");
         msgBox.exec();
         return;
     }
+
     dst=QImage((const unsigned char*)(src.data),src.cols,src.rows,src.step,f);
 }
 
@@ -41,7 +45,7 @@ cv::Mat QImage2Mat(const QImage & image)
         dst = cv::Mat(image.height(), image.width(), CV_8UC3);
         unsigned char * data = dst.data;
     //    const IplImage test = dst;
-        printf("%d vs %d\n", dst.cols*int(dst.elemSize()), dst.step);
+        //printf("%d vs %d\n", dst.cols*int(dst.elemSize()), dst.step, 0);
         for(int y = 0; y < image.height(); ++y, data+=dst.cols*dst.elemSize())
         {
             for(int x = 0; x < image.width(); ++x)

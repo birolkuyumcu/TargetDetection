@@ -4,11 +4,15 @@
 #include <QThread>
 #include <QDebug>
 #include "imageprocess.h"
+#include <exception.h>
 
 class ImageRetrieve : public QThread
 {
-private:
+protected:
+    Exception exc;
+    ImageProcess* pImgProcess;
     int fps;
+private:
 
 public:
     ImageRetrieve();
@@ -20,9 +24,6 @@ public:
     {
         fps = _fps;
     }
-
-
-    ImageProcess* pImgProcess;
 
 };
 

@@ -8,15 +8,18 @@ CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(a
     if(settings.streamType == VideoStream)
     {
         imageSource = new VideoRetrieve(&imgProcess);
+        imageSource->setFps(settings.retrieveFps);
+        ((VideoRetrieve*)imageSource)->openVideoFile(settings.videoFileName, 0, cv::Size(640, 480));
     }
     else
     {
         imageSource = new CameraRetrieve();
+        imageSource->setFps(settings.retrieveFps);
     }
 
-    imageSource->setFps(settings.retrieveFps);
-    imageSource->start();
 
+
+    imageSource->start();
     imgProcess.start();
 }
 
