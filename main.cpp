@@ -1,4 +1,4 @@
-#include <cvs_uavtargetdetectionapp.h>
+#include "cvs_uavtargetdetectionapp.h"
 
 int main(int argc, char *argv[])
 {

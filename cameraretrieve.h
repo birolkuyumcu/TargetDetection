@@ -1,7 +1,7 @@
 #ifndef CAMERARETRIEVE_H
 #define CAMERARETRIEVE_H
 
-#include <imageretrieve.h>
+#include "imageretrieve.h"
 
 class CameraRetrieve : public ImageRetrieve
 {

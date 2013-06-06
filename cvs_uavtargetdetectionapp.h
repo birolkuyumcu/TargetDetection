@@ -4,11 +4,11 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-#include <systemsettings.h>
-#include <exception.h>
-#include <videoretrieve.h>
-#include <cameraretrieve.h>
-#include <imageprocess.h>
+#include "systemsettings.h"
+#include "exception.h"
+#include "videoretrieve.h"
+#include "cameraretrieve.h"
+#include "imageprocess.h"
 
 class CVS_UAVTargetDetectionApp
 {

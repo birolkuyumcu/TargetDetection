@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     imageretrieve.cpp \
     videoretrieve.cpp \
     cameraretrieve.cpp \
-    imageprocess.cpp
+    imageprocess.cpp \
+    cvutility.cpp
 
 HEADERS  += mainwindow.h \
     systemsettings.h \
@@ -47,6 +48,7 @@ HEADERS  += mainwindow.h \
     imageretrieve.h \
     videoretrieve.h \
     cameraretrieve.h \
-    imageprocess.h
+    imageprocess.h \
+    cvutility.h
 
 FORMS    += mainwindow.ui

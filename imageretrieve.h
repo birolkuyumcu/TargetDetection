@@ -3,7 +3,7 @@
 
 #include <QThread>
 #include <QDebug>
-#include <imageprocess.h>
+#include "imageprocess.h"
 
 class ImageRetrieve : public QThread
 {

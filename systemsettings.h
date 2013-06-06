@@ -4,7 +4,7 @@
 #include <QString>
 #include <QtSql/QSqlDatabase>
 
-#include <exception.h>
+#include "exception.h"
 
 enum StreamType
 {
