@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <opencv2/opencv.hpp>
+#include <imageprocess.h>
 
 namespace Ui
 {
@@ -14,7 +16,11 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void connectImageRefreshSlot(ImageProcess &imgProcess);
     ~MainWindow();
+
+public slots:
+    void refreshOutputImage(cv::Mat &outputImage);
     
 private:
     Ui::MainWindow *ui;

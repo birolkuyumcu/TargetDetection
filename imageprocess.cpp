@@ -21,7 +21,7 @@ void ImageProcess::timerTick1Hz()
 
 }
 
-void ImageProcess::pushFrame(cv::Mat &img)
+void ImageProcess::pushFrame(cv::Mat &inputImage)
 {
 
     writeIndex ++;
@@ -30,7 +30,7 @@ void ImageProcess::pushFrame(cv::Mat &img)
         writeIndex = 0;
     }
 
-    img.copyTo(imgBuffer[writeIndex]);
+    inputImage.copyTo(imgBuffer[writeIndex]);
 
 
     semaphore.release();
@@ -43,18 +43,31 @@ void ImageProcess::run()
     {
         semaphore.acquire(); //wait for semaphore
 
-        cv::imshow("Testing", imgBuffer[readIndex]);
+        //image processing will be done in here
+        //use imgBuffer[readIndex] as input image
 
-        processedFrameCnt ++;
+        /*.
+        .
+        .
+        .
+
+        .*/
+
+
+        //push result to view
+        emit pushFrameToView(imgBuffer[readIndex]);
+
 
         readIndex ++;
-
         if(readIndex >= _CVS_IMG_BUFFER_SIZE)
         {
             readIndex = 0;
         }
 
+
+        processedFrameCnt ++;
     }
 }
+
 
 
