@@ -14,7 +14,7 @@ void SystemSettings::loadDefaultParameters()
 {
     streamType = VideoStream;
     videoFileName = "test.avi";
-    retrieveFps = 30;
+    retrieveFps = 20;
     viewFps = 30;
     imageWidth = 640;
     imageHeight = 480;

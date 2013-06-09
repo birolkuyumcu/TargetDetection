@@ -4,7 +4,7 @@ ImageProcess::ImageProcess(QObject *parent) :
     QThread(parent)
 {
     writeIndex = 0;
-    readIndex = 0;
+    readIndex = 1;
 
     connect(&timer1Hz, SIGNAL(timeout()), this, SLOT(timerTick1Hz()));
 
@@ -31,7 +31,7 @@ void ImageProcess::pushFrame(cv::Mat &img)
     }
 
     img.copyTo(imgBuffer[writeIndex]);
-    cv::imshow("Testing", imgBuffer[writeIndex]);
+
 
     semaphore.release();
 
@@ -43,11 +43,12 @@ void ImageProcess::run()
     {
         semaphore.acquire(); //wait for semaphore
 
-        //cv::imshow("Testing", imgBuffer[readIndex]);
+        cv::imshow("Testing", imgBuffer[readIndex]);
 
         processedFrameCnt ++;
 
         readIndex ++;
+
         if(readIndex >= _CVS_IMG_BUFFER_SIZE)
         {
             readIndex = 0;

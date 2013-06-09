@@ -24,11 +24,15 @@ void VideoRetrieve::run()
             {
                 cv::resize(capturedFrame, resizedFrame, frameResolution);
                 pImgProcess->pushFrame(resizedFrame);
+
+                resizedFrame.release();
             }
             else
             {
                 pImgProcess->pushFrame(capturedFrame);
             }
+
+            capturedFrame.release();
         }
 
         QThread::msleep(1000./fps);
@@ -49,7 +53,7 @@ void VideoRetrieve::openVideoFile(QString _videoFileName, unsigned int _frameNum
     capture.set(CV_CAP_PROP_POS_FRAMES, (double)currentFrameNumber);
     capture.open(videoFileName.toStdString());
 
-    if(! capture.isOpened())
+    if(!capture.isOpened())
     {
         exc.showException("Video acilamadi.");
     }
