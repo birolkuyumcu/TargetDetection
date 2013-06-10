@@ -3,7 +3,10 @@
 CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(argc, argv)
 {
     settings.load();
+
     w.show();
+
+    imgProcess.connectGuiSlots(w);
 
     if(settings.streamType == VideoStream)
     {
@@ -16,6 +19,7 @@ CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(a
         imageSource = new CameraRetrieve();
         imageSource->setFps(settings.retrieveFps);
     }
+
 
     imageSource->start();
     imgProcess.start();

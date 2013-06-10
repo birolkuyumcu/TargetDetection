@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
-#include "imageprocess.h"
 
 namespace Ui
 {
@@ -20,6 +19,10 @@ public:
     
 private:
     Ui::MainWindow *ui;
+    bool cvMat2QImage(cv::Mat &src, QImage& dst);
+
+public slots:
+    void refreshImgProcessingImg(void* imgPtr);
 };
 
 #endif // MAINWINDOW_H

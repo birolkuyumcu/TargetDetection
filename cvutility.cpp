@@ -1,32 +1,5 @@
 #include "cvutility.h"
 
-void Mat2QImage(cv::Mat src, QImage& dst)
-{
-    QImage::Format f;
-
-    if(src.channels() == 3)
-    {
-       // Renkli ise OpenCvnin BGR okuduğunu RGB formatına çeviriyoruz
-       cv::cvtColor(src, src, CV_BGR2RGB);
-       f=QImage::Format_RGB888;
-    }
-    else if(src.channels() == 1)
-    {
-       // Siyah Beyaz ise Sadece formatı değiştiriyoruz.
-       f=QImage::Format_Indexed8;
-    }
-    else
-    {
-        // Üsteki iki tip dışındaki formatlar gösterilmek için uygun değil...
-        QMessageBox msgBox;
-        msgBox.setText("Görüntü Kanal sayısı uyumsuz !");
-        msgBox.exec();
-        return;
-    }
-
-    dst=QImage((const unsigned char*)(src.data),src.cols,src.rows,src.step,f);
-}
-
 cv::Mat Qimread(const QString& filename, int flags)
 {
     // return cv::imread(qPrintable(filename),flags);

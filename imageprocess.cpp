@@ -55,6 +55,7 @@ void ImageProcess::run()
 
 
         //push result to view
+        emit pushFrameToGui((void*)&imgBuffer[readIndex]);
 
 
         readIndex ++;
@@ -66,6 +67,16 @@ void ImageProcess::run()
 
         processedFrameCnt ++;
     }
+}
+
+void ImageProcess::cloneImageWithIndex(unsigned int index, cv::Mat &outputImg)
+{
+    outputImg = imgBuffer[index].clone();
+}
+
+void ImageProcess::connectGuiSlots(MainWindow &ui)
+{
+    QObject::connect(this, SIGNAL(pushFrameToGui(void*)), &ui, SLOT(refreshImgProcessingImg(void*)));
 }
 
 

@@ -5,7 +5,9 @@
 #include <QTimer>
 #include <QThread>
 #include <QSemaphore>
+#include <mainwindow.h>
 #include <opencv2/opencv.hpp>
+
 
 #define _CVS_IMG_BUFFER_SIZE 30
 
@@ -15,6 +17,8 @@ class ImageProcess : public QThread
 public:
     explicit ImageProcess(QObject *parent = 0);
     void pushFrame(cv::Mat &inputImage);
+    void connectGuiSlots(MainWindow &ui);
+    void cloneImageWithIndex(unsigned int, cv::Mat &outputImg);
 
 private:
     QTimer          timer1Hz;
@@ -29,6 +33,9 @@ private:
     
 public slots:
     void timerTick1Hz();
+
+signals:
+    void pushFrameToGui(void*);
     
 };
 
