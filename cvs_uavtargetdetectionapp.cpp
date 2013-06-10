@@ -17,8 +17,6 @@ CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(a
         imageSource->setFps(settings.retrieveFps);
     }
 
-    w.connectImageRefreshSlot(imgProcess);
-
     imageSource->start();
     imgProcess.start();
 }

@@ -27,9 +27,6 @@ private:
 
     void run();
     
-signals:
-    void pushFrameToView(const cv::Mat &outputImage);
-    
 public slots:
     void timerTick1Hz();
     

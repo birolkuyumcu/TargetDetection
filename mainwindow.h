@@ -16,11 +16,7 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
-    void connectImageRefreshSlot(ImageProcess &imgProcess);
     ~MainWindow();
-
-public slots:
-    void refreshOutputImage(cv::Mat &outputImage);
     
 private:
     Ui::MainWindow *ui;

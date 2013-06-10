@@ -55,7 +55,6 @@ void ImageProcess::run()
 
 
         //push result to view
-        emit pushFrameToView(imgBuffer[readIndex]);
 
 
         readIndex ++;
