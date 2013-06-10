@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
-#include <imageprocess.h>
+#include "imageprocess.h"
 
 namespace Ui
 {
