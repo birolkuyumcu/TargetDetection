@@ -7,6 +7,7 @@
 #include <QSemaphore>
 #include <mainwindow.h>
 #include <opencv2/opencv.hpp>
+#include <preprocess.h>
 
 
 #define _CVS_IMG_BUFFER_SIZE 30
@@ -28,6 +29,8 @@ private:
     unsigned int    readIndex;
     unsigned int    processedFps;
     unsigned int    processedFrameCnt;
+
+    Preprocess      preprocess;
 
     void run();
     
