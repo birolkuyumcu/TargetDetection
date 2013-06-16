@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     videoretrieve.cpp \
     cameraretrieve.cpp \
     imageprocess.cpp \
-    cvutility.cpp
+    cvutility.cpp \
+    framealigner.cpp
 
 HEADERS  += mainwindow.h \
     systemsettings.h \
@@ -49,6 +50,7 @@ HEADERS  += mainwindow.h \
     videoretrieve.h \
     cameraretrieve.h \
     imageprocess.h \
-    cvutility.h
+    cvutility.h \
+    framealigner.h
 
 FORMS    += mainwindow.ui
