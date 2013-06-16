@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QSemaphore>
-#include <mainwindow.h>
+#include "mainwindow.h"
 #include <opencv2/opencv.hpp>
 
 
