@@ -39,13 +39,7 @@ SOURCES += main.cpp\
     videoretrieve.cpp \
     cameraretrieve.cpp \
     imageprocess.cpp \
-    cvutility.cpp \
-    preprocess.cpp \
-    alignmentmatrixcalc.cpp \
-    framealignment.cpp \
-    candidatedetector.cpp \
-    candidatefilter.cpp \
-    alarmgenerator.cpp
+    cvutility.cpp
 
 HEADERS  += mainwindow.h \
     systemsettings.h \
@@ -55,12 +49,6 @@ HEADERS  += mainwindow.h \
     videoretrieve.h \
     cameraretrieve.h \
     imageprocess.h \
-    cvutility.h \
-    preprocess.h \
-    alignmentmatrixcalc.h \
-    framealignment.h \
-    candidatedetector.h \
-    candidatefilter.h \
-    alarmgenerator.h
+    cvutility.h
 
 FORMS    += mainwindow.ui
