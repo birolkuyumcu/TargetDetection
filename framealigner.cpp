@@ -1,11 +1,7 @@
 #include "framealigner.h"
 
-<<<<<<< HEAD
 
 
-=======
-/*
->>>>>>> 0c3d3e095355a8442dfc8c8b7d7198e7dad9713e
 frameAligner::frameAligner()
 {
 //    exc.setModuleName("frameAligner");
@@ -138,7 +134,6 @@ void frameAligner::flowBasedHomography()
 
 }
 
-<<<<<<< HEAD
 void frameAligner::setDetector(cv::Ptr<FeatureDetector> idetector)
 {
     detector=idetector;
@@ -213,6 +208,3 @@ void frameAligner::alignPrevFrame(cv::Mat &alignedPrev)
     alignedPrev=mask;
 
 }
-=======
-*/
->>>>>>> 0c3d3e095355a8442dfc8c8b7d7198e7dad9713e
