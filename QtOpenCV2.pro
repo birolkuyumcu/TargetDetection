@@ -32,26 +32,38 @@ LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245 -lope
 }
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    systemsettings.cpp \
-    exception.cpp \
-    cvs_uavtargetdetectionapp.cpp \
-    imageretrieve.cpp \
-    videoretrieve.cpp \
-    cameraretrieve.cpp \
-    imageprocess.cpp \
-    cvutility.cpp \
-    framealigner.cpp
+            mainwindow.cpp \
+            systemsettings.cpp \
+            exception.cpp \
+            cvs_uavtargetdetectionapp.cpp \
+            imageretrieve.cpp \
+            videoretrieve.cpp \
+            cameraretrieve.cpp \
+            imageprocess.cpp \
+            cvutility.cpp \
+    framealignment.cpp \
+    framealigner.cpp \
+    candidatefilter.cpp \
+    candidatedetector.cpp \
+    alignmentmatrixcalc.cpp \
+    alarmgenerator.cpp \
+    preprocess.cpp
 
 HEADERS  += mainwindow.h \
-    systemsettings.h \
-    exception.h \
-    cvs_uavtargetdetectionapp.h \
-    imageretrieve.h \
-    videoretrieve.h \
-    cameraretrieve.h \
-    imageprocess.h \
-    cvutility.h \
-    framealigner.h
+            systemsettings.h \
+            exception.h \
+            cvs_uavtargetdetectionapp.h \
+            imageretrieve.h \
+            videoretrieve.h \
+            cameraretrieve.h \
+            imageprocess.h \
+            cvutility.h \
+    framealignment.h \
+    framealigner.h \
+    candidatefilter.h \
+    candidatedetector.h \
+    alarmgenerator.h \
+    alignmentmatrixcalc.h \
+    preprocess.h
 
 FORMS    += mainwindow.ui

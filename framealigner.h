@@ -12,8 +12,12 @@
 
 enum HomograpyMethod {featureBased,flowBased};
 
+<<<<<<< HEAD
 using namespace cv;
 
+=======
+/*
+>>>>>>> 0c3d3e095355a8442dfc8c8b7d7198e7dad9713e
 class frameAligner
 {
 protected:
@@ -37,10 +41,10 @@ private:
     vector<Point2f> pointsCurrent;
     vector<Point2f> pointsPrev;
 
-    /*
+    / *
     std::vector< DMatch > matches;
     std::vector< DMatch > matchesRev;
-    */
+    * /
     float keyRetainFactor;
 
     void featureBasedHomography();
@@ -64,5 +68,5 @@ public:
     void setMatcherSimple(char* matcherName);
 
 };
-
+*/
 #endif // FRAMEALIGNER_H

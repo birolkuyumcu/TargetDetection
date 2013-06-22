@@ -53,6 +53,14 @@ void ImageProcess::run()
 
         .*/
 
+        PreprocessSettings test;
+
+        test.method = HistEq;
+
+
+        preprocess.set(test);
+
+
 
         //push result to view
         emit pushFrameToGui((void*)&imgBuffer[readIndex]);
