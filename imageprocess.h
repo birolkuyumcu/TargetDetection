@@ -7,7 +7,7 @@
 #include <QSemaphore>
 #include "mainwindow.h"
 #include <opencv2/opencv.hpp>
-#include <preprocess.h>
+#include "preprocess.h"
 
 
 #define _CVS_IMG_BUFFER_SIZE 30
