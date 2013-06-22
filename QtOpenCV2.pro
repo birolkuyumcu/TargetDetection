@@ -20,7 +20,8 @@ win32:debug {
      CONFIG += console
 INCLUDEPATH +=C:\opencv-2.4.5\opencv\build\include
 
-LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245d -lopencv_highgui245d -lopencv_imgproc245d
+LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245d -lopencv_highgui245d -lopencv_imgproc245d -lopencv_features2d245d -lopencv_video245d
+ -lopencv_nonfree245d -lopencv_calib3d245d
 
  }
 
