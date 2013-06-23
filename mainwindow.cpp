@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    ui->setupUi(this); 
 }
 
 MainWindow::~MainWindow()
@@ -24,6 +24,40 @@ void MainWindow::refreshImgProcessingImg(void* imgPtr)
     {
         ui->labelOutputImage->setPixmap(QPixmap::fromImage(qOutputImage));
     }
+}
+
+void MainWindow::setModulePtrs(Preprocess* preprocessor, FrameAlignment* frameAligner,
+                                CandidateDetector* candidateDetector, CandidateFilter* CandidateFilter,
+                                AlarmGenerator *alarmGenerator)
+{
+    pPreprocessor = preprocessor;
+    pframeAligner = frameAligner;
+    pCandidateFilter = CandidateFilter;
+    pCandidateDetector = candidateDetector;
+    pAlarmGenerator = alarmGenerator;
+
+    preprocessor->getSettings(preprocessSettings);
+
+
+    fillSettings();
+}
+
+void MainWindow::fillpreprocessorSettings()
+{
+    if(preprocessSettings.method == HistEq)
+    {
+        ui->comboBox_preprocessMethod->setCurrentIndex(0);
+    }
+    else if(preprocessSettings.method == GoF)
+    {
+        ui->comboBox_preprocessMethod->setCurrentIndex(1);
+    }
+}
+
+void MainWindow::fillSettings()
+{
+    //preprocessor
+    fillpreprocessorSettings();
 }
 
 bool MainWindow::cvMat2QImage(cv::Mat &src, QImage& dst)
@@ -53,4 +87,35 @@ bool MainWindow::cvMat2QImage(cv::Mat &src, QImage& dst)
     }
 
     return conversionResult;
+}
+
+void MainWindow::on_button_generalChange_clicked()
+{
+
+}
+
+void MainWindow::on_button_generalSave_clicked()
+{
+
+}
+
+void MainWindow::on_button_preprocessChange_clicked()
+{
+    if(ui->comboBox_preprocessMethod->currentText() == "HistEq")
+    {
+        preprocessSettings.method = HistEq;
+    }
+    else if(ui->comboBox_preprocessMethod->currentText() == "GoF")
+    {
+        preprocessSettings.method = GoF;
+    }
+
+
+    pPreprocessor->set(preprocessSettings);
+}
+
+void MainWindow::on_button_preprocessSave_clicked()
+{
+    on_button_preprocessChange_clicked();
+    pPreprocessor->saveSettings();
 }

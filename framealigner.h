@@ -12,12 +12,10 @@
 
 enum HomograpyMethod {featureBased,flowBased};
 
-using namespace cv;
-
 class frameAligner
 {
 protected:
-//    Exception    exc;
+    Exception    exc;
 private:
     cv::Mat currentFrame;
     cv::Mat prevFrame;
@@ -29,13 +27,13 @@ private:
     float flowErrorThreshold;
     unsigned int minimumFlowPoint;
     HomograpyMethod hMethod;
-    cv::Ptr<FeatureDetector> detector;
-    cv::Ptr<DescriptorExtractor> descriptor;
-    cv::Ptr<DescriptorMatcher> matcher;
-    std::vector<KeyPoint> keypointsCurrent;
-    std::vector<KeyPoint> keypointsPrev;
-    vector<Point2f> pointsCurrent;
-    vector<Point2f> pointsPrev;
+    cv::Ptr<cv::FeatureDetector> detector;
+    cv::Ptr<cv::DescriptorExtractor> descriptor;
+    cv::Ptr<cv::DescriptorMatcher> matcher;
+    std::vector<cv::KeyPoint> keypointsCurrent;
+    std::vector<cv::KeyPoint> keypointsPrev;
+    cv::vector<cv::Point2f> pointsCurrent;
+    cv::vector<cv::Point2f> pointsPrev;
 
     /*
     std::vector< DMatch > matches;
@@ -56,11 +54,11 @@ public:
     void add(cv::Mat &frame);
     void alignPrevFrame(cv::Mat &alignedPrev);
 // Setters
-    void setDetector(cv::Ptr<FeatureDetector> idetector);
+    void setDetector(cv::Ptr<cv::FeatureDetector> idetector);
     void setDetectorSimple(char *detectorName);
-    void setDescriptor(cv::Ptr<DescriptorExtractor> idescriptor);
+    void setDescriptor(cv::Ptr<cv::DescriptorExtractor> idescriptor);
     void setDescriptorSimple(char* descriptorName);
-    void setMatcher(cv::Ptr<DescriptorMatcher> imatcher);
+    void setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher);
     void setMatcherSimple(char* matcherName);
 
 };

@@ -15,13 +15,13 @@ class CVS_UAVTargetDetectionApp
 private:
 
     QApplication a;
-    MainWindow w;
-
+    ImageProcess    imgProcess;
     SystemSettings  settings;
     Exception       exc;
-
     ImageRetrieve*  imageSource;
-    ImageProcess    imgProcess;
+
+    MainWindow w;
+
 
 public:
     CVS_UAVTargetDetectionApp(int argc, char *argv[]);

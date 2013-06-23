@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>926</width>
+    <width>1361</width>
     <height>640</height>
    </rect>
   </property>
@@ -14,24 +14,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelOutputImage">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>20</y>
+      <x>680</x>
+      <y>10</y>
       <width>640</width>
       <height>480</height>
      </rect>
@@ -40,13 +27,279 @@
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>641</width>
+      <height>561</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab_general">
+     <attribute name="title">
+      <string>General</string>
+     </attribute>
+     <widget class="QLabel" name="label_videFileName">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Video File Name</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Stream Type</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>111</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Retrieve FPS</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>110</y>
+        <width>111</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>View Fps</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>140</y>
+        <width>111</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Image Width</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>170</y>
+        <width>111</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Image Height</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_videoFileName">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>10</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_2">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>40</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_retrieveFps">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>70</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_viewFps">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>100</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_imgWidth">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>130</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_imgHeight">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>160</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_generalChange">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>500</y>
+        <width>80</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Apply</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_generalSave">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>500</y>
+        <width>80</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_preprocess">
+     <attribute name="title">
+      <string>Preprocess</string>
+     </attribute>
+     <widget class="QLabel" name="label_videFileName_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Method</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_preprocessChange">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>500</y>
+        <width>80</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Apply</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_preprocessSave">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>500</y>
+        <width>80</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_preprocessMethod">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>10</y>
+        <width>79</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>HistEq</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>GoF</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_align">
+     <attribute name="title">
+      <string>Alignment</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_canDedector">
+     <attribute name="title">
+      <string>CanDedector</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_canfilter">
+     <attribute name="title">
+      <string>CanFilter</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_alarmGenerator">
+     <attribute name="title">
+      <string>AlarmGen</string>
+     </attribute>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>926</width>
+     <width>1361</width>
      <height>20</height>
     </rect>
    </property>

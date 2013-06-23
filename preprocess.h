@@ -2,6 +2,9 @@
 #define PREPROCESS_H
 
 #include <opencv2/opencv.hpp>
+#include <QFile>
+#include <QDataStream>
+#include "exception.h"
 
 enum PreprocessMethods
 {
@@ -20,10 +23,15 @@ class Preprocess
 public:
     Preprocess();
     void set(PreprocessSettings& _settings);
+    void getSettings(PreprocessSettings& _settings);
+    void saveSettings();
+    bool loadSettings();
     void process(cv::Mat& inputImage);
 
+
 private:
-    PreprocessSettings settings;
+    PreprocessSettings  settings;
+    Exception           exc;
 };
 
 

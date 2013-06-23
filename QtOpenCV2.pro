@@ -40,7 +40,6 @@ SOURCES += main.cpp\
             videoretrieve.cpp \
             cameraretrieve.cpp \
             imageprocess.cpp \
-            cvutility.cpp \
     framealignment.cpp \
     framealigner.cpp \
     candidatefilter.cpp \
@@ -57,7 +56,6 @@ HEADERS  += mainwindow.h \
             videoretrieve.h \
             cameraretrieve.h \
             imageprocess.h \
-            cvutility.h \
     framealignment.h \
     framealigner.h \
     candidatefilter.h \

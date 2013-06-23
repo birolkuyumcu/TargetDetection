@@ -4,6 +4,9 @@ CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(a
 {
     settings.load();
 
+    w.setModulePtrs(&imgProcess.preprocess, &imgProcess.frameAligner,
+                    &imgProcess.candidateDetector, &imgProcess.candidateFilter,
+                    &imgProcess.alarmGenerator);
     w.show();
 
     imgProcess.connectGuiSlots(w);
