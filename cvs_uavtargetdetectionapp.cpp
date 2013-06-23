@@ -2,25 +2,32 @@
 
 CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(argc, argv)
 {
-    settings.load();
 
-    w.setModulePtrs(&imgProcess.preprocess, &imgProcess.frameAligner,
-                    &imgProcess.candidateDetector, &imgProcess.candidateFilter,
+    exc.setModuleName("CVS_UAVTargetDetectionApp");
+
+    //default settings
+
+    w.setModulePtrs(&imgProcess.preprocess,
+                    &imgProcess.frameAligner,
+                    &imgProcess.candidateDetector,
+                    &imgProcess.candidateFilter,
                     &imgProcess.alarmGenerator);
     w.show();
 
     imgProcess.connectGuiSlots(w);
 
-    if(settings.streamType == VideoStream)
+    if(w.systemSettings.streamType == VideoStream)
     {
         imageSource = new VideoRetrieve(&imgProcess);
-        imageSource->setFps(settings.retrieveFps);
-        ((VideoRetrieve*)imageSource)->openVideoFile(settings.videoFileName, 0, cv::Size(640, 480));
+        imageSource->setFps(w.systemSettings.retrieveFps);
+        ((VideoRetrieve*)imageSource)->openVideoFile(w.systemSettings.videoFileName, 0,
+                                                     cv::Size(w.systemSettings.imageWidth,
+                                                              w.systemSettings.imageHeight));
     }
     else
     {
         imageSource = new CameraRetrieve();
-        imageSource->setFps(settings.retrieveFps);
+        imageSource->setFps(w.systemSettings.retrieveFps);
     }
 
 

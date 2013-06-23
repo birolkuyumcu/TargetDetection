@@ -8,6 +8,7 @@ Preprocess::Preprocess()
     if(!loadSettings())
     {
         exc.showException("Settings could not loaded");
+
         settings.method = GoF;
     }
 }

@@ -4,11 +4,11 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-#include "systemsettings.h"
 #include "exception.h"
 #include "videoretrieve.h"
 #include "cameraretrieve.h"
 #include "imageprocess.h"
+
 
 class CVS_UAVTargetDetectionApp
 {
@@ -16,12 +16,9 @@ private:
 
     QApplication a;
     ImageProcess    imgProcess;
-    SystemSettings  settings;
     Exception       exc;
     ImageRetrieve*  imageSource;
-
     MainWindow w;
-
 
 public:
     CVS_UAVTargetDetectionApp(int argc, char *argv[]);

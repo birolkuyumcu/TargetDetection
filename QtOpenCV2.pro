@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +33,6 @@ LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245 -lope
 
 SOURCES += main.cpp\
             mainwindow.cpp \
-            systemsettings.cpp \
             exception.cpp \
             cvs_uavtargetdetectionapp.cpp \
             imageretrieve.cpp \
@@ -49,7 +48,6 @@ SOURCES += main.cpp\
     preprocess.cpp
 
 HEADERS  += mainwindow.h \
-            systemsettings.h \
             exception.h \
             cvs_uavtargetdetectionapp.h \
             imageretrieve.h \

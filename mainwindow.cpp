@@ -7,6 +7,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this); 
+
+    exc.setModuleName("MainWindow");
+
+    if(!loadSettings())
+    {
+        exc.showException("Settings could not be loaded");
+
+        systemSettings.streamType = VideoStream;
+        systemSettings.videoFileName = "test.avi";
+        systemSettings.retrieveFps = 20;
+        systemSettings.viewFps = 30;
+        systemSettings.imageWidth = 640;
+        systemSettings.imageHeight = 480;
+    }
+
 }
 
 MainWindow::~MainWindow()
@@ -26,9 +41,11 @@ void MainWindow::refreshImgProcessingImg(void* imgPtr)
     }
 }
 
-void MainWindow::setModulePtrs(Preprocess* preprocessor, FrameAlignment* frameAligner,
-                                CandidateDetector* candidateDetector, CandidateFilter* CandidateFilter,
-                                AlarmGenerator *alarmGenerator)
+void MainWindow::setModulePtrs(Preprocess* preprocessor,
+                               FrameAlignment* frameAligner,
+                               CandidateDetector* candidateDetector,
+                               CandidateFilter* CandidateFilter,
+                               AlarmGenerator *alarmGenerator)
 {
     pPreprocessor = preprocessor;
     pframeAligner = frameAligner;
@@ -36,10 +53,29 @@ void MainWindow::setModulePtrs(Preprocess* preprocessor, FrameAlignment* frameAl
     pCandidateDetector = candidateDetector;
     pAlarmGenerator = alarmGenerator;
 
-    preprocessor->getSettings(preprocessSettings);
+    getSettings(systemSettings);
+    pPreprocessor->getSettings(preprocessSettings);
 
 
     fillSettings();
+}
+
+void MainWindow::fillSystemSettings()
+{
+    if(systemSettings.streamType == VideoStream)
+    {
+        ui->comboBox_streamSrc->setCurrentIndex(0);
+    }
+    else if(systemSettings.streamType == CameraStream)
+    {
+        ui->comboBox_streamSrc->setCurrentIndex(1);
+    }
+
+    ui->lineEdit_videoFileName->setText(systemSettings.videoFileName);
+    ui->lineEdit_retrieveFps->setText(QString::number(systemSettings.retrieveFps));
+    ui->lineEdit_viewFps->setText(QString::number(systemSettings.viewFps));
+    ui->lineEdit_imgWidth->setText(QString::number(systemSettings.imageWidth));
+    ui->lineEdit_imgHeight->setText(QString::number(systemSettings.imageHeight));
 }
 
 void MainWindow::fillpreprocessorSettings()
@@ -56,7 +92,8 @@ void MainWindow::fillpreprocessorSettings()
 
 void MainWindow::fillSettings()
 {
-    //preprocessor
+
+    fillSystemSettings();
     fillpreprocessorSettings();
 }
 
@@ -89,14 +126,73 @@ bool MainWindow::cvMat2QImage(cv::Mat &src, QImage& dst)
     return conversionResult;
 }
 
+void MainWindow::set(SystemSettings& _settings)
+{
+     systemSettings = _settings;
+}
+
+void MainWindow::getSettings(SystemSettings& _settings)
+{
+    _settings = systemSettings;
+}
+
+void MainWindow::saveSettings()
+{
+    QFile file("systemSettings.bin");
+
+    if ( file.open(QIODevice::WriteOnly | QIODevice::Truncate)  )
+    {
+        QDataStream out(&file);
+        out.writeRawData((const char*)&systemSettings, sizeof(SystemSettings));
+        file.close();
+    }
+}
+
+bool MainWindow::loadSettings()
+{
+    bool readResult = false;
+
+    QFile file("systemSettings.bin");
+
+    if ( file.open(QIODevice::ReadOnly) )
+    {
+        readResult = true;
+        QDataStream in(&file);
+        in.readRawData((char*)&systemSettings, sizeof(SystemSettings));
+
+        systemSettings.videoFileName = "test.avi"; // problem while reading QString
+        file.close();
+    }
+
+    return readResult;
+}
+
+
 void MainWindow::on_button_generalChange_clicked()
 {
 
+    if(ui->comboBox_streamSrc->currentText() == "VideoStream")
+    {
+        systemSettings.streamType = VideoStream;
+    }
+    else if(ui->comboBox_streamSrc->currentText() == "CameraStream")
+    {
+        systemSettings.streamType = CameraStream;
+    }
+
+    systemSettings.videoFileName = QString(ui->lineEdit_videoFileName->text());
+    systemSettings.retrieveFps = ui->lineEdit_retrieveFps->text().toUInt();
+    systemSettings.viewFps = ui->lineEdit_viewFps->text().toUInt();
+    systemSettings.imageWidth = ui->lineEdit_imgWidth->text().toUInt();
+    systemSettings.imageHeight = ui->lineEdit_imgHeight->text().toUInt();
+
+    set(systemSettings);
 }
 
 void MainWindow::on_button_generalSave_clicked()
 {
-
+    on_button_generalChange_clicked();
+    saveSettings();
 }
 
 void MainWindow::on_button_preprocessChange_clicked()
@@ -117,5 +213,5 @@ void MainWindow::on_button_preprocessChange_clicked()
 void MainWindow::on_button_preprocessSave_clicked()
 {
     on_button_preprocessChange_clicked();
-    pPreprocessor->saveSettings();
+    //pPreprocessor->saveSettings();
 }

@@ -15,6 +15,26 @@ namespace Ui
     class MainWindow;
 }
 
+
+
+enum StreamType
+{
+    VideoStream,
+    CameraStream
+};
+
+class SystemSettings
+{
+
+public:
+    QString videoFileName;
+    StreamType streamType;
+    int retrieveFps;
+    int viewFps;
+    int imageWidth;
+    int imageHeight;
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -23,23 +43,37 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void setModulePtrs(Preprocess* preprocessor, FrameAlignment* frameAligner,
-                       CandidateDetector* candidateDetector, CandidateFilter* pCandidateFilter,
+    void setModulePtrs(Preprocess* preprocessor,
+                       FrameAlignment* frameAligner,
+                       CandidateDetector* candidateDetector,
+                       CandidateFilter* pCandidateFilter,
                        AlarmGenerator* alarmGenerator);
+
+
+    SystemSettings                  systemSettings;
     
 private:
-    Ui::MainWindow      *ui;
-    Preprocess*         pPreprocessor;
-    FrameAlignment*     pframeAligner;
-    CandidateDetector*  pCandidateDetector;
-    CandidateFilter*    pCandidateFilter;
-    AlarmGenerator*     pAlarmGenerator;
+    Ui::MainWindow                  *ui;
+    Exception                       exc;
 
-    PreprocessSettings preprocessSettings;
+    Preprocess*                     pPreprocessor;
+    FrameAlignment*                 pframeAligner;
+    CandidateDetector*              pCandidateDetector;
+    CandidateFilter*                pCandidateFilter;
+    AlarmGenerator*                 pAlarmGenerator;
+
+    PreprocessSettings              preprocessSettings;
+
 
     bool cvMat2QImage(cv::Mat &src, QImage& dst);
+    void set(SystemSettings& _settings);
+    void getSettings(SystemSettings& _settings);
+    void saveSettings();
+
+    bool loadSettings();
     void fillSettings();
     void fillpreprocessorSettings();
+    void fillSystemSettings();
 
 public slots:
     void refreshImgProcessingImg(void* imgPtr);
