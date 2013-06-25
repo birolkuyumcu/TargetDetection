@@ -1,7 +1,5 @@
 #include "framealigner.h"
 
-
-
 frameAligner::frameAligner()
 {
     exc.setModuleName("frameAligner");
@@ -17,54 +15,60 @@ frameAligner::frameAligner()
 
     if(!cv::initModule_nonfree())
     {
-        exc.showException("Compiled without Non-free Option ! " );
+        exc.showException("Compiled without Non-free Option!" );
     }
 
 }
 
 void frameAligner::add(cv::Mat &frame)
 {
-    if(prevFrame.empty()){
+    if(!prevFrame.empty())
+    {
+        if(!currentFrame.empty())
+        {
+            if(hMethod == featureBased)
+            {
+                prevFrame = currentFrame;
+                keypointsPrev = keypointsCurrent;
+                descriptorsPrev = descriptorsCurrent;
+            }
+            else if(hMethod == flowBased)
+            {
+                prevFrame = currentFrame;
+                pointsPrev = pointsCurrent;
+            }
+        }
+
+        frame.copyTo(currentFrame);
+        process();
+
+        if(hMethod == featureBased)
+        {
+            featureBasedHomography();
+        }
+        else
+        {
+            flowBasedHomography();
+        }
+    }
+    else // if(!prevFrame.empty()){
+    {
         init(frame);
-        return;
     }
-
-    if(!currentFrame.empty()){
-        if(hMethod == featureBased){
-            prevFrame = currentFrame;
-            keypointsPrev = keypointsCurrent;
-            descriptorsPrev = descriptorsCurrent;
-        }
-        else if(hMethod == flowBased){
-            prevFrame = currentFrame;
-            pointsPrev = pointsCurrent;
-        }
-    }
-
-    frame.copyTo(currentFrame);
-    process();
-
-    if(hMethod == featureBased)
-    {
-        featureBasedHomography();
-    }
-    else
-    {
-        flowBasedHomography();
-    }
-
 }
 
 void frameAligner::init(cv::Mat &frame)
 {
     frame.copyTo(prevFrame);
 
-    if(hMethod == featureBased){
+    if(hMethod == featureBased)
+    {
         detector->detect(prevFrame,keypointsPrev);
         cv::KeyPointsFilter::retainBest(keypointsPrev,keyRetainFactor*keypointsPrev.size() );
         descriptor->compute(prevFrame,keypointsPrev,descriptorsPrev);
     }
-    else if(hMethod == flowBased){
+    else if(hMethod == flowBased)
+    {
         detector->detect(prevFrame, keypointsPrev);
         cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
 
@@ -77,25 +81,28 @@ void frameAligner::init(cv::Mat &frame)
                          cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS, 30, 0.1));
 
     }
-
-//
 }
 
 void frameAligner::process()
 {
-    if(hMethod == featureBased){
+    if(hMethod == featureBased)
+    {
         detector->detect(currentFrame, keypointsCurrent);
         cv::KeyPointsFilter::retainBest(keypointsCurrent, keyRetainFactor*keypointsCurrent.size() );
         descriptor->compute(currentFrame, keypointsCurrent, descriptorsCurrent);
     }
-    else if(hMethod == flowBased){
-        if(pointsPrev.size() < minimumFlowPoint){
+    else if(hMethod == flowBased)
+    {
+        if(pointsPrev.size() < minimumFlowPoint)
+        {
             detector->detect(prevFrame, keypointsPrev);
             cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
+
             for(unsigned int i=0; i < keypointsPrev.size(); i++)
             {
                 pointsPrev.push_back(keypointsPrev[i].pt);
             }
+
             cv::cornerSubPix(prevFrame,pointsPrev,cv::Size(5,5),cv::Size(-1,-1),cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
         }
 
@@ -143,11 +150,13 @@ void frameAligner::flowBasedHomography()
 
     calcOpticalFlowPyrLK(prevFrame, currentFrame, pointsPrev, pointsCurrent, status, err);
 
-    for (unsigned int i=0; i<pointsPrev.size(); i++) {
-            if(status[i] && err[i] <= flowErrorThreshold){
-                tempPrev.push_back(pointsPrev[i]);
-                tempCurrent.push_back(pointsCurrent[i]);
-            }
+    for (unsigned int i=0; i<pointsPrev.size(); i++)
+    {
+        if(status[i] && err[i] <= flowErrorThreshold)
+        {
+            tempPrev.push_back(pointsPrev[i]);
+            tempCurrent.push_back(pointsCurrent[i]);
+        }
     }
 
     homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod, ransacReprojThreshold);
