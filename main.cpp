@@ -1,10 +1,103 @@
 #include "cvs_uavtargetdetectionapp.h"
+//
+#include "framealigner.h"
+#include "alignmentmatrixcalc.h"
+#include "framealignment.h"
+
+void Test()
+{
+    frameAligner fAlgn;
+    cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+    fAlgn.add(img_1);
+    fAlgn.add(img_2);
+    cv::Mat aPrev,aPrevMask;
+    fAlgn.alignPrevFrame(aPrev);
+    cv::absdiff(aPrev,img_2,aPrev);
+    cv::imshow("Sonuç",aPrev);
+
+//     cv::imshow("Sonuc",img_1);
+     cv::waitKey(0);
+}
+
+void Test2()
+{
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+
+    cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00799.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+    calc.process(img_1);
+    calc.process(img_2);
+
+    cv::Mat aPrev;
+    cv::Mat H;
+    cv::imshow("Img 1",img_1);
+    cv::imshow("Img 2",img_2);
+
+    if(calc.getHomography(H) == true){
+        aligner.process(img_1,H,aPrev);
+        cv::imshow("Aligned Img 1",aPrev);
+        cv::absdiff(aPrev,img_2,aPrev);
+        cv::imshow("AbsDiff ",aPrev);
+    }
+
+
+     cv::waitKey(0);
+}
+
+void Test3()
+{
+    char Buf[1024];
+    char *wName="Test";
+    cv::Mat frame;
+    cv::namedWindow(wName);
+    frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::imshow(wName,frame);
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+    cv::Mat prev;
+    calc.process(frame);
+    prev=frame;
+
+    for(int i=0;i<1000;i+=3)
+    {
+        sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
+        std::cout<<Buf<<"\n";
+        frame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
+        if(frame.empty()) break;
+        /*
+        cv::imshow(wName,cframe);
+        cv::waitKey(100);
+*/
+
+        calc.process(frame);
+
+        cv::Mat aPrev;
+        cv::Mat H;
+
+        if(calc.getHomography(H) == true){
+            aligner.process(prev,H,aPrev);
+            cv::absdiff(aPrev,frame,aPrev);
+            cv::imshow(wName,aPrev);
+            cv::waitKey(10);
+            std::cout<<i<<"\n";
+        }
+        prev=frame;
+
+
+    }
+
+}
 
 int main(int argc, char *argv[])
 {
-    CVS_UAVTargetDetectionApp targetDetection(argc, argv);
+ /*   CVS_UAVTargetDetectionApp targetDetection(argc, argv);
 
     targetDetection.exec();
+*/
+    Test3();
 
     return 0;
 }
+
