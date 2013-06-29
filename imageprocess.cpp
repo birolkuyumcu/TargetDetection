@@ -53,6 +53,12 @@ void ImageProcess::run()
 
         .*/
 
+        preprocess.process(imgBuffer[readIndex]);
+
+        //frameAligner.process(imgBuffer[readIndex]);
+
+
+
 
         //push result to view
         emit pushFrameToGui((void*)&imgBuffer[readIndex]);
