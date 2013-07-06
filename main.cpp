@@ -20,6 +20,12 @@ void Test()
      cv::waitKey(0);
 }
 
+void testPP(cv::Mat &in, cv::Mat &out)
+{
+//    cv::resize(in,out, cv::Size(),0.5,0.5);
+    out=in;
+}
+
 void Test2()
 {
     AlignmentMatrixCalc calc;
@@ -54,18 +60,21 @@ void Test3()
     cv::Mat pFrame;
     cv::namedWindow(wName);
     frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    //
-    cv::resize(frame,pFrame, cv::Size(),0.5,0.5);
-    //
+
+    testPP(frame,pFrame);
+
     cv::imshow(wName,pFrame);
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
     cv::Mat prev;
-    calc.setDescriptorSimple("ORB");
+//    calc.setDetectorSimple("SURF");
+//    calc.setDescriptorSimple("SURF");
+//    calc.setHomographyMethod(flowBased);  // featurebased a göre çok hızlı
+    calc.setHomographyCalcMethod(CV_LMEDS);
     calc.process(pFrame);
     prev=pFrame;
 
-    for(int i=0;i<1000;i+=3)
+    for(int i=0;i<1300;i+=1)
     {
         double t = (double)cv::getTickCount();
 
@@ -75,7 +84,7 @@ void Test3()
         frame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
         if(frame.empty()) break;
         //
-        cv::resize(frame,pFrame, cv::Size(),0.5,0.5);
+        testPP(frame,pFrame);
         //
         calc.process(pFrame);
 
@@ -85,10 +94,11 @@ void Test3()
         if(calc.getHomography(H) == true){
             aligner.process(prev,H,aPrev);
             cv::absdiff(aPrev,pFrame,aPrev);
+            cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
             t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
             std::cout<<"Processing Time :"<<t<<"\n\n";
             cv::imshow(wName,aPrev);
-            cv::waitKey(1);
+            cv::waitKey(10);
             std::cout<<i<<"\n";
         }
         prev=pFrame;
