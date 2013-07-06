@@ -167,6 +167,10 @@ void AlignmentMatrixCalc::flowBasedHomography()
     isHomographyCalc=true;
     // Burda bir kontrol eklenmeli filitrelenen noktaların belli bir sayı altına düştüğünde
     // yeniden feature bazlı nokta tespit ettirilmeli
+    if(pointsCurrent.size()<50)
+    {
+        init(currentFrame);
+    }
 
 }
 
@@ -199,6 +203,22 @@ void AlignmentMatrixCalc::setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher)
 void AlignmentMatrixCalc::setMatcherSimple(char *matcherName)
 {
     setMatcher(cv::DescriptorMatcher::create(matcherName));
+}
+
+void AlignmentMatrixCalc::setHomographyMethod(HomograpyMethod ihMethod)
+{
+    hMethod=ihMethod;
+}
+
+void AlignmentMatrixCalc::setHomographyCalcMethod(int ihomographyCalcMethod)
+{
+    /*
+    – 0 - a regular method using all the points
+    – CV_RANSAC - RANSAC-based robust method
+    – CV_LMEDS - Least-Median robust method
+    */
+
+    homographyCalcMethod=ihomographyCalcMethod;
 }
 
 bool AlignmentMatrixCalc::getHomography(cv::Mat &gHomography)
