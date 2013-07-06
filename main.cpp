@@ -51,39 +51,49 @@ void Test3()
     char Buf[1024];
     char *wName="Test";
     cv::Mat frame;
+    cv::Mat pFrame;
     cv::namedWindow(wName);
     frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    cv::imshow(wName,frame);
+    //
+    cv::resize(frame,pFrame, cv::Size(),0.5,0.5);
+    //
+    cv::imshow(wName,pFrame);
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
     cv::Mat prev;
-    calc.process(frame);
-    prev=frame;
+    calc.setDescriptorSimple("ORB");
+    calc.process(pFrame);
+    prev=pFrame;
 
     for(int i=0;i<1000;i+=3)
     {
+        double t = (double)cv::getTickCount();
+
+
         sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
         std::cout<<Buf<<"\n";
         frame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
         if(frame.empty()) break;
-        /*
-        cv::imshow(wName,cframe);
-        cv::waitKey(100);
-*/
-
-        calc.process(frame);
+        //
+        cv::resize(frame,pFrame, cv::Size(),0.5,0.5);
+        //
+        calc.process(pFrame);
 
         cv::Mat aPrev;
         cv::Mat H;
 
         if(calc.getHomography(H) == true){
             aligner.process(prev,H,aPrev);
-            cv::absdiff(aPrev,frame,aPrev);
+            cv::absdiff(aPrev,pFrame,aPrev);
+            t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+            std::cout<<"Processing Time :"<<t<<"\n\n";
             cv::imshow(wName,aPrev);
-            cv::waitKey(10);
+            cv::waitKey(1);
             std::cout<<i<<"\n";
         }
-        prev=frame;
+        prev=pFrame;
+
+
 
 
     }
