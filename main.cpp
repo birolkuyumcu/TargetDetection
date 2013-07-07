@@ -71,10 +71,12 @@ void Test3()
     cv::imshow(wName,pFrame);
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
+
     cv::Mat prev;
-//    calc.setDetectorSimple("SURF");
-//    calc.setDescriptorSimple("SURF");
-//    calc.setHomographyMethod(flowBased);  // featurebased a göre çok hızlı
+    calc.setDetectorSimple("SURF");
+
+    calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
+
     calc.setHomographyCalcMethod(CV_LMEDS);
     calc.process(pFrame);
     prev=pFrame;
@@ -117,7 +119,7 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
 
-    Test2();
+    Test3();
 
     return 0;
 }
