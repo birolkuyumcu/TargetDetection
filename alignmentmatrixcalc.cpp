@@ -224,7 +224,10 @@ void AlignmentMatrixCalc::setHomographyCalcMethod(int ihomographyCalcMethod)
 bool AlignmentMatrixCalc::getHomography(cv::Mat &gHomography)
 {
     if(isHomographyCalc)
-        gHomography=homography;
+    {
+        gHomography = homography;
+    }
+
     return isHomographyCalc;
 }
 

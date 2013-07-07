@@ -54,5 +54,13 @@ bool Preprocess::loadSettings()
 
 void Preprocess::process(cv::Mat& inputImage)
 {
-    //preprocessin will be done over image here!
+
+    if(settings.method == GoF)
+    {
+
+    }
+    else if(settings.method == HistEq)
+    {
+        cv::equalizeHist(inputImage,inputImage);
+    }
 }

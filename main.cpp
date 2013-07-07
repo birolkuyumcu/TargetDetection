@@ -7,8 +7,12 @@
 void Test()
 {
     frameAligner fAlgn;
-    cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+    //cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    //cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+
+    cv::Mat img_1 = cv::imread("../uavVideoDataset/egtest02/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_2 = cv::imread("../uavVideoDataset/egtest02/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+
     fAlgn.add(img_1);
     fAlgn.add(img_2);
     cv::Mat aPrev,aPrevMask;
@@ -31,8 +35,8 @@ void Test2()
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
 
-    cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00799.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+    cv::Mat img_1 = cv::imread("../uavVideoDataset/egtest02/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_2 = cv::imread("../uavVideoDataset/egtest02/frame00799.jpg", CV_LOAD_IMAGE_GRAYSCALE );
     calc.process(img_1);
     calc.process(img_2);
 
@@ -41,15 +45,15 @@ void Test2()
     cv::imshow("Img 1",img_1);
     cv::imshow("Img 2",img_2);
 
-    if(calc.getHomography(H) == true){
+    if(calc.getHomography(H) == true)
+    {
         aligner.process(img_1,H,aPrev);
         cv::imshow("Aligned Img 1",aPrev);
         cv::absdiff(aPrev,img_2,aPrev);
         cv::imshow("AbsDiff ",aPrev);
     }
 
-
-     cv::waitKey(0);
+    cv::waitKey(0);
 }
 
 void Test3()
@@ -59,7 +63,8 @@ void Test3()
     cv::Mat frame;
     cv::Mat pFrame;
     cv::namedWindow(wName);
-    frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    //frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 
     testPP(frame,pFrame);
 
@@ -79,7 +84,8 @@ void Test3()
         double t = (double)cv::getTickCount();
 
 
-        sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
+        //sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
+        sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
         std::cout<<Buf<<"\n";
         frame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
         if(frame.empty()) break;
@@ -102,21 +108,16 @@ void Test3()
             std::cout<<i<<"\n";
         }
         prev=pFrame;
-
-
-
-
     }
 
 }
 
 int main(int argc, char *argv[])
 {
- /*   CVS_UAVTargetDetectionApp targetDetection(argc, argv);
+    //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
+    //targetDetection.exec();
 
-    targetDetection.exec();
-*/
-    Test3();
+    Test2();
 
     return 0;
 }
