@@ -28,7 +28,7 @@ void Test()
 void testPP(cv::Mat &in, cv::Mat &out)
 {
 //    cv::resize(in,out, cv::Size(),0.5,0.5);
-    out=in;
+    out=in.clone();
 }
 
 void Test2()
@@ -61,6 +61,44 @@ void Test2()
     cv::waitKey(0);
 }
 
+void FindCandidate(cv::Mat in, cv::Mat frame, cv::Mat &out)
+{
+    cv::RNG rng;
+
+    std::vector<std::vector<cv::Point> > contours;
+    std::vector<cv::Vec4i> hierarchy;
+
+    //
+    cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
+    cv::dilate( in,in, element,cv::Point(-1,-1),3 );
+
+    cv::findContours( in, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+    /// Approximate contours to polygons + get bounding rects and circles
+    std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
+    std::vector<cv::Rect> boundRect( contours.size() );
+    std::vector<cv::Point2f>center( contours.size() );
+    std::vector<float>radius( contours.size() );
+    for( int i = 0; i < contours.size(); i++ )
+    {
+        cv::approxPolyDP( cv::Mat(contours[i]), contours_poly[i], 3, true );
+        boundRect[i] = cv::boundingRect( cv::Mat(contours_poly[i]) );
+        cv::minEnclosingCircle( contours_poly[i], center[i], radius[i] );
+    }
+    /// Draw polygonal contour + bonding rects + circles
+
+    cv::cvtColor(frame,out,CV_GRAY2BGR);
+
+    for( int i = 0; i< contours.size(); i++ )
+    {
+        if(cv::contourArea(contours[i])<100 || cv::contourArea(contours[i])>2500) continue;
+        cv::Scalar color = cv::Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+   //     cv::drawContours( out, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point() );
+        cv::rectangle( out, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
+  //      cv::circle( out, center[i], (int)radius[i], color, 2, 8, 0 );
+    }
+
+}
+
 void Test3()
 {
     char Buf[1024];
@@ -84,7 +122,7 @@ void Test3()
 
     calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
 
-    calc.setHomographyCalcMethod(CV_LMEDS);
+  //  calc.setHomographyCalcMethod(CV_LMEDS);
     calc.process(pFrame);
     prev=pFrame;
 
@@ -114,7 +152,9 @@ void Test3()
             cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
             t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
             std::cout<<"Processing Time :"<<t<<"\n\n";
-            cv::imshow(wName,aPrev);
+            cv::Mat cFrame;
+            FindCandidate(aPrev,frame,cFrame);
+            cv::imshow(wName,cFrame);
             cv::waitKey(10);
             std::cout<<i<<"\n";
         }
