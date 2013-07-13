@@ -19,13 +19,6 @@ void Test()
 //     cv::imshow("Sonuc",img_1);
      cv::waitKey(0);
 }
-
-void testPP(cv::Mat &in, cv::Mat &out)
-{
-//    cv::resize(in,out, cv::Size(),0.5,0.5);
-    out=in;
-}
-
 void Test2()
 {
     AlignmentMatrixCalc calc;
@@ -52,6 +45,12 @@ void Test2()
      cv::waitKey(0);
 }
 
+void testPP(cv::Mat &in, cv::Mat &out)
+{
+  //  cv::resize(in,out, cv::Size(),0.75,0.75,cv::INTER_AREA);
+    out=in;
+}
+
 void Test3()
 {
     char Buf[1024];
@@ -67,10 +66,10 @@ void Test3()
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
     cv::Mat prev;
-//    calc.setDetectorSimple("SURF");
-//    calc.setDescriptorSimple("SURF");
-//    calc.setHomographyMethod(flowBased);  // featurebased a göre çok hızlı
-    calc.setHomographyCalcMethod(CV_LMEDS);
+    calc.setDetectorSimple("SIFT");
+    calc.setDescriptorSimple("SIFT");
+    calc.setHomographyMethod(flowBased);  // featurebased a göre çok hızlı
+//    calc.setHomographyCalcMethod(CV_LMEDS);
     calc.process(pFrame);
     prev=pFrame;
 
@@ -98,13 +97,10 @@ void Test3()
             t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
             std::cout<<"Processing Time :"<<t<<"\n\n";
             cv::imshow(wName,aPrev);
-            cv::waitKey(10);
+            cv::waitKey(3);
             std::cout<<i<<"\n";
         }
         prev=pFrame;
-
-
-
 
     }
 
