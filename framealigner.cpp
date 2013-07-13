@@ -8,7 +8,7 @@ frameAligner::frameAligner()
     //currentFrame = NULL;
 
     hMethod = featureBased;
-    keyRetainFactor=0.75;
+    keyRetainFactor = 0.75;
     homographyCalcMethod=CV_RANSAC;
     ransacReprojThreshold = 3;
     setDetectorSimple("HARRIS");
@@ -214,7 +214,8 @@ void frameAligner::alignPrevFrame(cv::Mat &alignedPrev)
     miny=0;
     maxy=currentFrame.rows;
 
-    for(int i = 0; i < 4; i++){
+    for(int i = 0; i < 4; i++)
+    {
         x=alignedCorners[i].x;
         y=alignedCorners[i].y;
 
