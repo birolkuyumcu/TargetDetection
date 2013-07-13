@@ -7,12 +7,13 @@
 void Test()
 {
     frameAligner fAlgn;
-    //cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    //cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
-
+#ifdef WIN32
+    cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+#else
     cv::Mat img_1 = cv::imread("../uavVideoDataset/egtest02/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
     cv::Mat img_2 = cv::imread("../uavVideoDataset/egtest02/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
-
+#endif
     fAlgn.add(img_1);
     fAlgn.add(img_2);
     cv::Mat aPrev,aPrevMask;
@@ -34,9 +35,13 @@ void Test2()
 {
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
-
+#ifdef WIN32
+    cv::Mat img_1 = cv::imread("D:/cvs/data/egt2/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat img_2 = cv::imread("D:/cvs/data/egt2/frame00791.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+#else
     cv::Mat img_1 = cv::imread("../uavVideoDataset/egtest02/frame00790.jpg",CV_LOAD_IMAGE_GRAYSCALE);
     cv::Mat img_2 = cv::imread("../uavVideoDataset/egtest02/frame00799.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+#endif
     calc.process(img_1);
     calc.process(img_2);
 
@@ -63,9 +68,11 @@ void Test3()
     cv::Mat frame;
     cv::Mat pFrame;
     cv::namedWindow(wName);
-    //frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+#ifdef WIN32
+    frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+#else
     frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-
+#endif
     testPP(frame,pFrame);
 
     cv::imshow(wName,pFrame);
@@ -85,9 +92,11 @@ void Test3()
     {
         double t = (double)cv::getTickCount();
 
-
-        //sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
+#ifdef WIN32
+        sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
+#else
         sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
+#endif
         std::cout<<Buf<<"\n";
         frame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
         if(frame.empty()) break;
