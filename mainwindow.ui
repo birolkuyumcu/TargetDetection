@@ -30,14 +30,14 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>0</x>
+      <y>0</y>
       <width>641</width>
       <height>561</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab_general">
      <attribute name="title">
@@ -301,6 +301,251 @@
      <attribute name="title">
       <string>Alignment</string>
      </attribute>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Detector</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Decriptor</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>90</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Matcher</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Homography Method</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>160</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Homography Calc Method</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxDetector">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>30</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>FAST</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>STAR</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SIFT</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SURF</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>ORB</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>GFTT</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>HARRIS</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BRISK</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Dense</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SimpleBlob</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxDiscriptor">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>60</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>SIFT</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SURF</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>ORB</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BRISK</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BRIEF</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>FREAK</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxMatcher">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>90</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>BruteForce</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BruteForce-L1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BruteForce-Hamming</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BruteForce-Hamming(2)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>FlannBased</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxDiscriptorHMethod">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>120</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Feature Based</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Optical Flow Based </string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBoxDiscriptorHMethod_2">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>150</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Regular</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Ransac</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Least - Median</string>
+       </property>
+      </item>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_canDedector">
      <attribute name="title">
@@ -325,7 +570,7 @@
      <x>0</x>
      <y>0</y>
      <width>1361</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -70,7 +70,8 @@ void FindCandidate(cv::Mat in, cv::Mat frame, cv::Mat &out)
 
     //
     cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
-    cv::dilate( in,in, element,cv::Point(-1,-1),3 );
+   // cv::erode( in,in, element,cv::Point(-1,-1),1 );
+    cv::dilate( in,in, element,cv::Point(-1,-1),4 );
 
     cv::findContours( in, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
     /// Approximate contours to polygons + get bounding rects and circles
@@ -91,7 +92,8 @@ void FindCandidate(cv::Mat in, cv::Mat frame, cv::Mat &out)
     for( int i = 0; i< contours.size(); i++ )
     {
         if(cv::contourArea(contours[i])<100 || cv::contourArea(contours[i])>2500) continue;
-        cv::Scalar color = cv::Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+    //    cv::Scalar color = cv::Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+        cv::Scalar color = cv::Scalar( 0, 0, 255 );
    //     cv::drawContours( out, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point() );
         cv::rectangle( out, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
   //      cv::circle( out, center[i], (int)radius[i], color, 2, 8, 0 );
@@ -107,7 +109,7 @@ void Test3()
     cv::Mat pFrame;
     cv::namedWindow(wName);
 #ifdef WIN32
-    frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    frame=cv::imread("D:/cvs/data/egt1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #else
     frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #endif
@@ -119,6 +121,8 @@ void Test3()
 
     cv::Mat prev;
     calc.setDetectorSimple("SURF");
+    calc.setDescriptorSimple("SURF");
+  //  calc.setDetectorSimple("GridORB");
 
     calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
 
@@ -126,12 +130,12 @@ void Test3()
     calc.process(pFrame);
     prev=pFrame;
 
-    for(int i=0;i<1300;i+=1)
+    for(int i=0;i<1820;i+=10)
     {
         double t = (double)cv::getTickCount();
 
 #ifdef WIN32
-        sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
+        sprintf(Buf,"D:/cvs/data/egt1/frame%05d.jpg%c",i,0);
 #else
         sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
 #endif
@@ -154,10 +158,14 @@ void Test3()
             std::cout<<"Processing Time :"<<t<<"\n\n";
             cv::Mat cFrame;
             FindCandidate(aPrev,frame,cFrame);
+          //  cv::imshow(wName,aPrev);
+
+
             cv::imshow(wName,cFrame);
             cv::waitKey(10);
             std::cout<<i<<"\n";
         }
+        prev.~Mat();
         prev=pFrame;
     }
 

@@ -18,15 +18,15 @@ LIBS += `pkg-config opencv --cflags --libs`
 CONFIG += debug_and_release
 win32:debug {
      CONFIG += console
-INCLUDEPATH +=C:\\opencv-2.4.5\\opencv\\build\\include
+INCLUDEPATH +=D:/OpenCv-2.4.6/opencv/build/include
 
-LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245d -lopencv_highgui245d -lopencv_imgproc245d -lopencv_features2d245d -lopencv_video245d -lopencv_nonfree245d -lopencv_calib3d245d
+LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core246d -lopencv_highgui246d -lopencv_imgproc246d -lopencv_features2d246d -lopencv_video246d -lopencv_nonfree246d -lopencv_calib3d246d
 
  }
 
 win32:release {
-INCLUDEPATH +=C:\\opencv-2.4.5\\opencv\\build\\include
-LIBS += -LC:\\opencv-2.4.5\\opencv\\build\\x86\\vc10\\lib -lopencv_core245 -lopencv_highgui245 -lopencv_imgproc245 -lopencv_features2d245 -lopencv_video245 -lopencv_nonfree245 -lopencv_calib3d245
+INCLUDEPATH +=D:/OpenCv-2.4.6/opencv/build/include
+LIBS += -LD:/OpenCv-2.4.6/opencv/build/x86/vc11/lib -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246 -lopencv_features2d246 -lopencv_video246 -lopencv_nonfree246 -lopencv_calib3d246
 
 
 }
