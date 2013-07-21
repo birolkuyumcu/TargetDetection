@@ -8,6 +8,8 @@
 #include "mainwindow.h"
 #include <opencv2/opencv.hpp>
 #include "preprocess.h"
+#include "alignmentmatrixcalc.h"
+#include "framealignment.h"
 
 
 #define _CVS_IMG_BUFFER_SIZE 30
@@ -22,6 +24,7 @@ public:
     CandidateDetector   candidateDetector;
     CandidateFilter     candidateFilter;
     AlarmGenerator      alarmGenerator;
+    AlignmentMatrixCalc alignmentCalc;
 
     explicit ImageProcess(QObject *parent = 0);
     void pushFrame(cv::Mat &inputImage);
@@ -37,6 +40,8 @@ private:
     unsigned int        processedFps;
     unsigned int        processedFrameCnt;
     void run();
+
+
     
 public slots:
     void timerTick1Hz();

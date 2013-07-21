@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_general">
      <attribute name="title">
@@ -131,7 +131,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>test.avi</string>
+       <string>D:/cvs/data/test.avi</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_retrieveFps">
@@ -231,6 +231,19 @@
         <string>CameraStream</string>
        </property>
       </item>
+     </widget>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>10</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_preprocess">
@@ -377,6 +390,11 @@
       </property>
       <item>
        <property name="text">
+        <string>HARRIS</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>FAST</string>
        </property>
       </item>
@@ -407,11 +425,6 @@
       </item>
       <item>
        <property name="text">
-        <string>HARRIS</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>BRISK</string>
        </property>
       </item>
@@ -437,17 +450,17 @@
       </property>
       <item>
        <property name="text">
+        <string>ORB</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>SIFT</string>
        </property>
       </item>
       <item>
        <property name="text">
         <string>SURF</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>ORB</string>
        </property>
       </item>
       <item>
@@ -477,12 +490,12 @@
       </property>
       <item>
        <property name="text">
-        <string>BruteForce</string>
+        <string>BruteForce-L1</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>BruteForce-L1</string>
+        <string>BruteForce</string>
        </property>
       </item>
       <item>
@@ -532,12 +545,12 @@
       </property>
       <item>
        <property name="text">
-        <string>Regular</string>
+        <string>Ransac</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Ransac</string>
+        <string>Regular</string>
        </property>
       </item>
       <item>

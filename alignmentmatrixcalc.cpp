@@ -12,8 +12,14 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     keyRetainFactor=0.75;
     homographyCalcMethod=CV_RANSAC;
     ransacReprojThreshold = 3;
-    setDetectorSimple("GridHARRIS");
+
+    setDetectorSimple("SURF");
+    setDescriptorSimple("SURF");
+
+    /*
+    setDetectorSimple("HARRIS");
     setDescriptorSimple("ORB");
+    */
     setMatcherSimple("BruteForce-L1");
     isHomographyCalc=false;
 
@@ -180,7 +186,7 @@ void AlignmentMatrixCalc::setDetector(cv::Ptr<cv::FeatureDetector> idetector)
     detector = idetector;
 }
 
-void AlignmentMatrixCalc::setDetectorSimple(char *detectorName)
+void AlignmentMatrixCalc::setDetectorSimple(const char *detectorName)
 {
     setDetector(cv::FeatureDetector::create(detectorName ));
 }
@@ -190,7 +196,7 @@ void AlignmentMatrixCalc::setDescriptor(cv::Ptr<cv::DescriptorExtractor> idescri
     descriptor=idescriptor;
 }
 
-void AlignmentMatrixCalc::setDescriptorSimple(char *descriptorName)
+void AlignmentMatrixCalc::setDescriptorSimple(const char *descriptorName)
 {
     setDescriptor(cv::DescriptorExtractor::create(descriptorName));
 }
@@ -200,7 +206,7 @@ void AlignmentMatrixCalc::setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher)
     matcher = imatcher;
 }
 
-void AlignmentMatrixCalc::setMatcherSimple(char *matcherName)
+void AlignmentMatrixCalc::setMatcherSimple(const char *matcherName)
 {
     setMatcher(cv::DescriptorMatcher::create(matcherName));
 }

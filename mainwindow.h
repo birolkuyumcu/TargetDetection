@@ -9,6 +9,7 @@
 #include "candidatedetector.h"
 #include "candidatefilter.h"
 #include "alarmgenerator.h"
+#include "alignmentmatrixcalc.h"
 
 namespace Ui
 {
@@ -44,6 +45,7 @@ public:
     ~MainWindow();
 
     void setModulePtrs(Preprocess* preprocessor,
+                       AlignmentMatrixCalc* alignmentCalc,
                        FrameAlignment* frameAligner,
                        CandidateDetector* candidateDetector,
                        CandidateFilter* pCandidateFilter,
@@ -61,6 +63,7 @@ private:
     CandidateDetector*              pCandidateDetector;
     CandidateFilter*                pCandidateFilter;
     AlarmGenerator*                 pAlarmGenerator;
+    AlignmentMatrixCalc*            pAlignmentCalc;
 
     PreprocessSettings              preprocessSettings;
 
@@ -82,6 +85,8 @@ private slots:
     void on_button_generalSave_clicked();
     void on_button_preprocessChange_clicked();
     void on_button_preprocessSave_clicked();
+    void on_comboBoxDetector_currentIndexChanged(int index);
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H

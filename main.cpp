@@ -173,10 +173,10 @@ void Test3()
 
 int main(int argc, char *argv[])
 {
-    //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
-    //targetDetection.exec();
+    CVS_UAVTargetDetectionApp targetDetection(argc, argv);
+    targetDetection.exec();
 
-    Test3();
+   // Test3();
 
     return 0;
 }

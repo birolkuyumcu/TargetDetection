@@ -8,6 +8,7 @@ CVS_UAVTargetDetectionApp::CVS_UAVTargetDetectionApp(int argc, char *argv[]):a(a
     //default settings
 
     w.setModulePtrs(&imgProcess.preprocess,
+                    &imgProcess.alignmentCalc,
                     &imgProcess.frameAligner,
                     &imgProcess.candidateDetector,
                     &imgProcess.candidateFilter,

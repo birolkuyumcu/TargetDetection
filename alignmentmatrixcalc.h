@@ -63,11 +63,11 @@ private:
     //
 public:
     void setDetector(cv::Ptr<cv::FeatureDetector> idetector);
-    void setDetectorSimple(char *detectorName);
+    void setDetectorSimple(const char *detectorName);
     void setDescriptor(cv::Ptr<cv::DescriptorExtractor> idescriptor);
-    void setDescriptorSimple(char* descriptorName);
+    void setDescriptorSimple(const char* descriptorName);
     void setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher);
-    void setMatcherSimple(char* matcherName);
+    void setMatcherSimple(const char* matcherName);
     void setHomographyMethod(HomograpyMethod ihMethod);
     void setHomographyCalcMethod(int ihomographyCalcMethod);
     //

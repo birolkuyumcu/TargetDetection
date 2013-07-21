@@ -54,6 +54,7 @@ bool Preprocess::loadSettings()
 
 void Preprocess::process(cv::Mat& inputImage)
 {
+    cv::cvtColor(inputImage,inputImage,CV_BGR2GRAY);
 
     if(settings.method == GoF)
     {

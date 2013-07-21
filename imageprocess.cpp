@@ -10,6 +10,9 @@ ImageProcess::ImageProcess(QObject *parent) :
 
     timer1Hz.setInterval(1000);
     timer1Hz.start();
+    //
+
+
 }
 
 void ImageProcess::timerTick1Hz()
@@ -39,8 +42,12 @@ void ImageProcess::pushFrame(cv::Mat &inputImage)
 
 void ImageProcess::run()
 {
+    cv::Mat pFrame;
+    cv::Mat frame;
     while(1)
     {
+        cv::Mat aPrev;
+        cv::Mat H;
         semaphore.acquire(); //wait for semaphore
 
         //image processing will be done in here
@@ -53,15 +60,31 @@ void ImageProcess::run()
 
         .*/
 
-        preprocess.process(imgBuffer[readIndex]);
+   //     preprocess.process(imgBuffer[readIndex]);
+        cv::cvtColor(imgBuffer[readIndex],frame,CV_BGR2GRAY);
+        cv::equalizeHist(frame,frame);
 
         //frameAligner.process(imgBuffer[readIndex]);
+
+        alignmentCalc.process(frame);
+        pFrame = frame;
+        if(alignmentCalc.getHomography(H))
+        {
+            frameAligner.process(pFrame,H,aPrev);
+            cv::absdiff(aPrev,frame,aPrev);
+            cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+            cv::imshow("Result",aPrev);
+            cv::waitKey(5);
+      //      aPrev.copyTo();
+            emit pushFrameToGui((void*)&imgBuffer[readIndex]);
+
+        }
 
 
 
 
         //push result to view
-        emit pushFrameToGui((void*)&imgBuffer[readIndex]);
+ //       emit pushFrameToGui((void*)&imgBuffer[readIndex]);
 
 
         readIndex ++;

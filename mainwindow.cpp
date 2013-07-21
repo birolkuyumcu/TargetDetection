@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
         exc.showException("Settings could not be loaded");
 
         systemSettings.streamType = VideoStream;
-        systemSettings.videoFileName = "test.avi";
+        systemSettings.videoFileName = "D:/cvs/data/test3.avi";
         systemSettings.retrieveFps = 20;
         systemSettings.viewFps = 30;
         systemSettings.imageWidth = 640;
@@ -42,6 +42,7 @@ void MainWindow::refreshImgProcessingImg(void* imgPtr)
 }
 
 void MainWindow::setModulePtrs(Preprocess* preprocessor,
+                               AlignmentMatrixCalc *alignmentCalc,
                                FrameAlignment* frameAligner,
                                CandidateDetector* candidateDetector,
                                CandidateFilter* CandidateFilter,
@@ -52,6 +53,7 @@ void MainWindow::setModulePtrs(Preprocess* preprocessor,
     pCandidateFilter = CandidateFilter;
     pCandidateDetector = candidateDetector;
     pAlarmGenerator = alarmGenerator;
+    pAlignmentCalc = alignmentCalc;
 
     getSettings(systemSettings);
     pPreprocessor->getSettings(preprocessSettings);
@@ -214,4 +216,14 @@ void MainWindow::on_button_preprocessSave_clicked()
 {
     on_button_preprocessChange_clicked();
     //pPreprocessor->saveSettings();
+}
+
+void MainWindow::on_comboBoxDetector_currentIndexChanged(int index)
+{
+    pAlignmentCalc->setDetectorSimple(ui->comboBoxDetector->currentText().toStdString().c_str());
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+   // ImageProcess    imgProcess; ve ImageRetrieve*  imageSource; ulaşamıyoruz ? on pause off imkanı yok !
 }
