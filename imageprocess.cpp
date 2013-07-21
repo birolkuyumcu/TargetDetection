@@ -44,6 +44,7 @@ void ImageProcess::run()
 {
     cv::Mat pFrame;
     cv::Mat frame;
+
     while(1)
     {
         cv::Mat aPrev;
@@ -60,26 +61,26 @@ void ImageProcess::run()
 
         .*/
 
-   //     preprocess.process(imgBuffer[readIndex]);
-        cv::cvtColor(imgBuffer[readIndex],frame,CV_BGR2GRAY);
-        cv::equalizeHist(frame,frame);
 
-        //frameAligner.process(imgBuffer[readIndex]);
 
-        alignmentCalc.process(frame);
-        pFrame = frame;
-        if(alignmentCalc.getHomography(H))
+        if(readIndex%10 == 0)// frame atlama
         {
-            frameAligner.process(pFrame,H,aPrev);
-            cv::absdiff(aPrev,frame,aPrev);
-            cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
-            cv::imshow("Result",aPrev);
-            cv::waitKey(5);
-      //      aPrev.copyTo();
-            emit pushFrameToGui((void*)&imgBuffer[readIndex]);
+            frame = imgBuffer[readIndex].clone();
+            preprocess.process(frame);
+            alignmentCalc.process(frame);
+            pFrame = frame;
+            if(alignmentCalc.getHomography(H))
+            {
+                frameAligner.process(pFrame,H,aPrev);
+                cv::absdiff(aPrev,frame,aPrev);
+                cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+                cv::imshow("Result",aPrev);
+                cv::waitKey(5);
 
+
+            }
         }
-
+        emit pushFrameToGui((void*)&imgBuffer[readIndex]);
 
 
 
