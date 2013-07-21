@@ -63,7 +63,7 @@ void ImageProcess::run()
 
 
 
-        if(readIndex%10 == 0)// frame atlama
+        if(readIndex%5 == 0)// frame atlama
         {
             frame = imgBuffer[readIndex].clone();
             preprocess.process(frame);
@@ -80,6 +80,8 @@ void ImageProcess::run()
 
             }
         }
+
+
         emit pushFrameToGui((void*)&imgBuffer[readIndex]);
 
 

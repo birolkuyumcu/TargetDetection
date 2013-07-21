@@ -171,10 +171,59 @@ void Test3()
 
 }
 
+void Vivid2Avi(const char *header,int max,const char*aviName)
+{
+
+
+    cv::Mat frame;
+    char Buf[1024];
+
+    cv::VideoWriter w;
+
+    sprintf(Buf,"%s%5s.avi%c",header,aviName,0);
+
+    w.open(Buf,-1,23,cv::Size(640,480));
+
+    for(int i = 0 ; i < max+1 ; i++)
+    {
+
+        sprintf(Buf,"%sframe%05d.jpg%c",header,i,0);
+        std::cout<<Buf<<"\n";
+        frame=cv::imread(Buf,CV_LOAD_IMAGE_COLOR);
+        w<<frame;
+        cv::waitKey(20);
+    }
+
+}
+
+void PlayAvi(const char * fAvi)
+{
+    cv::VideoCapture cap;
+    cv::Mat frame;
+
+    cap.open(fAvi);
+
+    while (cap.read(frame))
+    {
+        cv::imshow("Video",frame);
+        cv::waitKey(10);
+
+    }
+
+
+}
+
 int main(int argc, char *argv[])
 {
+
     CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     targetDetection.exec();
+
+ //   PlayAvi("D:/cvs/data/egt1.avi"); // Microsoft Video 1 codec
+ //  Vivid2Avi("D:/cvs/data/egt1/",1820,"egt1");
+  //  Vivid2Avi("D:/cvs/data/egt2/",1300,"egt2");
+  //  Vivid2Avi("D:/cvs/data/egt3/",2570,"egt3");
+ //   Vivid2Avi("D:/cvs/data/egt4/",1832,"egt4");
 
    // Test3();
 

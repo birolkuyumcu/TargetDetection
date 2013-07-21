@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
         exc.showException("Settings could not be loaded");
 
         systemSettings.streamType = VideoStream;
-        systemSettings.videoFileName = "D:/cvs/data/test2.avi";
+        systemSettings.videoFileName = "D:/cvs/data/egt1.avi";
         systemSettings.retrieveFps = 20;
         systemSettings.viewFps = 30;
         systemSettings.imageWidth = 640;
