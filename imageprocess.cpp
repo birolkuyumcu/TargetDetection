@@ -75,7 +75,7 @@ void ImageProcess::run()
                 cv::absdiff(aPrev,frame,aPrev);
                 cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
                 cv::imshow("Result",aPrev);
-                cv::waitKey(5);
+                cv::waitKey(1); // bende bunsuz çalışmıyor
 
 
             }

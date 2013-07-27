@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
         exc.showException("Settings could not be loaded");
 
         systemSettings.streamType = VideoStream;
-        systemSettings.videoFileName = "D:/cvs/data/egt1.avi";
+        systemSettings.videoFileName = "D:/cvs/data/egt2.avi";
         systemSettings.retrieveFps = 20;
         systemSettings.viewFps = 30;
         systemSettings.imageWidth = 640;
@@ -218,12 +218,42 @@ void MainWindow::on_button_preprocessSave_clicked()
     //pPreprocessor->saveSettings();
 }
 
-void MainWindow::on_comboBoxDetector_currentIndexChanged(int index)
-{
-    pAlignmentCalc->setDetectorSimple(ui->comboBoxDetector->currentText().toStdString().c_str());
-}
 
 void MainWindow::on_pushButton_clicked()
 {
    // ImageProcess    imgProcess; ve ImageRetrieve*  imageSource; ulaşamıyoruz ? on pause off imkanı yok !
+}
+
+void MainWindow::on_applyAlignmentButton_clicked()
+{
+    pAlignmentCalc->setDetectorSimple(ui->comboBoxDetector->currentText().toStdString().c_str());
+    pAlignmentCalc->setDescriptorSimple(ui->comboBoxDiscriptor->currentText().toStdString().c_str());
+    pAlignmentCalc->setMatcherSimple(ui->comboBoxMatcher->currentText().toStdString().c_str());
+
+    if(ui->comboBoxDiscriptorHMethod->currentText() == "Feature Based")
+    {
+        pAlignmentCalc->setHomographyMethod(featureBased);
+    }
+    else
+    {
+        pAlignmentCalc->setHomographyMethod(flowBased);
+    }
+
+    if( ui->comboBoxDiscriptorHMethodC->currentText()=="Ransac")
+    {
+        pAlignmentCalc->setHomographyCalcMethod(CV_RANSAC);
+    }
+    else if( ui->comboBoxDiscriptorHMethodC->currentText()=="Least - Median")
+    {
+        pAlignmentCalc->setHomographyCalcMethod(CV_LMEDS);
+    }
+    else
+    {
+        pAlignmentCalc->setHomographyCalcMethod(0); // Regular
+    }
+
+
+
+
+
 }
