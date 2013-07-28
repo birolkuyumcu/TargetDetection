@@ -4,11 +4,7 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
 {
     exc.setModuleName("AlignmentMatrixCalc");
 
-    //prevFrame = NULL;
-    //currentFrame = NULL;
-
     hMethod = featureBased;
- //   hMethod = flowBased;
     keyRetainFactor=0.75;
     homographyCalcMethod=CV_RANSAC;
     ransacReprojThreshold = 3;
@@ -16,10 +12,6 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     setDetectorSimple("SURF");
     setDescriptorSimple("SURF");
 
-    /*
-    setDetectorSimple("HARRIS");
-    setDescriptorSimple("ORB");
-    */
     setMatcherSimple("BruteForce-L1");
     isHomographyCalc=false;
 
@@ -145,8 +137,16 @@ void AlignmentMatrixCalc::featureBasedHomography()
         pointsCurrent.push_back(keypointsCurrent[matches[p].trainIdx].pt);
     }
 
-    homography=cv::findHomography(pointsPrev, pointsCurrent, homographyCalcMethod, ransacReprojThreshold);
-    isHomographyCalc=true;
+    if(pointsPrev.size() !=0 && pointsCurrent.size() != 0)
+    {
+        homography = cv::findHomography(pointsPrev, pointsCurrent, homographyCalcMethod, ransacReprojThreshold);
+        isHomographyCalc = true;
+    }
+    else
+    {
+        isHomographyCalc = false;
+    }
+
 
 }
 

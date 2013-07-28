@@ -589,9 +589,6 @@
      </attribute>
     </widget>
    </widget>
-   <zorder>labelOutputImage</zorder>
-   <zorder>tabWidget</zorder>
-   <zorder>comboBoxDiscriptorHMethodC</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -599,7 +596,7 @@
      <x>0</x>
      <y>0</y>
      <width>1361</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

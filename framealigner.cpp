@@ -11,9 +11,9 @@ frameAligner::frameAligner()
     keyRetainFactor = 0.75;
     homographyCalcMethod=CV_RANSAC;
     ransacReprojThreshold = 3;
-    setDetectorSimple("HARRIS");
-    setDescriptorSimple("ORB");
-    setMatcherSimple("BruteForce-L1");
+    setDetectorSimple((char*)"HARRIS");
+    setDescriptorSimple((char*)"ORB");
+    setMatcherSimple((char*)"BruteForce-L1");
 
 
     if(!cv::initModule_nonfree())
