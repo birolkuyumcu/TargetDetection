@@ -145,6 +145,10 @@ void AlignmentMatrixCalc::featureBasedHomography()
         pointsCurrent.push_back(keypointsCurrent[matches[p].trainIdx].pt);
     }
 
+    // Sub-pixsel Accuracy
+    cv::cornerSubPix(prevFrame,pointsPrev,cv::Size(5,5),cv::Size(-1,-1),cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
+    cv::cornerSubPix(currentFrame,pointsCurrent,cv::Size(5,5),cv::Size(-1,-1),cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
+
     homography=cv::findHomography(pointsPrev, pointsCurrent, homographyCalcMethod, ransacReprojThreshold);
     isHomographyCalc=true;
 
@@ -167,6 +171,7 @@ void AlignmentMatrixCalc::flowBasedHomography()
             tempCurrent.push_back(pointsCurrent[i]);
         }
     }
+
 
     homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod, ransacReprojThreshold);
     pointsCurrent = tempCurrent;
