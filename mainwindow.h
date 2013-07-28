@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
 
+// #include "imageprocess.h"
 #include "preprocess.h"
 #include "framealignment.h"
 #include "candidatedetector.h"
@@ -51,6 +52,8 @@ public:
                        CandidateFilter* pCandidateFilter,
                        AlarmGenerator* alarmGenerator);
 
+  //  void setModulePtrs(ImageProcess* ipImgProcess);
+
 
     SystemSettings                  systemSettings;
     
@@ -58,6 +61,7 @@ private:
     Ui::MainWindow                  *ui;
     Exception                       exc;
 
+    // ImageProcess*                   pImgProcess;
     Preprocess*                     pPreprocessor;
     FrameAlignment*                 pframeAligner;
     CandidateDetector*              pCandidateDetector;

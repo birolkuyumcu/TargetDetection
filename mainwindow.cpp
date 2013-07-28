@@ -62,6 +62,18 @@ void MainWindow::setModulePtrs(Preprocess* preprocessor,
     fillSettings();
 }
 
+/*
+void MainWindow::setModulePtrs(ImageProcess* ipImgProcess)
+{
+    pImgProcess=ipImgProcess;
+    setModulePtrs(&pImgProcess->preprocess,
+                  &pImgProcess->alignmentCalc,
+                  &pImgProcess->frameAligner,
+                  &pImgProcess->candidateDetector,
+                  &pImgProcess->candidateFilter,
+                  &pImgProcess->alarmGenerator);
+}
+*/
 void MainWindow::fillSystemSettings()
 {
     if(systemSettings.streamType == VideoStream)

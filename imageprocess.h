@@ -10,6 +10,9 @@
 #include "preprocess.h"
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
+#include "alarmgenerator.h"
+#include "candidatedetector.h"
+#include "candidatefilter.h"
 
 
 #define _CVS_IMG_BUFFER_SIZE 30
