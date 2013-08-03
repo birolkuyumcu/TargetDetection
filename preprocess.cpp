@@ -1,4 +1,5 @@
 #include "preprocess.h"
+#include <QString>
 
 Preprocess::Preprocess()
 {
@@ -9,7 +10,9 @@ Preprocess::Preprocess()
     {
         exc.showException("Settings could not loaded");
 
-        settings.method = GoF;
+        settings.method = HistEq;
+        settings.DoGSigma1 = 1.6;
+        settings.DoGSigma2 = 1.9;
     }
 }
 
@@ -54,14 +57,29 @@ bool Preprocess::loadSettings()
 
 void Preprocess::process(cv::Mat& inputImage)
 {
-    cv::cvtColor(inputImage,inputImage,CV_BGR2GRAY);
 
-    if(settings.method == GoF)
+    if(inputImage.channels() != 1)
     {
+        cv::cvtColor(inputImage, inputImage, CV_BGR2GRAY);
+    }
+
+    if(settings.method == DoG)
+    {
+        inputImage.convertTo(inputImage32f, CV_32F);
+
+        cv::GaussianBlur(inputImage32f, dog_1, cv::Size(), settings.DoGSigma1);
+        cv::GaussianBlur(inputImage32f, dog_2, cv::Size(), settings.DoGSigma2);
+
+        cv::subtract(dog_1, dog_2, inputImage32f);
+
+        inputImage32f.convertTo(inputImage, CV_8U);
+
+        //filterResponse.convertTo(filterResponse, CV_8U);
 
     }
     else if(settings.method == HistEq)
     {
-        cv::equalizeHist(inputImage,inputImage);
+        cv::equalizeHist(inputImage, inputImage);
     }
+
 }

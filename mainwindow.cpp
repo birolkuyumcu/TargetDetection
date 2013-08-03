@@ -98,7 +98,7 @@ void MainWindow::fillpreprocessorSettings()
     {
         ui->comboBox_preprocessMethod->setCurrentIndex(0);
     }
-    else if(preprocessSettings.method == GoF)
+    else if(preprocessSettings.method == DoG)
     {
         ui->comboBox_preprocessMethod->setCurrentIndex(1);
     }
@@ -215,9 +215,9 @@ void MainWindow::on_button_preprocessChange_clicked()
     {
         preprocessSettings.method = HistEq;
     }
-    else if(ui->comboBox_preprocessMethod->currentText() == "GoF")
+    else if(ui->comboBox_preprocessMethod->currentText() == "DoG")
     {
-        preprocessSettings.method = GoF;
+        preprocessSettings.method = DoG;
     }
 
 

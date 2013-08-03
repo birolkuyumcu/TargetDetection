@@ -9,13 +9,17 @@
 enum PreprocessMethods
 {
     HistEq,
-    GoF
+    DoG
 };
 
 class PreprocessSettings
 {
 public:
     PreprocessMethods method;
+
+
+    float               DoGSigma1;
+    float               DoGSigma2;
 };
 
 class Preprocess
@@ -32,6 +36,10 @@ public:
 private:
     PreprocessSettings  settings;
     Exception           exc;
+
+    cv::Mat             dog_1;
+    cv::Mat             dog_2;
+    cv::Mat             inputImage32f;
 };
 
 

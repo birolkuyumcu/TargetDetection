@@ -79,7 +79,7 @@ void FindCandidate(cv::Mat in, cv::Mat frame, cv::Mat &out)
     std::vector<cv::Rect> boundRect( contours.size() );
     std::vector<cv::Point2f>center( contours.size() );
     std::vector<float>radius( contours.size() );
-    for( int i = 0; i < contours.size(); i++ )
+    for(unsigned int i = 0; i < contours.size(); i++ )
     {
         cv::approxPolyDP( cv::Mat(contours[i]), contours_poly[i], 3, true );
         boundRect[i] = cv::boundingRect( cv::Mat(contours_poly[i]) );
@@ -89,7 +89,7 @@ void FindCandidate(cv::Mat in, cv::Mat frame, cv::Mat &out)
 
     cv::cvtColor(frame,out,CV_GRAY2BGR);
 
-    for( int i = 0; i< contours.size(); i++ )
+    for(unsigned int i = 0; i< contours.size(); i++ )
     {
         if(cv::contourArea(contours[i])<100 || cv::contourArea(contours[i])>2500) continue;
     //    cv::Scalar color = cv::Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
@@ -104,7 +104,7 @@ void FindCandidate(cv::Mat in, cv::Mat frame, cv::Mat &out)
 void Test3()
 {
     char Buf[1024];
-    char *wName="Test";
+    char *wName = (char *)"Test";
     cv::Mat frame;
     cv::Mat pFrame;
     cv::namedWindow(wName);
@@ -171,6 +171,69 @@ void Test3()
 
 }
 
+void Test4()
+{
+    Preprocess preProcess;
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+    cv::Mat aPrev;
+    cv::Mat H;
+    cv::Mat prev;
+    cv::Mat pFrame;
+    cv::Mat frame;
+    char Buf[100];
+    calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
+
+
+    calc.process(pFrame);
+    prev=pFrame;
+
+    for(int i=0;i<1820;i+=10)
+    {
+        double t = (double)cv::getTickCount();
+
+#ifdef WIN32
+        sprintf(Buf,"D:/cvs/data/egt1/frame%05d.jpg%c",i,0);
+#else
+        sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
+#endif
+        qDebug()<<Buf<<"\n";
+
+        frame = cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
+
+        if(frame.empty())
+        {
+            break;
+        }
+
+        cv::imshow("beforePreprocess", frame );
+        preProcess.process(frame);
+
+        cv::imshow("afterPreprocess", frame );
+
+
+        calc.process(frame);
+
+        if(calc.getHomography(H) == true)
+        {
+            aligner.process(prev, H, aPrev);
+            cv::absdiff(aPrev, frame, aPrev);
+            cv::threshold(aPrev, aPrev, 0,255, cv::THRESH_BINARY|cv::THRESH_OTSU);
+            t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+            std::cout<<"Processing Time :"<<t<<"\n\n";
+            cv::Mat cFrame;
+            FindCandidate(aPrev,frame,cFrame);
+
+            cv::imshow("result", cFrame);
+            cv::waitKey(10);
+            std::cout<<i<<"\n";
+        }
+        prev.~Mat();
+        prev = frame;
+    }
+
+}
+
 void Vivid2Avi(const char *header,int max,const char*aviName)
 {
 
@@ -215,17 +278,10 @@ void PlayAvi(const char * fAvi)
 
 int main(int argc, char *argv[])
 {
+    //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
+    //targetDetection.exec();
 
-    CVS_UAVTargetDetectionApp targetDetection(argc, argv);
-    targetDetection.exec();
-
- //   PlayAvi("D:/cvs/data/egt1.avi"); // Microsoft Video 1 codec
- //  Vivid2Avi("D:/cvs/data/egt1/",1820,"egt1");
-  //  Vivid2Avi("D:/cvs/data/egt2/",1300,"egt2");
-  //  Vivid2Avi("D:/cvs/data/egt3/",2570,"egt3");
- //   Vivid2Avi("D:/cvs/data/egt4/",1832,"egt4");
-
-   // Test3();
+    Test4();
 
     return 0;
 }
