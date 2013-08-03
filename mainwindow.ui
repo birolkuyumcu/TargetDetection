@@ -490,12 +490,17 @@
       </property>
       <item>
        <property name="text">
+        <string>BruteForce</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>BruteForce-L1</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>BruteForce</string>
+        <string>BruteForce-SL2</string>
        </property>
       </item>
       <item>
@@ -596,7 +601,7 @@
      <x>0</x>
      <y>0</y>
      <width>1361</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
