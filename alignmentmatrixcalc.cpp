@@ -122,18 +122,27 @@ void AlignmentMatrixCalc::run()
 void AlignmentMatrixCalc::featureBasedHomography()
 {
     std::vector< cv::DMatch > matches,matches12,matches21;
+ //   std::vector< cv::DMatch >& knnMatches=matches;
     // Simetri testi
     matcher->match( descriptorsPrev, descriptorsCurrent, matches12 );
     matcher->match( descriptorsCurrent, descriptorsPrev, matches21 );
+  /*  matcher->knnMatch();
+    matcher->radiusMatch();
+*/
+
+
 
     for( size_t i = 0; i < matches12.size(); i++ )
     {
+
         cv::DMatch forward = matches12[i];
         cv::DMatch backward = matches21[forward.trainIdx];
-        if( backward.trainIdx == forward.queryIdx )
+        if( backward.trainIdx == forward.queryIdx && forward.distance<0.3)
         {
             matches.push_back( forward );
+            std::cout<<forward.distance<<"\n";
         }
+
     }
 
     pointsPrev.clear();
