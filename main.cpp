@@ -127,6 +127,9 @@ void Test3()
     calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
 
   //  calc.setHomographyCalcMethod(CV_LMEDS);
+
+    calc.setMatchingType(knnMatch);
+
     calc.process(pFrame);
     prev=pFrame;
 
@@ -158,10 +161,10 @@ void Test3()
             std::cout<<"Processing Time :"<<t<<"\n\n";
             cv::Mat cFrame;
             FindCandidate(aPrev,frame,cFrame);
-          //  cv::imshow(wName,aPrev);
+            cv::imshow(wName,aPrev);
 
 
-            cv::imshow(wName,cFrame);
+            cv::imshow("Out",cFrame);
             cv::waitKey(10);
             std::cout<<i<<"\n";
         }
@@ -183,6 +186,7 @@ void Test4()
     cv::Mat frame;
     char Buf[100];
     calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
+
 
 
     calc.process(pFrame);
@@ -281,7 +285,7 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
 
-    Test4();
+    Test3();
 
     return 0;
 }
