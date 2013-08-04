@@ -18,9 +18,9 @@ enum HomograpyMethod
  **/
 enum MatchingType
 {
-    normal,
-    knn,
-    radius
+    normalMatch,
+    knnMatch,
+    radiusMatch
 };
 
 class AlignmentMatrixCalcSettings
@@ -56,6 +56,7 @@ private:
     unsigned int minimumFlowPoint;
     HomograpyMethod hMethod;
     MatchingType matchType;
+    float maxRatio;
     cv::Ptr<cv::FeatureDetector> detector;
     cv::Ptr<cv::DescriptorExtractor> descriptor;
     cv::Ptr<cv::DescriptorMatcher> matcher;
@@ -72,6 +73,7 @@ private:
     void init(cv::Mat &frame);
     void run();
     void symmetryTest(std::vector< cv::DMatch >& matchesPrevToCurrent,std::vector< cv::DMatch >& matchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
+    void ratioTest(std::vector<std::vector<cv::DMatch>>& kmatches, std::vector< cv::DMatch >& matchesGood);
     //
 public:
     void setDetector(cv::Ptr<cv::FeatureDetector> idetector);

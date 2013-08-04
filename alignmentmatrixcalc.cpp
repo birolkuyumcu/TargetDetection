@@ -9,7 +9,7 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     homographyCalcMethod=CV_RANSAC;
     ransacReprojThreshold = 3;
 
-    matchType=normal;
+    matchType=normalMatch;
 
     setDetectorSimple("SURF");
     setDescriptorSimple("SURF");
@@ -115,20 +115,31 @@ void AlignmentMatrixCalc::run()
 
 void AlignmentMatrixCalc::featureBasedHomography()
 {
-    // Matching Section start
-    // Re-writed
-    // there is a another matchig system exist
-    /*
-      matcher->knnMatch();
-      matcher->radiusMatch();
-    */
-
     std::vector<cv::DMatch> matchesPrevToCurrent;
     std::vector<cv::DMatch> matchesCurrentToPrev;
     std::vector<cv::DMatch> matchesPassed;
 
-    matcher->match( descriptorsPrev, descriptorsCurrent, matchesPrevToCurrent );
-    matcher->match( descriptorsCurrent, descriptorsPrev, matchesCurrentToPrev );
+    if( matchType == normalMatch )
+    {
+        matcher->match( descriptorsPrev, descriptorsCurrent, matchesPrevToCurrent );
+        matcher->match( descriptorsCurrent, descriptorsPrev, matchesCurrentToPrev );
+    }
+    else if( matchType == knnMatch)
+    {
+        std::vector<std::vector<cv::DMatch>> kmatchesPrevToCurrent;
+        std::vector<std::vector<cv::DMatch>> kmatchesCurrentToPrev;
+        matcher->knnMatch(descriptorsPrev,descriptorsCurrent,kmatchesPrevToCurrent,2);
+        ratioTest(kmatchesPrevToCurrent,matchesPrevToCurrent);
+        matcher->knnMatch(descriptorsCurrent,descriptorsPrev,kmatchesCurrentToPrev,2);
+        ratioTest(kmatchesCurrentToPrev,matchesCurrentToPrev);
+    }
+    else if( matchType == radiusMatch)
+    {
+        // Not implemented yet
+        // there is no documentation
+
+    }
+
 
     // Symetri Test start
     symmetryTest(matchesPrevToCurrent,matchesCurrentToPrev,matchesPassed);
@@ -270,7 +281,7 @@ void AlignmentMatrixCalc::setMatchingType(MatchingType iType)
 
 void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCurrent, std::vector<cv::DMatch> &matchesCurrentToPrev, std::vector<cv::DMatch> &matchesPassed)
 {
-    for( size_t i = 0; i < matchesCurrentToPrev.size(); i++ )
+    for( size_t i = 0; i < matchesPrevToCurrent.size(); i++ )
     {
 
         cv::DMatch forward = matchesPrevToCurrent[i];
@@ -281,6 +292,24 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCur
              std::cout<<forward.distance<<"\n"; // for debugging
         }
 
+    }
+}
+
+void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatches, std::vector<cv::DMatch> &matchesGood)
+{
+
+    for (size_t i=0; i< kmatches.size(); i++)
+    {
+        const cv::DMatch& best = kmatches[i][0];
+        const cv::DMatch& good = kmatches[i][1];
+
+        assert(best.distance <= good.distance);
+        float ratio = (best.distance / good.distance);
+
+        if (ratio <= maxRatio)
+        {
+            matchesGood.push_back(best);
+        }
     }
 }
 
