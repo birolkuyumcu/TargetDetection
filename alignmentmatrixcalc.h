@@ -11,7 +11,17 @@ enum HomograpyMethod
     flowBased
 };
 
-
+/*
+ *       match( const Mat& queryDescriptors, CV_OUT vector<DMatch>& matches,const vector<Mat>& masks=vector<Mat>() );
+      knnMatch( const Mat& queryDescriptors, CV_OUT vector<vector<DMatch> >& matches, int k,const vector<Mat>& masks=vector<Mat>(), bool compactResult=false );
+   radiusMatch( const Mat& queryDescriptors, vector<vector<DMatch> >& matches, float maxDistance,const vector<Mat>& masks=vector<Mat>(), bool compactResult=false );
+ **/
+enum MatchingType
+{
+    normal,
+    knn,
+    radius
+};
 
 class AlignmentMatrixCalcSettings
 {
@@ -45,6 +55,7 @@ private:
     float flowErrorThreshold;
     unsigned int minimumFlowPoint;
     HomograpyMethod hMethod;
+    MatchingType matchType;
     cv::Ptr<cv::FeatureDetector> detector;
     cv::Ptr<cv::DescriptorExtractor> descriptor;
     cv::Ptr<cv::DescriptorMatcher> matcher;
@@ -60,6 +71,7 @@ private:
     void flowBasedHomography();
     void init(cv::Mat &frame);
     void run();
+    void symmetryTest(std::vector< cv::DMatch >& matchesPrevToCurrent,std::vector< cv::DMatch >& matchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
     //
 public:
     void setDetector(cv::Ptr<cv::FeatureDetector> idetector);
@@ -70,6 +82,7 @@ public:
     void setMatcherSimple(const char* matcherName);
     void setHomographyMethod(HomograpyMethod ihMethod);
     void setHomographyCalcMethod(int ihomographyCalcMethod);
+    void setMatchingType(MatchingType iType);
     //
 
 

@@ -9,6 +9,8 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     homographyCalcMethod=CV_RANSAC;
     ransacReprojThreshold = 3;
 
+    matchType=normal;
+
     setDetectorSimple("SURF");
     setDescriptorSimple("SURF");
 
@@ -121,34 +123,26 @@ void AlignmentMatrixCalc::featureBasedHomography()
       matcher->radiusMatch();
     */
 
-    std::vector< cv::DMatch > matches,matches12,matches21;
+    std::vector<cv::DMatch> matchesPrevToCurrent;
+    std::vector<cv::DMatch> matchesCurrentToPrev;
+    std::vector<cv::DMatch> matchesPassed;
+
+    matcher->match( descriptorsPrev, descriptorsCurrent, matchesPrevToCurrent );
+    matcher->match( descriptorsCurrent, descriptorsPrev, matchesCurrentToPrev );
 
     // Symetri Test start
-    matcher->match( descriptorsPrev, descriptorsCurrent, matches12 );
-    matcher->match( descriptorsCurrent, descriptorsPrev, matches21 );
-    for( size_t i = 0; i < matches12.size(); i++ )
-    {
+    symmetryTest(matchesPrevToCurrent,matchesCurrentToPrev,matchesPassed);
 
-        cv::DMatch forward = matches12[i];
-        cv::DMatch backward = matches21[forward.trainIdx];
-        if( backward.trainIdx == forward.queryIdx && forward.distance<0.3)
-        {
-            matches.push_back( forward );
-            std::cout<<forward.distance<<"\n";
-        }
-
-    }
-    // Symetri Test end
 
     // Matching Section end
 
     pointsPrev.clear();
     pointsCurrent.clear();
 
-    for (int p = 0; p < (int)matches.size(); ++p)
+    for (int p = 0; p < (int)matchesPassed.size(); ++p)
     {
-        pointsPrev.push_back(keypointsPrev[matches[p].queryIdx].pt);
-        pointsCurrent.push_back(keypointsCurrent[matches[p].trainIdx].pt);
+        pointsPrev.push_back(keypointsPrev[matchesPassed[p].queryIdx].pt);
+        pointsCurrent.push_back(keypointsCurrent[matchesPassed[p].trainIdx].pt);
     }
 
     // Sub-pixsel Accuracy
@@ -267,5 +261,26 @@ bool AlignmentMatrixCalc::getHomography(cv::Mat &gHomography)
     }
 
     return isHomographyCalc;
+}
+
+void AlignmentMatrixCalc::setMatchingType(MatchingType iType)
+{
+    matchType=iType;
+}
+
+void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCurrent, std::vector<cv::DMatch> &matchesCurrentToPrev, std::vector<cv::DMatch> &matchesPassed)
+{
+    for( size_t i = 0; i < matchesCurrentToPrev.size(); i++ )
+    {
+
+        cv::DMatch forward = matchesPrevToCurrent[i];
+        cv::DMatch backward = matchesCurrentToPrev[forward.trainIdx];
+        if( backward.trainIdx == forward.queryIdx && forward.distance<0.3)
+        {
+            matchesPassed.push_back( forward );
+             std::cout<<forward.distance<<"\n"; // for debugging
+        }
+
+    }
 }
 
