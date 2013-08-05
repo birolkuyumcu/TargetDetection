@@ -10,7 +10,7 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     ransacReprojThreshold = 3;
 
     matchType=normalMatch;
-    maxRatio=0.70;
+    maxRatio=0.50;
 
     setDetectorSimple("SURF");
     setDescriptorSimple("SURF");
@@ -133,11 +133,17 @@ void AlignmentMatrixCalc::featureBasedHomography()
     else if( matchType == knnMatch)
     {
         matcher->knnMatch(descriptorsPrev,descriptorsCurrent,kmatchesPrevToCurrent,2);
-        ratioTest(kmatchesPrevToCurrent,matchesPrevToCurrent);
+        std::cout<<"Ratio Test 1 :"<<kmatchesPrevToCurrent.size()<<"\n";
+        ratioTest(kmatchesPrevToCurrent);
+        std::cout<<"Ratio Test 1 End :"<<kmatchesPrevToCurrent.size()<<"\n";
         matcher->knnMatch(descriptorsCurrent,descriptorsPrev,kmatchesCurrentToPrev,2);
-        ratioTest(kmatchesCurrentToPrev,matchesCurrentToPrev);
+        std::cout<<"Ratio Test 2 :"<<kmatchesCurrentToPrev.size()<<"\n";
+        ratioTest(kmatchesCurrentToPrev);
+        std::cout<<"Ratio Test 2 End :"<<kmatchesCurrentToPrev.size()<<"\n";
         // Symmetry Test not working for knn
-        matchesPassed=matchesPrevToCurrent;
+        //matchesPassed=matchesPrevToCurrent;
+        symmetryTest(kmatchesPrevToCurrent,kmatchesCurrentToPrev,matchesPassed);
+        std::cout<<"Sym Test  :"<<matchesPassed.size()<<"\n";
 
     }
     else if( matchType == radiusMatch)
@@ -290,33 +296,64 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCur
     {
 
         cv::DMatch forward = matchesPrevToCurrent[i];
+        std::cout<<i<<")"<<forward.trainIdx<<" - "<<forward.distance<<"\n"; // for debugging
+      //  if(forward.trainIdx >= matchesCurrentToPrev.size()) continue;
         cv::DMatch backward = matchesCurrentToPrev[forward.trainIdx];
         if( backward.trainIdx == forward.queryIdx && forward.trainIdx==backward.queryIdx)
         {
             matchesPassed.push_back( forward );
-             std::cout<<forward.distance<<"\n"; // for debugging
+
         }
 
     }
+    std::cout<<"Matches Passed Symmetry Test :"<<matchesPassed.size()<<"\n";
 }
 
-void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatches, std::vector<cv::DMatch> &matchesGood)
+void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch>>& kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch>>& kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed)
 {
 
-    for (size_t i=0; i< kmatches.size(); i++)
+    for(std::vector<std::vector<cv::DMatch> >::iterator mPi= kmatchesPrevToCurrent.begin(); mPi != kmatchesPrevToCurrent.end(); ++mPi)
     {
-        const cv::DMatch& best = kmatches[i][0];
-        const cv::DMatch& good = kmatches[i][1];
-
-        assert(best.distance <= good.distance);
-        float ratio = (best.distance / good.distance);
-  //     std::cout<<ratio<<"\n";
-
-        if (ratio <= maxRatio)
+        if(mPi->size() < 2 )
+            continue;
+        for(std::vector<std::vector<cv::DMatch> >::iterator mCi= kmatchesCurrentToPrev.begin(); mCi != kmatchesCurrentToPrev.end(); ++mCi)
         {
-            matchesGood.push_back(best);
+
+            if(mCi->size() < 2 )
+                continue;
+            cv::DMatch forward = (*mPi)[0];
+            cv::DMatch backward = (*mCi)[0];
+            if((forward.queryIdx == backward.trainIdx) && (backward.queryIdx == forward.trainIdx) )
+            {
+                matchesPassed.push_back(forward);
+                break;
+            }
         }
     }
-    std::cout<<"Sizeof Good Matches"<<matchesGood.size()<<"\n";
+
 }
 
+void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatches)
+{
+    for(std::vector<std::vector<cv::DMatch> >::iterator mi=kmatches.begin() ; mi != kmatches.end(); ++mi)
+    {
+        if(mi->size()>1)
+        {
+            const cv::DMatch& best = (*mi)[0];
+            const cv::DMatch& good = (*mi)[1];
+
+            assert(best.distance <= good.distance);
+            float ratio = (best.distance / good.distance);
+            //     std::cout<<ratio<<"\n";
+
+            if (ratio > maxRatio)
+            {
+                std::cout<<ratio<<"\n";
+                mi->clear();
+            }
+        }
+        else
+            mi->clear();
+
+    }
+}

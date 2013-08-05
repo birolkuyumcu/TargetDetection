@@ -120,8 +120,8 @@ void Test3()
     FrameAlignment aligner;
 
     cv::Mat prev;
-    calc.setDetectorSimple("SURF");
-    calc.setDescriptorSimple("SURF");
+    calc.setDetectorSimple("GridGFTT");
+    calc.setDescriptorSimple("BRISK");
   //  calc.setDetectorSimple("GridORB");
 
     calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
