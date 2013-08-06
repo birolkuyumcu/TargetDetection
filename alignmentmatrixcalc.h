@@ -57,6 +57,7 @@ private:
     HomograpyMethod hMethod;
     MatchingType matchType;
     float maxRatio;
+    float maxRadius;
     cv::Ptr<cv::FeatureDetector> detector;
     cv::Ptr<cv::DescriptorExtractor> descriptor;
     cv::Ptr<cv::DescriptorMatcher> matcher;

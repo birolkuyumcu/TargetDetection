@@ -94,7 +94,7 @@ void FindCandidate(cv::Mat in, cv::Mat frame, cv::Mat &out)
         if(cv::contourArea(contours[i])<100 || cv::contourArea(contours[i])>2500) continue;
     //    cv::Scalar color = cv::Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
         cv::Scalar color = cv::Scalar( 0, 0, 255 );
-   //     cv::drawContours( out, contours_poly, i, color, 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point() );
+    //    cv::drawContours( out, contours_poly, i,cv::Scalar( 255, 0, 0 ), 2, 8, std::vector<cv::Vec4i>(), 0, cv::Point() );
         cv::rectangle( out, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
   //      cv::circle( out, center[i], (int)radius[i], color, 2, 8, 0 );
     }
@@ -124,9 +124,9 @@ void Test3()
     calc.setDescriptorSimple("BRISK");
   //  calc.setDetectorSimple("GridORB");
 
-    calc.setHomographyMethod(featureBased);  // featurebased a göre çok hızlı
+   // calc.setHomographyMethod(flowBased);  // featurebased a göre çok hızlı
 
-  //  calc.setHomographyCalcMethod(CV_LMEDS);
+    calc.setHomographyCalcMethod(CV_LMEDS);
 
     calc.setMatchingType(knnMatch);
 

@@ -11,6 +11,7 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
 
     matchType=normalMatch;
     maxRatio=0.50;
+    maxRadius=100;
 
     setDetectorSimple("SURF");
     setDescriptorSimple("SURF");
@@ -114,6 +115,18 @@ void AlignmentMatrixCalc::run()
 
 }
 
+/*
+void convertRMatches(std::vector<std::vector<cv::DMatch>> rmatches,std::vector<cv::DMatch> matchesPassed)
+{
+    std::cout<<"Radius Matches :"<<rmatches.size()<<"\n ";
+    for(std::vector<std::vector<cv::DMatch> >::iterator mi=rmatches.begin() ; mi != rmatches.end(); ++mi)
+    {
+        std::cout<<"Radius Matches :"<<(*mi).size()<<"\n ";
+        matchesPassed.push_back((*mi)[0]);
+    }
+    std::cout<<"Matches Passed : "<<matchesPassed.size()<<"\n ";
+}
+*/
 void AlignmentMatrixCalc::featureBasedHomography()
 {
     std::vector<cv::DMatch> matchesPrevToCurrent;
@@ -148,11 +161,13 @@ void AlignmentMatrixCalc::featureBasedHomography()
     }
     else if( matchType == radiusMatch)
     {
-        // Not implemented yet
         // there is no documentation
+        //matcher->radiusMatch(descriptorsPrev, descriptorsCurrent, kmatchesPrevToCurrent,maxRadius );
+        // work but there is no matching back for any maxRadius
+        //convertRMatches(kmatchesCurrentToPrev,matchesPassed);
+        exc.showException("radiusMatch not working Dont use it!" );
 
     }
-
 
 
     // Matching Section end
@@ -291,12 +306,12 @@ void AlignmentMatrixCalc::setMatchingType(MatchingType iType)
 
 void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCurrent, std::vector<cv::DMatch> &matchesCurrentToPrev, std::vector<cv::DMatch> &matchesPassed)
 {
-    std::cout<<"Prev2Cur :"<<matchesPrevToCurrent.size()<<"\n Cur2Prev :"<<matchesCurrentToPrev.size()<<"\n";
+   // std::cout<<"Prev2Cur :"<<matchesPrevToCurrent.size()<<"\n Cur2Prev :"<<matchesCurrentToPrev.size()<<"\n";
     for( size_t i = 0; i < matchesPrevToCurrent.size(); i++ )
     {
 
         cv::DMatch forward = matchesPrevToCurrent[i];
-        std::cout<<i<<")"<<forward.trainIdx<<" - "<<forward.distance<<"\n"; // for debugging
+      //  std::cout<<i<<")"<<forward.trainIdx<<" - "<<forward.distance<<"\n"; // for debugging
       //  if(forward.trainIdx >= matchesCurrentToPrev.size()) continue;
         cv::DMatch backward = matchesCurrentToPrev[forward.trainIdx];
         if( backward.trainIdx == forward.queryIdx && forward.trainIdx==backward.queryIdx)
@@ -348,7 +363,7 @@ void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatc
 
             if (ratio > maxRatio)
             {
-                std::cout<<ratio<<"\n";
+               // std::cout<<ratio<<"\n";
                 mi->clear();
             }
         }
