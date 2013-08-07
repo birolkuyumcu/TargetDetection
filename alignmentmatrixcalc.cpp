@@ -208,6 +208,12 @@ void AlignmentMatrixCalc::featureBasedHomography()
     {
         isHomographyCalc = false;
     }
+    //If Homogrphy not valid
+    if(!isHomographyValid())
+    {
+        wayBack();
+    }
+
 
 }
 
@@ -238,6 +244,12 @@ void AlignmentMatrixCalc::flowBasedHomography()
     if(pointsCurrent.size()<50)
     {
         init(currentFrame);
+    }
+
+    //If Homogrphy not valid !
+    if(isHomographyValid())
+    {
+        wayBack();
     }
 
 }
@@ -370,5 +382,25 @@ void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatc
         else
             mi->clear();
 
+    }
+}
+
+bool AlignmentMatrixCalc::isHomographyValid()
+{
+    return true;
+}
+
+void AlignmentMatrixCalc::wayBack()
+{
+    if(hMethod == featureBased)
+    {
+        currentFrame = prevFrame;
+        keypointsCurrent = keypointsPrev;
+        descriptorsCurrent = descriptorsPrev;
+    }
+    else if(hMethod == flowBased)
+    {
+        currentFrame = prevFrame;
+        pointsCurrent = pointsPrev;
     }
 }

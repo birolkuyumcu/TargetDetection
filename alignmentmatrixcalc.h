@@ -76,6 +76,8 @@ private:
     void symmetryTest(std::vector< cv::DMatch >& matchesPrevToCurrent,std::vector< cv::DMatch >& matchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
     void symmetryTest(std::vector<std::vector<cv::DMatch>>& kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch>>& kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
     void ratioTest(std::vector<std::vector<cv::DMatch>>& kmatches);
+    bool isHomographyValid();
+    void wayBack();
     //
 public:
     void setDetector(cv::Ptr<cv::FeatureDetector> idetector);
