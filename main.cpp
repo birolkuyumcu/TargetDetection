@@ -120,8 +120,9 @@ void Test3()
     FrameAlignment aligner;
 
     cv::Mat prev;
-    calc.setDetectorSimple("GridGFTT");
-    calc.setDescriptorSimple("BRISK");
+    calc.setDetectorSimple("SURF");
+    calc.setDescriptorSimple("SURF");
+    cv::waitKey(0);
   //  calc.setDetectorSimple("GridORB");
 
    // calc.setHomographyMethod(flowBased);  // featurebased a göre çok hızlı
@@ -165,7 +166,7 @@ void Test3()
 
 
             cv::imshow("Out",cFrame);
-            cv::waitKey(10);
+            cv::waitKey(1);
             std::cout<<i<<"\n";
         }
         prev.~Mat();
