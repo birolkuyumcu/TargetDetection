@@ -131,8 +131,8 @@ void AlignmentMatrixCalc::featureBasedHomography()
 {
     std::vector<cv::DMatch> matchesPrevToCurrent;
     std::vector<cv::DMatch> matchesCurrentToPrev;
-    std::vector<std::vector<cv::DMatch>> kmatchesPrevToCurrent;
-    std::vector<std::vector<cv::DMatch>> kmatchesCurrentToPrev;
+    std::vector<std::vector<cv::DMatch> > kmatchesPrevToCurrent;
+    std::vector<std::vector<cv::DMatch> > kmatchesCurrentToPrev;
     std::vector<cv::DMatch> matchesPassed;
 
     if( matchType == normalMatch )
@@ -336,7 +336,7 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCur
     std::cout<<"Matches Passed Symmetry Test :"<<matchesPassed.size()<<"\n";
 }
 
-void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch>>& kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch>>& kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed)
+void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch> >&kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed)
 {
 
     for(std::vector<std::vector<cv::DMatch> >::iterator mPi= kmatchesPrevToCurrent.begin(); mPi != kmatchesPrevToCurrent.end(); ++mPi)

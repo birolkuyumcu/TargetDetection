@@ -74,8 +74,8 @@ private:
     void init(cv::Mat &frame);
     void run();
     void symmetryTest(std::vector< cv::DMatch >& matchesPrevToCurrent,std::vector< cv::DMatch >& matchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
-    void symmetryTest(std::vector<std::vector<cv::DMatch>>& kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch>>& kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
-    void ratioTest(std::vector<std::vector<cv::DMatch>>& kmatches);
+    void symmetryTest(std::vector<std::vector<cv::DMatch> >&kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch> >& kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
+    void ratioTest(std::vector<std::vector<cv::DMatch> >&kmatches);
     bool isHomographyValid();
     void wayBack();
     //
