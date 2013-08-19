@@ -1,0 +1,6 @@
+#ifndef TEST_FRAMEALLIGNMENT_H
+#define TEST_FRAMEALLIGNMENT_H
+
+void TEST_frameAllignment();
+
+#endif // TEST_FRAMEALLIGNMENT_H

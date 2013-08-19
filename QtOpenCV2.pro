@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     candidatedetector.cpp \
     alignmentmatrixcalc.cpp \
     alarmgenerator.cpp \
-    preprocess.cpp
+    preprocess.cpp \
+    Test/TEST_frameAllignment.cpp
 
 HEADERS  += mainwindow.h \
             exception.h \
@@ -60,6 +61,7 @@ HEADERS  += mainwindow.h \
     candidatedetector.h \
     alarmgenerator.h \
     alignmentmatrixcalc.h \
-    preprocess.h
+    preprocess.h \
+    Test/TEST_frameAllignment.h
 
 FORMS    += mainwindow.ui
