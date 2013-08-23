@@ -387,7 +387,9 @@ void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatc
 
 bool AlignmentMatrixCalc::isHomographyValid()
 {
+    std::cout<<"\nHomography Matrix \n"<<homography<<"\n";
     return true;
+
 }
 
 void AlignmentMatrixCalc::wayBack()
