@@ -1,5 +1,6 @@
 #include <Test/TEST_frameAllignment.h>
 
+
 #define TEST_VIDEO_FILE_CNT 5
 
 static void processVideoAndGetScores();
