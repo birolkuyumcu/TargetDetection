@@ -155,24 +155,20 @@ void Test3()
         cv::Mat H;
 
         if(calc.getHomography(H) == true){
-            //cv::Mat mask(prev.size(),CV_8U);
-            cv::Mat tmask=prev.clone();
-            tmask=cv::Scalar(255);
-            cv::Mat mask;
+            cv::Mat mask(prev.size(),CV_8U);
+            mask=cv::Scalar(255);
             aligner.process(prev,H,aPrev);
-            aligner.process(tmask,H,mask);
-            pFrame=pFrame&mask;
-            cv::absdiff(aPrev,pFrame,aPrev);
+            aligner.process(mask,H,mask);
+            mask=pFrame&mask;
+            cv::absdiff(aPrev,mask,aPrev);
             cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
             t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
             std::cout<<"Processing Time :"<<t<<"\n\n";
             cv::Mat cFrame;
         //    FindCandidate(aPrev,frame,cFrame);
             cv::imshow(wName,aPrev);
-
-
-            cv::imshow("Out",pFrame);
-            cv::waitKey(0);
+            cv::imshow("Out",mask);
+            cv::waitKey(1);
             std::cout<<i<<"\n";
         }
         prev.~Mat();
