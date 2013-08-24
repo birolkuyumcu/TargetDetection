@@ -387,8 +387,39 @@ void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatc
 
 bool AlignmentMatrixCalc::isHomographyValid()
 {
-    std::cout<<"\nHomography Matrix \n"<<homography<<"\n";
-    return true;
+    std::vector<cv::Point2f> inputCorners(4);
+    inputCorners[0] = cvPoint(0,0);
+    inputCorners[1] = cvPoint( prevFrame.cols, 0 );
+    inputCorners[2] = cvPoint( prevFrame.cols, prevFrame.rows );
+    inputCorners[3] = cvPoint( 0, prevFrame.rows );
+    std::vector<cv::Point2f> alignedCorners(4);
+
+    perspectiveTransform( inputCorners, alignedCorners, homography);
+
+    float upDeltaX = fabs(alignedCorners[0].x-alignedCorners[1].x);
+    float downDeltaX = fabs(alignedCorners[2].x-alignedCorners[3].x);
+    float upDeltaY = fabs(alignedCorners[0].y-alignedCorners[3].y);
+    float downDeltaY = fabs(alignedCorners[1].y-alignedCorners[2].y);
+    float alignedCols=(upDeltaX+downDeltaX)/2;
+    float alignedRows=(upDeltaY+downDeltaY)/2;
+    float colsDifference=fabs(alignedCols-prevFrame.cols)/prevFrame.cols;
+    float rowsDifference=fabs(alignedRows-prevFrame.rows)/prevFrame.rows;
+
+
+/*
+    for(int i = 0; i < 4; i++){
+        x=alignedCorners[i].x;
+        y=alignedCorners[i].y;
+  */
+ //   std::cout<<"\nNew Delta X , Ys \n"<<upDeltaX<<" - "<<upDeltaY<<"\n"<<downDeltaX<<" - "<<downDeltaY<<"\n";
+    std::cout<<"\nCols and Rows Differenece \n"<<colsDifference<<" - "<<rowsDifference<<"\n";
+
+    if( colsDifference < 0.1 && rowsDifference < 0.1 )
+       isHomographyCalc=true;
+    else
+       isHomographyCalc=false;
+
+    return isHomographyCalc;
 
 }
 
@@ -396,6 +427,7 @@ void AlignmentMatrixCalc::wayBack()
 {
     if(hMethod == featureBased)
     {
+        return;
         currentFrame = prevFrame;
         keypointsCurrent = keypointsPrev;
         descriptorsCurrent = descriptorsPrev;

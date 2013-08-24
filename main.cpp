@@ -171,6 +171,13 @@ void Test3()
             cv::waitKey(1);
             std::cout<<i<<"\n";
         }
+        else
+        {
+            i-=9;
+        }
+
+
+
         prev.~Mat();
         prev=pFrame;
     }
