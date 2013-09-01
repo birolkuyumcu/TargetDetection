@@ -308,7 +308,7 @@ void produceArtificialDataset(cv::Mat &baseFrame,int n,std::vector<cv::Mat> &fra
         walkX += (20-(rand()%40));
         walkY += (10-(rand()%20));
     }
-    std::cout<<"1 Ends \n";
+  //  std::cout<<"1 Ends \n";
 
 }
 
@@ -327,13 +327,13 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
 
     calc.process(frameList[0]);
     for(int i = 1; i < frameList.size(); i++){
-        std::cout<<"2 \n";
+        std::cout<<" 2 ";
         calc.process(frameList[i]);
         cv::Mat aPrev;
         cv::Mat H;
 
         if(calc.getHomography(H) == true){
-            std::cout<<"3 \n";
+            std::cout<<" 3 ";
             cv::Mat mask(frameList[i].size(),CV_8U);
             mask=cv::Scalar(255);
             aligner.process(frameList[i-1],H,aPrev);
@@ -342,19 +342,19 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
             cv::absdiff(aPrev,mask,aPrev);
             cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
             cv::imshow("Result", aPrev);
-            cv::waitKey(100);
+            cv::waitKey(1);
             // count non-zero pixels
             sumNonZero += cv::countNonZero(aPrev);
         }
         else
         {
-            std::cout<<"4 \n"; // improper matching...
+            std::cout<<"4 improper matching... \n"; // improper matching...
         }
 
 
     }
 
-    std::cout<<"5 \n";
+    std::cout<<" 5 \n";
     // return avarge of them (cout / n ) low is better...
     sumNonZero = sumNonZero / frameList.size();
     return sumNonZero;
