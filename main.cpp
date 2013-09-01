@@ -290,12 +290,99 @@ void PlayAvi(const char * fAvi)
 
 }
 
+float ApplyTest(cv::Mat &bFrame, int n, const char *fName , const char *dName, const char * mName)
+{
+    return 0;
+}
+
+void PeformanceTester()
+{
+    /*
+    FeatureDetectors;
+    • "FAST" – FastFeatureDetector
+    • "STAR" – StarFeatureDetector
+    • "SIFT" – SIFT (nonfree module)
+    • "SURF" – SURF (nonfree module)
+    • "ORB" – ORB
+    • "MSER" – MSER
+    • "GFTT" – GoodFeaturesToTrackDetector
+    • "HARRIS" – GoodFeaturesToTrackDetector with Harris detector enabled
+    • "Dense" – DenseFeatureDetector
+    • "SimpleBlob" – SimpleBlobDetector
+
+    Also a combined format is supported: feature detector adapter name ( "Grid" – GridAdaptedFeatureDetector,
+    "Pyramid" – PyramidAdaptedFeatureDetector ) + feature detector name (see above), for example: "GridFAST",
+    "PyramidSTAR" .
+
+    DescriptorExtractors;
+    • "SIFT" – SIFT
+    • "SURF" – SURF
+    • "ORB" – ORB
+    • "BRIEF" – BriefDescriptorExtractor
+    • "FREAK" -
+    A combined format is also supported: descriptor extractor adapter name ( "Opponent" –
+    OpponentColorDescriptorExtractor ) + descriptor extractor name (see above), for example: "OpponentSIFT" .
+
+    DescriptorMatchers;
+
+    – BruteForce (it uses L2 )
+    – BruteForce-L1
+    – BruteForce-Hamming
+    – BruteForce-Hamming(2)
+    – FlannBased
+
+    */
+
+    const char * featureDetectorNames[10] = {"FAST",
+                                           "STAR",
+                                           "SIFT",
+                                           "SURF",
+                                           "ORB",
+                                           "MSER",
+                                           "GFTT",
+                                           "HARRIS",
+                                           "Dense",
+                                           "SimpleBlob"
+                                           };
+    const char *descriptorExtractorNames[6] = {"SIFT",
+                                               "SURF",
+                                               "ORB",
+                                               "BRIEF",
+                                               "BRISK",
+                                               "FREAK"
+                                               };
+    const char *matcherNames[5]={"BruteForce",
+                                "BruteForce-L1",
+                                "BruteForce-Hamming",
+                                "BruteForce-Hamming(2)",
+                                "FlannBased"
+                                };
+
+    float perf=0;
+
+    cv::Mat baseFrame;
+    int nTimes=5;
+
+    for( int ftr = 0 ; ftr < 10; ftr++){
+        for( int dsc = 0 ; dsc < 6 ; dsc++){
+            for ( int mtc = 0; mtc < 5 ; mtc++ ){
+                perf=ApplyTest(baseFrame,nTimes,featureDetectorNames[ftr],descriptorExtractorNames[dsc],matcherNames[mtc]);
+                std::cout<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<" : "<<perf<<"\n";
+            }
+        }
+    }
+
+
+
+}
+
 int main(int argc, char *argv[])
 {
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
 
-    Test3();
+     //Test3();
+    PeformanceTester();
 
     return 0;
 }
