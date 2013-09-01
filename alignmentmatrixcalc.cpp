@@ -333,7 +333,7 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCur
         }
 
     }
-    std::cout<<"Matches Passed Symmetry Test :"<<matchesPassed.size()<<"\n";
+ //   std::cout<<"Matches Passed Symmetry Test :"<<matchesPassed.size()<<"\n";
 }
 
 void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch> >&kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed)
@@ -412,7 +412,7 @@ bool AlignmentMatrixCalc::isHomographyValid()
         y=alignedCorners[i].y;
   */
  //   std::cout<<"\nNew Delta X , Ys \n"<<upDeltaX<<" - "<<upDeltaY<<"\n"<<downDeltaX<<" - "<<downDeltaY<<"\n";
-    std::cout<<"\nCols and Rows Differenece \n"<<colsDifference<<" - "<<rowsDifference<<"\n";
+ //   std::cout<<"\nCols and Rows Differenece \n"<<colsDifference<<" - "<<rowsDifference<<"\n";
 
     if( colsDifference < 0.1 && rowsDifference < 0.1 )
        isHomographyCalc=true;

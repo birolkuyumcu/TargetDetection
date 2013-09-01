@@ -290,11 +290,10 @@ void PlayAvi(const char * fAvi)
 
 }
 
-double ApplyTest(cv::Mat &baseFrame, int n, const char *fName , const char *dName, const char * mName)
+void produceArtificialDataset(cv::Mat &baseFrame,int n,std::vector<cv::Mat> &frameList)
 {
     // baseFrame (1280x720) den bir dizi frame hazırlama (640x480) ( n + 1 adet )
     // by using random walk start from center (320,120)
-    std::vector<cv::Mat> frameList;
     int walkX = 320;
     int walkY = 120;
 
@@ -309,6 +308,12 @@ double ApplyTest(cv::Mat &baseFrame, int n, const char *fName , const char *dNam
         walkX += (20-(rand()%40));
         walkY += (10-(rand()%20));
     }
+    std::cout<<"1 Ends \n";
+
+}
+
+double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *dName, const char * mName)
+{
 
     // diziFrame üzerinde sistemi çalıştırma (n times )
 
@@ -321,7 +326,7 @@ double ApplyTest(cv::Mat &baseFrame, int n, const char *fName , const char *dNam
 
 
     calc.process(frameList[0]);
-    for(int i = 0; i < frameList.size(); i++){
+    for(int i = 1; i < frameList.size(); i++){
         std::cout<<"2 \n";
         calc.process(frameList[i]);
         cv::Mat aPrev;
@@ -343,7 +348,7 @@ double ApplyTest(cv::Mat &baseFrame, int n, const char *fName , const char *dNam
         }
         else
         {
-            std::cout<<"4 \n";
+            std::cout<<"4 \n"; // improper matching...
         }
 
 
@@ -351,7 +356,7 @@ double ApplyTest(cv::Mat &baseFrame, int n, const char *fName , const char *dNam
 
     std::cout<<"5 \n";
     // return avarge of them (cout / n ) low is better...
-    sumNonZero = sumNonZero / n;
+    sumNonZero = sumNonZero / frameList.size();
     return sumNonZero;
 }
 
@@ -393,19 +398,19 @@ void ArtificalPeformanceTester()
 
     */
 
-    const char * featureDetectorNames[10] = {"FAST",
-                                           "STAR",
-                                           "SIFT",
-                                           "SURF",
-                                           "ORB",
-                                           "MSER",
-                                           "GFTT",
-                                           "HARRIS",
-                                           "Dense",
-                                           "SimpleBlob"
+    const char * featureDetectorNames[10] = {"SURF",
+                                             "FAST",
+                                             "STAR",
+                                             "SIFT",
+                                             "ORB",
+                                             "MSER",
+                                             "GFTT",
+                                             "HARRIS",
+                                             "Dense",
+                                             "SimpleBlob"
                                            };
-    const char *descriptorExtractorNames[6] = {"SIFT",
-                                               "SURF",
+    const char *descriptorExtractorNames[6] = {"SURF",
+                                               "SIFT",
                                                "ORB",
                                                "BRIEF",
                                                "BRISK",
@@ -421,20 +426,24 @@ void ArtificalPeformanceTester()
     float perf=0;
 
 #ifdef WIN32
-    cv::Mat baseFrame = cv::imread("D:/cvs/data/bframes/frame00.png",CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat baseFrame = cv::imread("D:/cvs/data/bframes/frame01.png",CV_LOAD_IMAGE_GRAYSCALE);
 #else
     cv::Mat baseFrame = cv::imread("../uavVideoDataset/egtest02/frame00.png",CV_LOAD_IMAGE_GRAYSCALE);
 #endif
     // Base Frame 1280x720
 
-    int nTimes=10;
+    int nTimes=5;
 
     std::cout<<"Test Started \n";
+    std::vector<cv::Mat> frameList;
 
-    for( int ftr = 0 ; ftr < 10; ftr++){
+    produceArtificialDataset(baseFrame,nTimes,frameList);
+
+    for ( int mtc = 0; mtc < 5 ; mtc++ ){
         for( int dsc = 0 ; dsc < 6 ; dsc++){
-            for ( int mtc = 0; mtc < 5 ; mtc++ ){
-                perf=ApplyTest(baseFrame,nTimes,featureDetectorNames[ftr],descriptorExtractorNames[dsc],matcherNames[mtc]);
+            for( int ftr = 0 ; ftr < 10; ftr++){
+                std::cout<< "Test for "<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<"\n";
+                perf=ApplyTest(frameList,featureDetectorNames[ftr],descriptorExtractorNames[dsc],matcherNames[mtc]);
                 std::cout<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<" : "<<perf<<"\n";
             }
         }
