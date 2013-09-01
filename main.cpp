@@ -290,12 +290,72 @@ void PlayAvi(const char * fAvi)
 
 }
 
-float ApplyTest(cv::Mat &bFrame, int n, const char *fName , const char *dName, const char * mName)
+double ApplyTest(cv::Mat &baseFrame, int n, const char *fName , const char *dName, const char * mName)
 {
-    return 0;
+    // baseFrame (1280x720) den bir dizi frame hazırlama (640x480) ( n + 1 adet )
+    // by using random walk start from center (320,120)
+    std::vector<cv::Mat> frameList;
+    int walkX = 320;
+    int walkY = 120;
+
+    std::cout<<"1 \n";
+    for(int i=0;i < n+1; i++)
+    {
+        cv::Mat temp(baseFrame, cv::Rect(walkX,walkY,640,480));
+        // may be add a some noise
+        frameList.push_back(temp);
+        cv::imshow("Result", temp);
+        cv::waitKey(100);
+        walkX += (20-(rand()%40));
+        walkY += (10-(rand()%20));
+    }
+
+    // diziFrame üzerinde sistemi çalıştırma (n times )
+
+    AlignmentMatrixCalc calc;
+    calc.setDetectorSimple(fName);
+    calc.setDescriptorSimple(dName);
+    calc.setMatcherSimple(mName);
+    FrameAlignment aligner;
+    double sumNonZero=0.0;
+
+
+    calc.process(frameList[0]);
+    for(int i = 0; i < frameList.size(); i++){
+        std::cout<<"2 \n";
+        calc.process(frameList[i]);
+        cv::Mat aPrev;
+        cv::Mat H;
+
+        if(calc.getHomography(H) == true){
+            std::cout<<"3 \n";
+            cv::Mat mask(frameList[i].size(),CV_8U);
+            mask=cv::Scalar(255);
+            aligner.process(frameList[i-1],H,aPrev);
+            aligner.process(mask,H,mask);
+            mask=frameList[i-1]&mask;
+            cv::absdiff(aPrev,mask,aPrev);
+            cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+            cv::imshow("Result", aPrev);
+            cv::waitKey(100);
+            // count non-zero pixels
+            sumNonZero += cv::countNonZero(aPrev);
+        }
+        else
+        {
+            std::cout<<"4 \n";
+        }
+
+
+    }
+
+    std::cout<<"5 \n";
+    // return avarge of them (cout / n ) low is better...
+    sumNonZero = sumNonZero / n;
+    return sumNonZero;
 }
 
-void PeformanceTester()
+void ArtificalPeformanceTester()
 {
     /*
     FeatureDetectors;
@@ -360,8 +420,16 @@ void PeformanceTester()
 
     float perf=0;
 
-    cv::Mat baseFrame;
-    int nTimes=5;
+#ifdef WIN32
+    cv::Mat baseFrame = cv::imread("D:/cvs/data/bframes/frame00.png",CV_LOAD_IMAGE_GRAYSCALE);
+#else
+    cv::Mat baseFrame = cv::imread("../uavVideoDataset/egtest02/frame00.png",CV_LOAD_IMAGE_GRAYSCALE);
+#endif
+    // Base Frame 1280x720
+
+    int nTimes=10;
+
+    std::cout<<"Test Started \n";
 
     for( int ftr = 0 ; ftr < 10; ftr++){
         for( int dsc = 0 ; dsc < 6 ; dsc++){
@@ -381,8 +449,8 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
 
-     //Test3();
-    PeformanceTester();
+    // Test3();
+     ArtificalPeformanceTester();
 
     return 0;
 }
