@@ -416,7 +416,10 @@ void ArtificalPeformanceTester()
                                                "BRISK",
                                                "FREAK"
                                                };
-    const char *matcherNames[5]={"BruteForce",
+
+    //D:\OpenCv-2.4.6\opencv\modules\features2d\src\matchers.cpp - line 462
+    const char *matcherNames[6]={"BruteForce",
+                                "BruteForce-SL2",
                                 "BruteForce-L1",
                                 "BruteForce-Hamming",
                                 "BruteForce-Hamming(2)",
@@ -439,7 +442,7 @@ void ArtificalPeformanceTester()
 
     produceArtificialDataset(baseFrame,nTimes,frameList);
 
-    for ( int mtc = 0; mtc < 5 ; mtc++ ){
+    for ( int mtc = 0; mtc < 6 ; mtc++ ){
         for( int dsc = 0 ; dsc < 6 ; dsc++){
             for( int ftr = 0 ; ftr < 10; ftr++){
                 std::cout<< "Test for "<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<"\n";
