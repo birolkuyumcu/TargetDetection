@@ -21,9 +21,10 @@ void FrameAlignment::process(cv::Mat &inputImage, cv::Mat &homography,cv::Mat &o
     miny=0;
     maxy=inputImage.rows;
 
-    for(int i = 0; i < 4; i++){
-        x=alignedCorners[i].x;
-        y=alignedCorners[i].y;
+    for(int i = 0; i < 4; i++)
+    {
+        x = alignedCorners[i].x;
+        y = alignedCorners[i].y;
 
         if(x < minx)
         {

@@ -39,6 +39,7 @@ public:
     bool loadSettings();
     void process(cv::Mat& inputImage);
     bool getHomography(cv::Mat& gHomography);
+    void reset();
 
 private:
     AlignmentMatrixCalcSettings settings;

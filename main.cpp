@@ -3,6 +3,7 @@
 #include "framealigner.h"
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
+#include "Test/TEST_frameAllignment.h"
 
 void Test()
 {
@@ -318,33 +319,46 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
     // diziFrame üzerinde sistemi çalıştırma (n times )
 
     AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+
+    cv::Mat alignedImage;
+    cv::Mat homographMatrix;
+    double sumNonZero = 0.0;
+
     calc.setDetectorSimple(fName);
     calc.setDescriptorSimple(dName);
     calc.setMatcherSimple(mName);
-    FrameAlignment aligner;
-    double sumNonZero=0.0;
-
 
     calc.process(frameList[0]);
-    for(int i = 1; i < frameList.size(); i++){
-        std::cout<<" 2 ";
-        calc.process(frameList[i]);
-        cv::Mat aPrev;
-        cv::Mat H;
 
-        if(calc.getHomography(H) == true){
+    for(int i = 1; i < frameList.size(); i++)
+    {
+        std::cout<<" 2 ";
+
+        calc.process(frameList[i]);
+
+        if(calc.getHomography(homographMatrix) == true)
+        {
             std::cout<<" 3 ";
-            cv::Mat mask(frameList[i].size(),CV_8U);
-            mask=cv::Scalar(255);
-            aligner.process(frameList[i-1],H,aPrev);
-            aligner.process(mask,H,mask);
-            mask=frameList[i-1]&mask;
-            cv::absdiff(aPrev,mask,aPrev);
-            cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
-            cv::imshow("Result", aPrev);
-            cv::waitKey(1);
+
+            cv::Mat mask(frameList[i].size(), CV_8U);
+
+            mask = cv::Scalar(255);
+
+            aligner.process(frameList[i-1], homographMatrix, alignedImage);
+            aligner.process(mask, homographMatrix, mask);
+
+            mask = frameList[i-1]&mask;
+
+            cv::absdiff(alignedImage, mask, alignedImage);
+            cv::threshold(alignedImage, alignedImage, 0, 255, cv::THRESH_BINARY|cv::THRESH_OTSU);
+            cv::imshow("Result", alignedImage);
+
             // count non-zero pixels
-            sumNonZero += cv::countNonZero(aPrev);
+            sumNonZero += cv::countNonZero(alignedImage);
+
+            cv::waitKey(1);
+
         }
         else
         {
@@ -462,7 +476,8 @@ int main(int argc, char *argv[])
     //targetDetection.exec();
 
     // Test3();
-     ArtificalPeformanceTester();
+    //ArtificalPeformanceTester();
+    TEST_frameAllignment();
 
     return 0;
 }

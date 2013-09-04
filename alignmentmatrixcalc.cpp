@@ -62,13 +62,20 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
     }
 }
 
+void AlignmentMatrixCalc::reset()
+{
+    //delete buffers
+    //set AlignmentMatrixCalc to initial state
+    prevFrame.release();
+}
+
 void AlignmentMatrixCalc::init(cv::Mat &frame)
 {
     frame.copyTo(prevFrame);
 
     if(hMethod == featureBased)
     {
-        detector->detect(prevFrame,keypointsPrev);
+        detector->detect(prevFrame, keypointsPrev);
         cv::KeyPointsFilter::retainBest(keypointsPrev,keyRetainFactor*keypointsPrev.size() );
         descriptor->compute(prevFrame,keypointsPrev,descriptorsPrev);
     }
