@@ -72,9 +72,7 @@ static long processVideoAndGetScores(QString &videoFileName)
     cv::Mat videoFrame;
 
     cv::Mat alignedImage;
-    cv::Mat homographMatrix;
     long sumNonZero = 0;
-
     cv::Mat homograpyMatrix;
 
     alignMatrixcalc.setDetectorSimple("SURF");
@@ -87,22 +85,29 @@ static long processVideoAndGetScores(QString &videoFileName)
     //burası düzeltilecek düzgün init fonksiyonu koyulacak.
     videoCap.read(videoFrame);
 
+    cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
+
     //buna neden gerek var. sadece getHomography olsa olmuyor mu?
     alignMatrixcalc.process(videoFrame);
 
     while (videoCap.read(videoFrame))
     {
 
-        cv::Mat mask(cv::Size(640, 480), CV_8U);
-        mask = cv::Scalar(255);
+        cv::imshow("input", videoFrame);
 
+        cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
         alignMatrixcalc.process(videoFrame);
+
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {
+
+            cv::Mat mask(videoFrame.size(),CV_8U);
+            mask=cv::Scalar(255);
+
             frameAlligner.process(videoFrame, homograpyMatrix, alignedImage);
 
-            frameAlligner.process(mask, homographMatrix, mask);
+            frameAlligner.process(mask, homograpyMatrix, mask);
 
             mask = videoFrame & mask;
 
@@ -111,7 +116,7 @@ static long processVideoAndGetScores(QString &videoFileName)
             cv::threshold(alignedImage, alignedImage, 0, 255, cv::THRESH_BINARY|cv::THRESH_OTSU);
 
             cv::imshow("Result", alignedImage);
-
+            cv::waitKey(1);
             sumNonZero += cv::countNonZero(alignedImage);
 
         }

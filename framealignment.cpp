@@ -14,7 +14,7 @@ void FrameAlignment::process(cv::Mat &inputImage, cv::Mat &homography,cv::Mat &o
     std::vector<cv::Point2f> alignedCorners(4);
     float x, y, minx, miny, maxx, maxy;
 
-    perspectiveTransform( inputCorners, alignedCorners, homography);
+    cv::perspectiveTransform( inputCorners, alignedCorners, homography);
 
     minx=0;
     maxx=inputImage.cols;

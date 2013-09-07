@@ -475,7 +475,7 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
 
-    // Test3();
+    //Test3();
     //ArtificalPeformanceTester();
     TEST_frameAllignment();
 
