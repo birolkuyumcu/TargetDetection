@@ -1,7 +1,7 @@
 #include <Test/TEST_frameAllignment.h>
 
 
-#define TEST_VIDEO_FILE_CNT 5
+#define TEST_VIDEO_FILE_CNT 14
 
 static long processVideoAndGetScores(QString &videoFileName);
 static void reportScoresForVideoFile(int videoFileIndex, long score);
@@ -15,10 +15,10 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 3; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
-        videoFileName = "";
+        videoFileName = "output";
         videoFileName +=  QString::number(i);
         videoFileName += ".avi";
 
@@ -82,20 +82,21 @@ static long processVideoAndGetScores(QString &videoFileName)
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
     alignMatrixcalc.setMatchingType(knnMatch);
 
-    videoCap.open(/*videoFileName.toStdString()*/"1.avi");
+    videoCap.open(videoFileName.toStdString());
 
     //burası düzeltilecek düzgün init fonksiyonu koyulacak.
     videoCap.read(videoFrame);
     frameCount ++;
 
     cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
+    cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
     //buna neden gerek var. sadece getHomography olsa olmuyor mu?
     alignMatrixcalc.process(videoFrame);
 
     while (videoCap.read(videoFrame))
     {
-        frameCount ++;
+        cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
         cv::imshow("input", videoFrame);
 
@@ -105,6 +106,7 @@ static long processVideoAndGetScores(QString &videoFileName)
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {
+            frameCount ++;
 
             cv::Mat mask(videoFrame.size(),CV_8U);
             mask=cv::Scalar(255);
