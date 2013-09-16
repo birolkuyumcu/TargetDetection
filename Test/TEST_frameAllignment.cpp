@@ -15,7 +15,7 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 3; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
         videoFileName = "";
@@ -75,6 +75,8 @@ static long processVideoAndGetScores(QString &videoFileName)
     long sumNonZero = 0;
     cv::Mat homograpyMatrix;
 
+    long frameCount = 0;
+
     alignMatrixcalc.setDetectorSimple("SURF");
     alignMatrixcalc.setDescriptorSimple("SURF");
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
@@ -84,6 +86,7 @@ static long processVideoAndGetScores(QString &videoFileName)
 
     //burası düzeltilecek düzgün init fonksiyonu koyulacak.
     videoCap.read(videoFrame);
+    frameCount ++;
 
     cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
 
@@ -92,6 +95,7 @@ static long processVideoAndGetScores(QString &videoFileName)
 
     while (videoCap.read(videoFrame))
     {
+        frameCount ++;
 
         cv::imshow("input", videoFrame);
 
@@ -120,6 +124,8 @@ static long processVideoAndGetScores(QString &videoFileName)
             sumNonZero += cv::countNonZero(alignedImage);
 
         }
+
+        qDebug()<<frameCount;
     }
 
     return sumNonZero;
