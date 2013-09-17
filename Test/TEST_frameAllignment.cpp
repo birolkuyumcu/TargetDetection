@@ -15,7 +15,7 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
         videoFileName = "output";
@@ -99,6 +99,8 @@ static long processVideoAndGetScores(QString &videoFileName)
         cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
         cv::imshow("input", videoFrame);
+
+        cv::waitKey();
 
         cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
         alignMatrixcalc.process(videoFrame);
