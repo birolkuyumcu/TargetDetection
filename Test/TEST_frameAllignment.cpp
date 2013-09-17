@@ -18,7 +18,12 @@ void TEST_frameAllignment()
     for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
+#ifdef WIN32
+        videoFileName = "D:/cvs/data/testavi/output";
+#else
         videoFileName = "output";
+#endif
+
         videoFileName +=  QString::number(i);
         videoFileName += ".avi";
 
