@@ -110,7 +110,8 @@ void AlignmentMatrixCalc::run()
     }
     else if(hMethod == flowBased)
     {
-        if(pointsPrev.size() < minimumFlowPoint)
+//      if(pointsPrev.size() < minimumFlowPoint)
+        // Now Detect always
         {
             detector->detect(prevFrame, keypointsPrev);
             cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
