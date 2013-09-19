@@ -1,7 +1,7 @@
 #include <Test/TEST_frameAllignment.h>
 
 
-#define TEST_VIDEO_FILE_CNT 14
+#define TEST_VIDEO_FILE_CNT 4
 
 static long processVideoAndGetScores(QString &videoFileName);
 static void reportScoresForVideoFile(int videoFileIndex, long score);
@@ -15,11 +15,11 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
-        videoFileName = "D:/cvs/data/testavi/output";
+        videoFileName = "D:/cvs/data/testavi/rvid";
 #else
         videoFileName = "output";
 #endif
@@ -103,38 +103,42 @@ static long processVideoAndGetScores(QString &videoFileName)
     {
         cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
-        cv::imshow("input", videoFrame);
+      /*  cv::imshow("input", videoFrame);
 
-        cv::waitKey();
-
+        cv::waitKey(5);
+*/
         cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
-        alignMatrixcalc.process(videoFrame);
-
-
-        if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
+     //   if(frameCount%2)
         {
-            frameCount ++;
+            alignMatrixcalc.process(videoFrame);
 
-            cv::Mat mask(videoFrame.size(),CV_8U);
-            mask=cv::Scalar(255);
 
-            frameAlligner.process(videoFrame, homograpyMatrix, alignedImage);
+            if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
+            {
+                frameCount ++;
 
-            frameAlligner.process(mask, homograpyMatrix, mask);
+                cv::Mat mask(videoFrame.size(),CV_8U);
+                mask=cv::Scalar(255);
 
-            mask = videoFrame & mask;
+                frameAlligner.process(videoFrame, homograpyMatrix, alignedImage);
 
-            cv::absdiff(alignedImage, mask, alignedImage);
+                frameAlligner.process(mask, homograpyMatrix, mask);
 
-            cv::threshold(alignedImage, alignedImage, 0, 255, cv::THRESH_BINARY|cv::THRESH_OTSU);
+                mask = videoFrame & mask;
 
-            cv::imshow("Result", alignedImage);
-            cv::waitKey(1);
-            sumNonZero += cv::countNonZero(alignedImage);
+                cv::absdiff(alignedImage, mask, alignedImage);
 
+                cv::threshold(alignedImage, alignedImage, 0, 255, cv::THRESH_BINARY|cv::THRESH_OTSU);
+
+                cv::imshow("Result", alignedImage);
+                cv::imshow("input", videoFrame);
+                cv::waitKey(5);
+                sumNonZero += cv::countNonZero(alignedImage);
+
+            }
         }
 
-        qDebug()<<frameCount;
+         qDebug()<<frameCount;
     }
 
     return sumNonZero;
