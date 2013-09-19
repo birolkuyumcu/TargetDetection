@@ -43,6 +43,11 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
                 pointsPrev = pointsCurrent;
             }
         }
+        else
+        {
+            exc.showException("Empty Frame..." );
+        }
+
 
         inputImage.copyTo(currentFrame);
         run();
