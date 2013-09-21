@@ -29,7 +29,7 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
 {
     if(!prevFrame.empty())
     {
-        if(!currentFrame.empty())
+        if(!currentFrame.empty()) // Third and so on passes
         {
             if(hMethod == featureBased)
             {
@@ -43,9 +43,9 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
                 pointsPrev = pointsCurrent;
             }
         }
-        else
+        else // Second Pass
         {
-            exc.showException("Empty Frame..." );
+            exc.showException("Empty Frame..." );  // Not Required
         }
 
 
@@ -61,7 +61,7 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
             flowBasedHomography();
         }
     }
-    else // if(!prevFrame.empty()){
+    else // if(!prevFrame.empty()){ // First Pass
     {
         init(inputImage);
     }
