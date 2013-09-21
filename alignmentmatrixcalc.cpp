@@ -27,7 +27,17 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
 
 void AlignmentMatrixCalc::process(cv::Mat &inputImage)
 {
-    if(!prevFrame.empty())
+    if(inputImage.empty())
+    {
+        exc.showException("Empty Frame..." );  // Not Required
+        return;
+    }
+
+    if(prevFrame.empty()) // First Pass
+    {
+        init(inputImage);
+    }
+    else
     {
         if(!currentFrame.empty()) // Third and so on passes
         {
@@ -43,14 +53,12 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
                 pointsPrev = pointsCurrent;
             }
         }
-        else // Second Pass
-        {
-            exc.showException("Empty Frame..." );  // Not Required
-        }
-
-
         inputImage.copyTo(currentFrame);
-        run();
+        if(run()==false || keypointsPrev.size()<50)
+        {
+           // wayBack();
+            return;
+        }
 
         if(hMethod == featureBased)
         {
@@ -61,10 +69,7 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
             flowBasedHomography();
         }
     }
-    else // if(!prevFrame.empty()){ // First Pass
-    {
-        init(inputImage);
-    }
+
 }
 
 void AlignmentMatrixCalc::reset()
@@ -76,6 +81,7 @@ void AlignmentMatrixCalc::reset()
 
 void AlignmentMatrixCalc::init(cv::Mat &frame)
 {
+    std::cout<<"Init\n";
     frame.copyTo(prevFrame);
 
     if(hMethod == featureBased)
@@ -100,11 +106,12 @@ void AlignmentMatrixCalc::init(cv::Mat &frame)
     }
 }
 
-void AlignmentMatrixCalc::run()
+bool AlignmentMatrixCalc::run()
 {
     if(hMethod == featureBased)
     {
         detector->detect(currentFrame, keypointsCurrent);
+        if(keypointsCurrent.size()==0) return false;
         cv::KeyPointsFilter::retainBest(keypointsCurrent, keyRetainFactor*keypointsCurrent.size() );
         descriptor->compute(currentFrame, keypointsCurrent, descriptorsCurrent);
     }
@@ -114,6 +121,7 @@ void AlignmentMatrixCalc::run()
         // Now Detect always
         {
             detector->detect(prevFrame, keypointsPrev);
+            if(keypointsPrev.size()==0) return false;
             cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
 
             for(unsigned int i=0; i < keypointsPrev.size(); i++)
@@ -125,6 +133,7 @@ void AlignmentMatrixCalc::run()
         }
 
     }
+    return true;
 
 }
 
@@ -158,6 +167,7 @@ void AlignmentMatrixCalc::featureBasedHomography()
     }
     else if( matchType == knnMatch)
     {
+        std::cout<<"Match : "<<keypointsCurrent.size()<<"  "<<keypointsPrev.size()<<"\n";
         matcher->knnMatch(descriptorsPrev,descriptorsCurrent,kmatchesPrevToCurrent,2);
         std::cout<<"Ratio Test 1 :"<<kmatchesPrevToCurrent.size()<<"\n";
         ratioTest(kmatchesPrevToCurrent);
@@ -223,6 +233,9 @@ void AlignmentMatrixCalc::featureBasedHomography()
     else
     {
         isHomographyCalc = false;
+        std::cout<<"Reset\n";
+       // wayBack();
+        return;
     }
     //If Homogrphy not valid
     if(!isHomographyValid())
@@ -443,7 +456,7 @@ void AlignmentMatrixCalc::wayBack()
 {
     if(hMethod == featureBased)
     {
-        return;
+       // return;
         currentFrame = prevFrame;
         keypointsCurrent = keypointsPrev;
         descriptorsCurrent = descriptorsPrev;

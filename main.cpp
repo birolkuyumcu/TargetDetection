@@ -284,7 +284,7 @@ void PlayAvi(const char * fAvi)
     while (cap.read(frame))
     {
         cv::imshow("Video",frame);
-        cv::waitKey(10);
+        cv::waitKey(0);
 
     }
 
@@ -477,7 +477,7 @@ int main(int argc, char *argv[])
 
     //Test3();
     //ArtificalPeformanceTester();
-   // PlayAvi("D:/cvs/data/testavi/rvid0.avi");
+    //PlayAvi("D:/cvs/data/testavi/output2.avi");
     TEST_frameAllignment();
 
     return 0;

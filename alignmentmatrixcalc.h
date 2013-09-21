@@ -73,7 +73,7 @@ private:
     void featureBasedHomography();
     void flowBasedHomography();
     void init(cv::Mat &frame);
-    void run();
+    bool run();
     void symmetryTest(std::vector< cv::DMatch >& matchesPrevToCurrent,std::vector< cv::DMatch >& matchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
     void symmetryTest(std::vector<std::vector<cv::DMatch> >&kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch> >& kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed);
     void ratioTest(std::vector<std::vector<cv::DMatch> >&kmatches);

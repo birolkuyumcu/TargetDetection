@@ -1,7 +1,7 @@
 #include <Test/TEST_frameAllignment.h>
 
 
-#define TEST_VIDEO_FILE_CNT 4
+#define TEST_VIDEO_FILE_CNT 14
 
 static long processVideoAndGetScores(QString &videoFileName);
 static void reportScoresForVideoFile(int videoFileIndex, long score);
@@ -15,11 +15,11 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
-        videoFileName = "D:/cvs/data/testavi/rvid";
+        videoFileName = "D:/cvs/data/testavi/output";
 #else
         videoFileName = "output";
 #endif
@@ -94,14 +94,14 @@ static long processVideoAndGetScores(QString &videoFileName)
     frameCount ++;
 
     cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
-    cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+  //  cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
     //buna neden gerek var. sadece getHomography olsa olmuyor mu?
     alignMatrixcalc.process(videoFrame);
 
     while (videoCap.read(videoFrame))
     {
-        cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+ //       cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
       /*  cv::imshow("input", videoFrame);
 
