@@ -10,9 +10,6 @@ ImageProcess::ImageProcess(QObject *parent) :
 
     timer1Hz.setInterval(1000);
     timer1Hz.start();
-    //
-
-
 }
 
 void ImageProcess::timerTick1Hz()

@@ -5,21 +5,21 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     exc.setModuleName("AlignmentMatrixCalc");
 
     hMethod = featureBased;
-    keyRetainFactor=0.75;
-    homographyCalcMethod=CV_RANSAC;
+    keyRetainFactor = 0.75;
+    homographyCalcMethod = CV_RANSAC;
     ransacReprojThreshold = 3;
 
-    matchType=normalMatch;
-    maxRatio=0.50;
-    maxRadius=100;
+    matchType = normalMatch;
+    maxRatio = 0.50;
+    maxRadius = 100;
 
     setDetectorSimple("SURF");
     setDescriptorSimple("SURF");
-
     setMatcherSimple("BruteForce-L1");
+
     isHomographyCalc=false;
-    stage=firstPass;
-    numOfPointsMin=50;
+    stage = firstPass;
+    numOfPointsMin = 50;
 
     if(!cv::initModule_nonfree())
     {
@@ -35,13 +35,13 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
         return;
     }
 
-    if(stage==firstPass) // First Pass
+    if(stage == firstPass)
     {
         init(inputImage);
     }
     else // secondPass or onGoing stage
     {
-        if(stage==onGoing) // Third and so on passes
+        if(stage == onGoing) // Third and so on passes
         {
             if(hMethod == featureBased)
             {
@@ -55,11 +55,13 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
                 pointsPrev = pointsCurrent;
             }
         }
+
         inputImage.copyTo(currentFrame);
-        if(run()==false)
+
+        if(run() == false)
         {
-           // wayBack();
-            isHomographyCalc=false;
+            //wayBack();
+            isHomographyCalc = false;
             return;
         }
 
@@ -84,31 +86,34 @@ void AlignmentMatrixCalc::reset()
 
 void AlignmentMatrixCalc::init(cv::Mat &frame)
 {
-    std::cout<<"Init\n\n";
     frame.copyTo(prevFrame);
 
     if(hMethod == featureBased)
     {
         detector->detect(prevFrame, keypointsPrev);
-        cv::KeyPointsFilter::retainBest(keypointsPrev,keyRetainFactor*keypointsPrev.size() );
-        if(keypointsPrev.size()>= numOfPointsMin)
+
+        cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
+
+        if(keypointsPrev.size() >= numOfPointsMin)
         {
-            stage=secondPass;
+            stage = secondPass;
         }
         else
         {
             return;
         }
 
-        descriptor->compute(prevFrame,keypointsPrev,descriptorsPrev);
+        descriptor->compute(prevFrame, keypointsPrev, descriptorsPrev);
     }
     else if(hMethod == flowBased)
     {
         detector->detect(prevFrame, keypointsPrev);
+
         cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
-        if(keypointsPrev.size()>= numOfPointsMin)
+
+        if(keypointsPrev.size() >= numOfPointsMin)
         {
-            stage=secondPass;
+            stage = secondPass;
         }
         else
         {
@@ -131,60 +136,49 @@ bool AlignmentMatrixCalc::run()
     if(hMethod == featureBased)
     {
         detector->detect(currentFrame, keypointsCurrent);
+
         cv::KeyPointsFilter::retainBest(keypointsCurrent, keyRetainFactor*keypointsCurrent.size() );
-        if(keypointsCurrent.size()>= numOfPointsMin)
+
+        if(keypointsCurrent.size() >= numOfPointsMin)
         {
-            stage=onGoing;
+            stage = onGoing;
         }
         else
         {
-            stage=secondPass;
+            stage = secondPass;
             return false;
         }
         descriptor->compute(currentFrame, keypointsCurrent, descriptorsCurrent);
     }
     else if(hMethod == flowBased)
     {
-  //      if(pointsPrev.size() < minimumFlowPoint)
-        // Now Detect always
+        detector->detect(prevFrame, keypointsPrev);
+
+        cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
+
+        if(keypointsPrev.size() >= numOfPointsMin)
         {
-            detector->detect(prevFrame, keypointsPrev);
-            cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
-            if(keypointsPrev.size()>= numOfPointsMin)
-            {
-                stage=onGoing;
-            }
-            else
-            {
-                stage=secondPass;
-                return false;
-            }
-
-            for(unsigned int i=0; i < keypointsPrev.size(); i++)
-            {
-                pointsPrev.push_back(keypointsPrev[i].pt);
-            }
-
-            cv::cornerSubPix(prevFrame,pointsPrev,cv::Size(5,5),cv::Size(-1,-1),cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
+            stage = onGoing;
         }
+        else
+        {
+            stage = secondPass;
+            return false;
+        }
+
+        for(unsigned int i=0; i < keypointsPrev.size(); i++)
+        {
+            pointsPrev.push_back(keypointsPrev[i].pt);
+        }
+
+        cv::cornerSubPix(prevFrame, pointsPrev, cv::Size(5, 5), cv::Size(-1,-1),
+                         cv::TermCriteria(cv::TermCriteria::MAX_ITER + cv::TermCriteria::EPS,30,0.1));
 
     }
     return true;
 
 }
 
-/*
-void convertRMatches(std::vector<std::vector<cv::DMatch>> rmatches,std::vector<cv::DMatch> matchesPassed)
-{
-    std::cout<<"Radius Matches :"<<rmatches.size()<<"\n ";
-    for(std::vector<std::vector<cv::DMatch> >::iterator mi=rmatches.begin() ; mi != rmatches.end(); ++mi)
-    {
-        std::cout<<"Radius Matches :"<<(*mi).size()<<"\n ";
-        matchesPassed.push_back((*mi)[0]);
-    }
-    std::cout<<"Matches Passed : "<<matchesPassed.size()<<"\n ";
-}
-*/
 void AlignmentMatrixCalc::featureBasedHomography()
 {
     std::vector<cv::DMatch> matchesPrevToCurrent;
@@ -198,22 +192,21 @@ void AlignmentMatrixCalc::featureBasedHomography()
         matcher->match( descriptorsPrev, descriptorsCurrent, matchesPrevToCurrent );
         matcher->match( descriptorsCurrent, descriptorsPrev, matchesCurrentToPrev );
         // Symmetry Test start
-        symmetryTest(matchesPrevToCurrent,matchesCurrentToPrev,matchesPassed);
+        symmetryTest(matchesPrevToCurrent, matchesCurrentToPrev, matchesPassed);
 
     }
     else if( matchType == knnMatch)
     {
         std::cout<<"Match : "<<keypointsCurrent.size()<<"  "<<keypointsPrev.size()<<"\n";
-        matcher->knnMatch(descriptorsPrev,descriptorsCurrent,kmatchesPrevToCurrent,2);
+        matcher->knnMatch(descriptorsPrev, descriptorsCurrent, kmatchesPrevToCurrent,2);
         std::cout<<"Ratio Test 1 :"<<kmatchesPrevToCurrent.size()<<"\n";
         ratioTest(kmatchesPrevToCurrent);
         std::cout<<"Ratio Test 1 End :"<<kmatchesPrevToCurrent.size()<<"\n";
-        matcher->knnMatch(descriptorsCurrent,descriptorsPrev,kmatchesCurrentToPrev,2);
+        matcher->knnMatch(descriptorsCurrent,descriptorsPrev, kmatchesCurrentToPrev, 2);
         std::cout<<"Ratio Test 2 :"<<kmatchesCurrentToPrev.size()<<"\n";
         ratioTest(kmatchesCurrentToPrev);
         std::cout<<"Ratio Test 2 End :"<<kmatchesCurrentToPrev.size()<<"\n";
         // Symmetry Test not working for knn
-        //matchesPassed=matchesPrevToCurrent;
         symmetryTest(kmatchesPrevToCurrent,kmatchesCurrentToPrev,matchesPassed);
         std::cout<<"Sym Test  :"<<matchesPassed.size()<<"\n";
 
@@ -241,16 +234,18 @@ void AlignmentMatrixCalc::featureBasedHomography()
     }
 
 
-
-
     if(pointsPrev.size() !=0 && pointsCurrent.size() != 0)
     {
         // Sub-pixsel Accuracy
 
-        cv::cornerSubPix(prevFrame, pointsPrev, cv::Size(5,5), cv::Size(-1,-1), cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
-        cv::cornerSubPix(currentFrame, pointsCurrent, cv::Size(5,5), cv::Size(-1,-1), cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
+        cv::cornerSubPix(prevFrame, pointsPrev, cv::Size(5,5), cv::Size(-1,-1),
+                         cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
 
-        homography = cv::findHomography(pointsPrev, pointsCurrent, homographyCalcMethod, ransacReprojThreshold);
+        cv::cornerSubPix(currentFrame, pointsCurrent, cv::Size(5,5), cv::Size(-1,-1),
+                         cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,30,0.1));
+
+        homography = cv::findHomography(pointsPrev, pointsCurrent, homographyCalcMethod,
+                                        ransacReprojThreshold);
         /*
          cv::findHomography can return empty matrix in some cases.
          This seems happen only when cv::RANSAC flag is passed.
@@ -269,17 +264,16 @@ void AlignmentMatrixCalc::featureBasedHomography()
     else
     {
         isHomographyCalc = false;
-        std::cout<<"Reset\n";
-       // wayBack();
+        qDebug<<"Reset\n";
+        //wayBack();
         return;
     }
     //If Homogrphy not valid
+
     if(!isHomographyValid())
     {
         wayBack();
     }
-
-
 }
 
 void AlignmentMatrixCalc::flowBasedHomography()
@@ -291,7 +285,7 @@ void AlignmentMatrixCalc::flowBasedHomography()
 
     calcOpticalFlowPyrLK(prevFrame, currentFrame, pointsPrev, pointsCurrent, status, err);
 
-    for (unsigned int i=0; i<pointsPrev.size(); i++)
+    for (unsigned int i=0; i < pointsPrev.size(); i++)
     {
         if(status[i] && err[i] <= flowErrorThreshold)
         {
@@ -301,12 +295,14 @@ void AlignmentMatrixCalc::flowBasedHomography()
     }
 
 
-    homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod, ransacReprojThreshold);
+    homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod,
+                                    ransacReprojThreshold);
     pointsCurrent = tempCurrent;
     isHomographyCalc=true;
+
     // Burda bir kontrol eklenmeli filitrelenen noktaların belli bir sayı altına düştüğünde
     // yeniden feature bazlı nokta tespit ettirilmeli
-    if(pointsCurrent.size()<50)
+    if(pointsCurrent.size() < 50)
     {
         init(currentFrame);
     }
@@ -352,7 +348,7 @@ void AlignmentMatrixCalc::setMatcherSimple(const char *matcherName)
 
 void AlignmentMatrixCalc::setHomographyMethod(HomograpyMethod ihMethod)
 {
-    hMethod=ihMethod;
+    hMethod = ihMethod;
 }
 
 void AlignmentMatrixCalc::setHomographyCalcMethod(int ihomographyCalcMethod)
@@ -363,7 +359,7 @@ void AlignmentMatrixCalc::setHomographyCalcMethod(int ihomographyCalcMethod)
     – CV_LMEDS - Least-Median robust method
     */
 
-    homographyCalcMethod=ihomographyCalcMethod;
+    homographyCalcMethod = ihomographyCalcMethod;
 }
 
 bool AlignmentMatrixCalc::getHomography(cv::Mat &gHomography)
@@ -378,27 +374,22 @@ bool AlignmentMatrixCalc::getHomography(cv::Mat &gHomography)
 
 void AlignmentMatrixCalc::setMatchingType(MatchingType iType)
 {
-    matchType=iType;
+    matchType = iType;
 }
 
 void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCurrent, std::vector<cv::DMatch> &matchesCurrentToPrev, std::vector<cv::DMatch> &matchesPassed)
 {
-   // std::cout<<"Prev2Cur :"<<matchesPrevToCurrent.size()<<"\n Cur2Prev :"<<matchesCurrentToPrev.size()<<"\n";
     for( size_t i = 0; i < matchesPrevToCurrent.size(); i++ )
     {
 
         cv::DMatch forward = matchesPrevToCurrent[i];
-      //  std::cout<<i<<")"<<forward.trainIdx<<" - "<<forward.distance<<"\n"; // for debugging
-      //  if(forward.trainIdx >= matchesCurrentToPrev.size()) continue;
         cv::DMatch backward = matchesCurrentToPrev[forward.trainIdx];
         if( backward.trainIdx == forward.queryIdx && forward.trainIdx==backward.queryIdx)
         {
             matchesPassed.push_back( forward );
-
         }
 
     }
- //   std::cout<<"Matches Passed Symmetry Test :"<<matchesPassed.size()<<"\n";
 }
 
 void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch> >&kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed)
@@ -407,14 +398,23 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kma
     for(std::vector<std::vector<cv::DMatch> >::iterator mPi= kmatchesPrevToCurrent.begin(); mPi != kmatchesPrevToCurrent.end(); ++mPi)
     {
         if(mPi->size() < 2 )
+        {
             continue;
-        for(std::vector<std::vector<cv::DMatch> >::iterator mCi= kmatchesCurrentToPrev.begin(); mCi != kmatchesCurrentToPrev.end(); ++mCi)
+        }
+
+        for(std::vector<std::vector<cv::DMatch> >::iterator mCi= kmatchesCurrentToPrev.begin();
+            mCi != kmatchesCurrentToPrev.end();
+            ++mCi)
         {
 
             if(mCi->size() < 2 )
+            {
                 continue;
+            }
+
             cv::DMatch forward = (*mPi)[0];
             cv::DMatch backward = (*mCi)[0];
+
             if((forward.queryIdx == backward.trainIdx) && (backward.queryIdx == forward.trainIdx) )
             {
                 matchesPassed.push_back(forward);
@@ -427,25 +427,28 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kma
 
 void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatches)
 {
-    for(std::vector<std::vector<cv::DMatch> >::iterator mi=kmatches.begin() ; mi != kmatches.end(); ++mi)
+    for(std::vector<std::vector<cv::DMatch> >::iterator mi=kmatches.begin();
+        mi != kmatches.end();
+        ++mi)
     {
-        if(mi->size()>1)
+        if(mi->size() > 1)
         {
             const cv::DMatch& best = (*mi)[0];
             const cv::DMatch& good = (*mi)[1];
 
             assert(best.distance <= good.distance);
+
             float ratio = (best.distance / good.distance);
-            //     std::cout<<ratio<<"\n";
 
             if (ratio > maxRatio)
             {
-               // std::cout<<ratio<<"\n";
                 mi->clear();
             }
         }
         else
+        {
             mi->clear();
+        }
 
     }
 }
@@ -467,32 +470,25 @@ bool AlignmentMatrixCalc::isHomographyValid()
     float downDeltaY = fabs(alignedCorners[1].y-alignedCorners[2].y);
     float alignedCols=(upDeltaX+downDeltaX)/2;
     float alignedRows=(upDeltaY+downDeltaY)/2;
-    float colsDifference=fabs(alignedCols-prevFrame.cols)/prevFrame.cols;
-    float rowsDifference=fabs(alignedRows-prevFrame.rows)/prevFrame.rows;
-
-
-/*
-    for(int i = 0; i < 4; i++){
-        x=alignedCorners[i].x;
-        y=alignedCorners[i].y;
-  */
- //   std::cout<<"\nNew Delta X , Ys \n"<<upDeltaX<<" - "<<upDeltaY<<"\n"<<downDeltaX<<" - "<<downDeltaY<<"\n";
- //   std::cout<<"\nCols and Rows Differenece \n"<<colsDifference<<" - "<<rowsDifference<<"\n";
+    float colsDifference=fabs(alignedCols - prevFrame.cols) / prevFrame.cols;
+    float rowsDifference=fabs(alignedRows - prevFrame.rows) / prevFrame.rows;
 
     if( colsDifference < 0.1 && rowsDifference < 0.1 )
-       isHomographyCalc=true;
+    {
+       isHomographyCalc = true;
+    }
     else
-       isHomographyCalc=false;
+    {
+       isHomographyCalc = false;
+    }
 
     return isHomographyCalc;
-
 }
 
 void AlignmentMatrixCalc::wayBack()
 {
     if(hMethod == featureBased)
     {
-       // return;
         currentFrame = prevFrame;
         keypointsCurrent = keypointsPrev;
         descriptorsCurrent = descriptorsPrev;

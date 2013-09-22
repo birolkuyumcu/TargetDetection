@@ -4,9 +4,6 @@ frameAligner::frameAligner()
 {
     exc.setModuleName("frameAligner");
 
-    //prevFrame = NULL;
-    //currentFrame = NULL;
-
     hMethod = featureBased;
     keyRetainFactor = 0.75;
     homographyCalcMethod=CV_RANSAC;
@@ -246,8 +243,9 @@ void frameAligner::alignPrevFrame(cv::Mat &alignedPrev)
 
     cv::Mat tempImg;
     tempImg.create(cv::Size((MaxX - MinX), (MaxY - MinY)), prevFrame.depth());
+
     cv::Mat mask(tempImg, cv::Rect(tX,tY,currentFrame.cols,currentFrame.rows));
     warpPerspective(prevFrame,mask,homography,mask.size(), cv::INTER_LINEAR | CV_WARP_FILL_OUTLIERS);
-    alignedPrev = mask;
 
+    alignedPrev = mask;
 }

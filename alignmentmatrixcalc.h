@@ -18,11 +18,7 @@ enum ProcessStage
     onGoing
 };
 
-/*
- *       match( const Mat& queryDescriptors, CV_OUT vector<DMatch>& matches,const vector<Mat>& masks=vector<Mat>() );
-      knnMatch( const Mat& queryDescriptors, CV_OUT vector<vector<DMatch> >& matches, int k,const vector<Mat>& masks=vector<Mat>(), bool compactResult=false );
-   radiusMatch( const Mat& queryDescriptors, vector<vector<DMatch> >& matches, float maxDistance,const vector<Mat>& masks=vector<Mat>(), bool compactResult=false );
- **/
+
 enum MatchingType
 {
     normalMatch,
