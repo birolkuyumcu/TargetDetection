@@ -17,6 +17,7 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     setDescriptorSimple("SURF");
     setMatcherSimple("BruteForce-L1");
 
+    setMatcherSimple("BruteForce-L1");
     isHomographyCalc=false;
     stage = firstPass;
     numOfPointsMin = 50;
@@ -86,6 +87,7 @@ void AlignmentMatrixCalc::reset()
 
 void AlignmentMatrixCalc::init(cv::Mat &frame)
 {
+    std::cout<<"Init\n\n";
     frame.copyTo(prevFrame);
 
     if(hMethod == featureBased)
@@ -179,6 +181,18 @@ bool AlignmentMatrixCalc::run()
 
 }
 
+/*
+void convertRMatches(std::vector<std::vector<cv::DMatch>> rmatches,std::vector<cv::DMatch> matchesPassed)
+{
+    std::cout<<"Radius Matches :"<<rmatches.size()<<"\n ";
+    for(std::vector<std::vector<cv::DMatch> >::iterator mi=rmatches.begin() ; mi != rmatches.end(); ++mi)
+    {
+        std::cout<<"Radius Matches :"<<(*mi).size()<<"\n ";
+        matchesPassed.push_back((*mi)[0]);
+    }
+    std::cout<<"Matches Passed : "<<matchesPassed.size()<<"\n ";
+}
+*/
 void AlignmentMatrixCalc::featureBasedHomography()
 {
     std::vector<cv::DMatch> matchesPrevToCurrent;
@@ -207,6 +221,7 @@ void AlignmentMatrixCalc::featureBasedHomography()
         ratioTest(kmatchesCurrentToPrev);
         std::cout<<"Ratio Test 2 End :"<<kmatchesCurrentToPrev.size()<<"\n";
         // Symmetry Test not working for knn
+        //matchesPassed=matchesPrevToCurrent;
         symmetryTest(kmatchesPrevToCurrent,kmatchesCurrentToPrev,matchesPassed);
         std::cout<<"Sym Test  :"<<matchesPassed.size()<<"\n";
 
@@ -232,6 +247,8 @@ void AlignmentMatrixCalc::featureBasedHomography()
         pointsPrev.push_back(keypointsPrev[matchesPassed[p].queryIdx].pt);
         pointsCurrent.push_back(keypointsCurrent[matchesPassed[p].trainIdx].pt);
     }
+
+
 
 
     if(pointsPrev.size() !=0 && pointsCurrent.size() != 0)
@@ -274,6 +291,8 @@ void AlignmentMatrixCalc::featureBasedHomography()
     {
         wayBack();
     }
+
+
 }
 
 void AlignmentMatrixCalc::flowBasedHomography()
@@ -379,17 +398,22 @@ void AlignmentMatrixCalc::setMatchingType(MatchingType iType)
 
 void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCurrent, std::vector<cv::DMatch> &matchesCurrentToPrev, std::vector<cv::DMatch> &matchesPassed)
 {
+   // std::cout<<"Prev2Cur :"<<matchesPrevToCurrent.size()<<"\n Cur2Prev :"<<matchesCurrentToPrev.size()<<"\n";
     for( size_t i = 0; i < matchesPrevToCurrent.size(); i++ )
     {
 
         cv::DMatch forward = matchesPrevToCurrent[i];
+      //  std::cout<<i<<")"<<forward.trainIdx<<" - "<<forward.distance<<"\n"; // for debugging
+      //  if(forward.trainIdx >= matchesCurrentToPrev.size()) continue;
         cv::DMatch backward = matchesCurrentToPrev[forward.trainIdx];
         if( backward.trainIdx == forward.queryIdx && forward.trainIdx==backward.queryIdx)
         {
             matchesPassed.push_back( forward );
+
         }
 
     }
+ //   std::cout<<"Matches Passed Symmetry Test :"<<matchesPassed.size()<<"\n";
 }
 
 void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch> >&kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed)
@@ -439,9 +463,11 @@ void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatc
             assert(best.distance <= good.distance);
 
             float ratio = (best.distance / good.distance);
+            //     std::cout<<ratio<<"\n";
 
             if (ratio > maxRatio)
             {
+               // std::cout<<ratio<<"\n";
                 mi->clear();
             }
         }
@@ -483,12 +509,14 @@ bool AlignmentMatrixCalc::isHomographyValid()
     }
 
     return isHomographyCalc;
+
 }
 
 void AlignmentMatrixCalc::wayBack()
 {
     if(hMethod == featureBased)
     {
+       // return;
         currentFrame = prevFrame;
         keypointsCurrent = keypointsPrev;
         descriptorsCurrent = descriptorsPrev;
