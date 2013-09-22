@@ -11,6 +11,13 @@ enum HomograpyMethod
     flowBased
 };
 
+enum ProcessStage
+{
+    firstPass,
+    secondPass,
+    onGoing
+};
+
 /*
  *       match( const Mat& queryDescriptors, CV_OUT vector<DMatch>& matches,const vector<Mat>& masks=vector<Mat>() );
       knnMatch( const Mat& queryDescriptors, CV_OUT vector<vector<DMatch> >& matches, int k,const vector<Mat>& masks=vector<Mat>(), bool compactResult=false );
@@ -68,6 +75,8 @@ private:
     cv::vector<cv::Point2f> pointsPrev;
     float keyRetainFactor;
     bool isHomographyCalc;
+    ProcessStage stage;
+    int numOfPointsMin;
 
     //
     void featureBasedHomography();
