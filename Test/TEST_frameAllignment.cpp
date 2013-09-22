@@ -15,7 +15,7 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
@@ -82,6 +82,7 @@ static long processVideoAndGetScores(QString &videoFileName)
 
     long frameCount = 0;
 
+   // alignMatrixcalc.setHomographyMethod(flowBased);
     alignMatrixcalc.setDetectorSimple("SURF");
     alignMatrixcalc.setDescriptorSimple("SURF");
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
