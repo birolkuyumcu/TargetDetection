@@ -72,7 +72,7 @@ private:
     float keyRetainFactor;
     bool isHomographyCalc;
     ProcessStage stage;
-    int numOfPointsMin;
+    unsigned int numOfPointsMin;
 
     //
     void featureBasedHomography();

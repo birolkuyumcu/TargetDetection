@@ -331,7 +331,7 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
 
     calc.process(frameList[0]);
 
-    for(int i = 1; i < frameList.size(); i++)
+    for(unsigned int i = 1; i < frameList.size(); i++)
     {
         std::cout<<" 2 ";
 
@@ -368,7 +368,7 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
 
     }
 
-    std::cout<<" 5 \n";
+    qDebug()<<" 5 \n";
     // return avarge of them (cout / n ) low is better...
     sumNonZero = sumNonZero / frameList.size();
     return sumNonZero;

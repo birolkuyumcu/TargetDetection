@@ -22,6 +22,11 @@ public:
     bool loadSettings();
     void process(cv::Mat& inputImage,cv::Mat& homography,cv::Mat &outputImage);
 
+    /* TODO: daha sonra private a çekilecek */
+    void calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat &image1,
+                                                             cv::Mat &image2,
+                                                             cv::Mat &outputImage);
+
 private:
     FrameAlignmentSettings settings;
     Exception               exc;

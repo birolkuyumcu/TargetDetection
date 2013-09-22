@@ -15,13 +15,13 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
         videoFileName = "D:/cvs/data/testavi/output";
 #else
-        videoFileName = "output";
+        videoFileName = "rvid";//"output";
 #endif
 
         videoFileName +=  QString::number(i);
@@ -75,8 +75,10 @@ static long processVideoAndGetScores(QString &videoFileName)
 
     cv::VideoCapture videoCap;
     cv::Mat videoFrame;
+    cv::Mat sequentalImageDiff;
+    cv::Mat sequentalImageDiffBinary;
 
-    cv::Mat alignedImage;
+    cv::Mat prevFrameAlligned;
     long sumNonZero = 0;
     cv::Mat homograpyMatrix;
 
@@ -110,29 +112,51 @@ static long processVideoAndGetScores(QString &videoFileName)
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {
-            frameCount ++;
 
-            cv::Mat mask(videoFrame.size(),CV_8U);
-            mask=cv::Scalar(255);
+            cv::Mat mask(videoFrame.size(), CV_8U);
+            mask = cv::Scalar(255);
 
-            frameAlligner.process(videoFrame, homograpyMatrix, alignedImage);
+            cv::Mat maskedVideoFrame(videoFrame.size(), CV_8U);
+            maskedVideoFrame = cv::Scalar(255);
+
+            frameAlligner.process(videoFrame, homograpyMatrix, prevFrameAlligned);
 
             frameAlligner.process(mask, homograpyMatrix, mask);
 
-            mask = videoFrame & mask;
+            maskedVideoFrame = videoFrame & mask;
 
-            cv::absdiff(alignedImage, mask, alignedImage);
+            /*
+             *yerine calculateBinaryDiffImageAccording2pixelNeighborhood yazıldı.
+            //cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
+            //cv::imshow("sequentalImageDiff", sequentalImageDiff);
 
-            cv::threshold(alignedImage, alignedImage, 0, 255, cv::THRESH_BINARY|cv::THRESH_OTSU);
 
-            cv::imshow("Result", alignedImage);
+            cv::threshold(sequentalImageDiff, sequentalImageDiffBinary, _CVS_IS_PIXEL_DIFFERENT_THRES,
+                          255, cv::THRESH_BINARY);
+                          */
+
+            sequentalImageDiffBinary.create(prevFrameAlligned.size(), prevFrameAlligned.type());
+            frameAlligner.calculateBinaryDiffImageAccording2pixelNeighborhood(prevFrameAlligned,
+                                                                              maskedVideoFrame,
+                                                                              sequentalImageDiffBinary);
+
+
+            /* Şimdilik bu dursun
+            cv::erode(alignedImage, alignedImage, cv::Mat());
+            cv::erode(alignedImage, alignedImage, cv::Mat());
+            cv::dilate(alignedImage, alignedImage, cv::Mat());
+            cv::dilate(alignedImage, alignedImage, cv::Mat());
+            */
+
+            cv::imshow("Result", sequentalImageDiffBinary);
             cv::imshow("input", videoFrame);
             cv::waitKey(5);
-            sumNonZero += cv::countNonZero(alignedImage);
+            sumNonZero += cv::countNonZero(prevFrameAlligned);
 
         }
 
-         qDebug()<<videoFileName<<frameCount;
+        frameCount++;
+        qDebug()<<videoFileName<<frameCount;
     }
 
     return sumNonZero;

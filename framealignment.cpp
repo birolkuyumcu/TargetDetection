@@ -58,3 +58,106 @@ void FrameAlignment::process(cv::Mat &inputImage, cv::Mat &homography,cv::Mat &o
     outputImage = mask;
 
 }
+
+#define _CVS_PIXEL_NEIGHBORHOOD_DIST    1
+#define _CVS_IS_PIXEL_DIFFERENT_THRES  50
+#define _CVS_IS_PIXEL_DIFFERENT_THRES_SQUARE 2500
+
+void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat& image1,
+                                                                         cv::Mat& image2,
+                                                                         cv::Mat& outputImage)
+{
+    int wMin;
+    int wMax;
+    int hMin;
+    int hMax;
+
+    int image1rowsCnt = image1.rows;
+    int image1colsCnt = image1.cols;
+
+    unsigned long rgbVectorValueForImg1;
+    unsigned long rgbVectorValueForImg2;
+
+    unsigned int closePixelFound = 0;
+
+
+    outputImage = cv::Scalar(0);
+
+
+    for (int j = 1; j < image1rowsCnt - 1; j++) // for all rows    // (except first and last)
+    {
+        hMin = j - _CVS_PIXEL_NEIGHBORHOOD_DIST;
+        hMax = j + _CVS_PIXEL_NEIGHBORHOOD_DIST;
+
+        //check boundary conditions
+        if(hMin < 0) hMin = 0;
+        if(hMax > image1rowsCnt) hMax = image1rowsCnt;
+
+        for (int i = 1; i < image1colsCnt - 1; i++) // for all columns    // (except first and last)
+        {
+
+            wMin = i - _CVS_PIXEL_NEIGHBORHOOD_DIST;
+            wMax = i + _CVS_PIXEL_NEIGHBORHOOD_DIST;
+
+            //check boundary conditions
+            if(wMin < 0) wMin = 0;
+            if(wMax > image1colsCnt) wMax = image1colsCnt;
+
+
+            //the rgb vector for position i,j in image1
+            rgbVectorValueForImg1 = 0;
+            rgbVectorValueForImg1 = image1.at<cv::Vec3b>(j, i)[0] * image1.at<cv::Vec3b>(j, i)[0];
+            //rgbVectorValueForImg1 = image1.at<cv::Vec3b>(j, i)[0] * image1.at<cv::Vec3b>(j, i)[0];
+            //rgbVectorValueForImg1 += image1.at<cv::Vec3b>(j, i)[1] * image1.at<cv::Vec3b>(j, i)[1];
+            //rgbVectorValueForImg1 += image1.at<cv::Vec3b>(j, i)[2] * image1.at<cv::Vec3b>(j, i)[2];
+
+            //loop for pixel neighborhood
+            closePixelFound = 0;
+
+            //scan a region on image2 to find a similar pixel feom image1
+            for(int h = hMax; h >= hMin; h--)
+            {
+                for(int  w = wMax; w >= wMin; w--)
+                {
+                    rgbVectorValueForImg2 = 0;
+                    rgbVectorValueForImg2 = image2.at<cv::Vec3b>(h, w)[0] * image2.at<cv::Vec3b>(h, w)[0];
+                    //rgbVectorValueForImg2 = image2.at<cv::Vec3b>(h, w)[0] * image2.at<cv::Vec3b>(h, w)[0];
+                    //rgbVectorValueForImg2 += image2.at<cv::Vec3b>(h, w)[1] * image2.at<cv::Vec3b>(h, w)[1];
+                    //rgbVectorValueForImg2 += image2.at<cv::Vec3b>(h, w)[2] * image2.at<cv::Vec3b>(h, w)[2];
+
+                    if( abs(rgbVectorValueForImg2 - rgbVectorValueForImg1) <= _CVS_IS_PIXEL_DIFFERENT_THRES_SQUARE)
+                    {
+                        //similar color pixel found
+                        closePixelFound = 1;
+                        break;
+                    }
+                }
+                if(closePixelFound == 1)
+                {
+                    break;
+                }
+            }
+
+            if(closePixelFound == 1)
+            {
+                //if a similar pixel found mark the position
+                outputImage.at<cv::Vec3b>(j, i)[0] = 100;
+                //outputImage.at<cv::Vec3b>(j, i)[0] = 255;
+                //outputImage.at<cv::Vec3b>(j, i)[1] = 255;
+                //outputImage.at<cv::Vec3b>(j, i)[2] = 255;
+            }
+
+
+        }
+    }
+
+
+    /*
+    // Set the unprocess pixels to 0
+    outputImage.row(0).setTo(cv::Scalar(0));
+    outputImage.row(outputImage.rows - 1).setTo(cv::Scalar(0));
+    outputImage.col(0).setTo(cv::Scalar(0));
+    outputImage.col(outputImage.cols - 1).setTo(cv::Scalar(0));
+    */
+
+}

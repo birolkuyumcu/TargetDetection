@@ -264,7 +264,7 @@ void AlignmentMatrixCalc::featureBasedHomography()
     else
     {
         isHomographyCalc = false;
-        qDebug<<"Reset\n";
+        qDebug()<<"Reset\n";
         //wayBack();
         return;
     }
