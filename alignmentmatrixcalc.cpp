@@ -251,7 +251,7 @@ void AlignmentMatrixCalc::featureBasedHomography()
 
 
 
-    if(pointsPrev.size() !=0 && pointsCurrent.size() != 0)
+    if(pointsPrev.size() >=4 && pointsCurrent.size() >= 4)
     {
         // Sub-pixsel Accuracy
 
