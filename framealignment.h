@@ -1,6 +1,10 @@
 #ifndef FRAMEALIGNMENT_H
 #define FRAMEALIGNMENT_H
 
+#define _CVS_PIXEL_NEIGHBORHOOD_DIST    1
+#define _CVS_IS_PIXEL_DIFFERENT_THRES  50
+#define _CVS_IS_PIXEL_DIFFERENT_THRES_SQUARE 2500
+
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "exception.h"

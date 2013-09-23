@@ -125,21 +125,21 @@ static long processVideoAndGetScores(QString &videoFileName)
 
             maskedVideoFrame = videoFrame & mask;
 
-            /*
-             *yerine calculateBinaryDiffImageAccording2pixelNeighborhood yazıldı.
-            //cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
-            //cv::imshow("sequentalImageDiff", sequentalImageDiff);
+
+             //yerine calculateBinaryDiffImageAccording2pixelNeighborhood yazıldı.
+            cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
+            cv::imshow("sequentalImageDiff", sequentalImageDiff);
 
 
             cv::threshold(sequentalImageDiff, sequentalImageDiffBinary, _CVS_IS_PIXEL_DIFFERENT_THRES,
                           255, cv::THRESH_BINARY);
-                          */
 
-            sequentalImageDiffBinary.create(prevFrameAlligned.size(), prevFrameAlligned.type());
+
+            /*sequentalImageDiffBinary.create(prevFrameAlligned.size(), prevFrameAlligned.type());
             frameAlligner.calculateBinaryDiffImageAccording2pixelNeighborhood(prevFrameAlligned,
                                                                               maskedVideoFrame,
                                                                               sequentalImageDiffBinary);
-
+*/
 
             /* Şimdilik bu dursun
             cv::erode(alignedImage, alignedImage, cv::Mat());

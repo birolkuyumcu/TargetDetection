@@ -144,7 +144,7 @@ void Test3()
 #else
         sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
 #endif
-        std::cout<<Buf<<"\n";
+        qDebug()<<Buf<<"\n";
         frame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
         if(frame.empty()) break;
         //
@@ -164,13 +164,13 @@ void Test3()
             cv::absdiff(aPrev,mask,aPrev);
             cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
             t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
-            std::cout<<"Processing Time :"<<t<<"\n\n";
+            qDebug()<<"Processing Time :"<<t<<"\n\n";
             cv::Mat cFrame;
         //    FindCandidate(aPrev,frame,cFrame);
             cv::imshow(wName,aPrev);
             cv::imshow("Out",mask);
             cv::waitKey(1);
-            std::cout<<i<<"\n";
+            qDebug()<<i<<"\n";
         }
         else
         {
@@ -235,13 +235,13 @@ void Test4()
             cv::absdiff(aPrev, frame, aPrev);
             cv::threshold(aPrev, aPrev, 0,255, cv::THRESH_BINARY|cv::THRESH_OTSU);
             t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
-            std::cout<<"Processing Time :"<<t<<"\n\n";
+            qDebug()<<"Processing Time :"<<t<<"\n\n";
             cv::Mat cFrame;
             FindCandidate(aPrev,frame,cFrame);
 
             cv::imshow("result", cFrame);
             cv::waitKey(10);
-            std::cout<<i<<"\n";
+            qDebug()<<i<<"\n";
         }
         prev.~Mat();
         prev = frame;
@@ -266,7 +266,7 @@ void Vivid2Avi(const char *header,int max,const char*aviName)
     {
 
         sprintf(Buf,"%sframe%05d.jpg%c",header,i,0);
-        std::cout<<Buf<<"\n";
+        qDebug()<<Buf<<"\n";
         frame=cv::imread(Buf,CV_LOAD_IMAGE_COLOR);
         w<<frame;
         cv::waitKey(20);
@@ -298,7 +298,7 @@ void produceArtificialDataset(cv::Mat &baseFrame,int n,std::vector<cv::Mat> &fra
     int walkX = 320;
     int walkY = 120;
 
-    std::cout<<"1 \n";
+    qDebug()<<"1 \n";
     for(int i=0;i < n+1; i++)
     {
         cv::Mat temp(baseFrame, cv::Rect(walkX,walkY,640,480));
@@ -309,7 +309,7 @@ void produceArtificialDataset(cv::Mat &baseFrame,int n,std::vector<cv::Mat> &fra
         walkX += (20-(rand()%40));
         walkY += (10-(rand()%20));
     }
-  //  std::cout<<"1 Ends \n";
+  //  qDebug()<<"1 Ends \n";
 
 }
 
@@ -333,13 +333,13 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
 
     for(unsigned int i = 1; i < frameList.size(); i++)
     {
-        std::cout<<" 2 ";
+        qDebug()<<" 2 ";
 
         calc.process(frameList[i]);
 
         if(calc.getHomography(homographMatrix) == true)
         {
-            std::cout<<" 3 ";
+            qDebug()<<" 3 ";
 
             cv::Mat mask(frameList[i].size(), CV_8U);
 
@@ -362,7 +362,7 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
         }
         else
         {
-            std::cout<<"4 improper matching... \n"; // improper matching...
+            qDebug()<<"4 improper matching... \n"; // improper matching...
         }
 
 
@@ -451,7 +451,7 @@ void ArtificalPeformanceTester()
 
     int nTimes=5;
 
-    std::cout<<"Test Started \n";
+    qDebug()<<"Test Started \n";
     std::vector<cv::Mat> frameList;
 
     produceArtificialDataset(baseFrame,nTimes,frameList);
@@ -459,9 +459,9 @@ void ArtificalPeformanceTester()
     for ( int mtc = 0; mtc < 6 ; mtc++ ){
         for( int dsc = 0 ; dsc < 6 ; dsc++){
             for( int ftr = 0 ; ftr < 10; ftr++){
-                std::cout<< "Test for "<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<"\n";
+                qDebug()<< "Test for "<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<"\n";
                 perf=ApplyTest(frameList,featureDetectorNames[ftr],descriptorExtractorNames[dsc],matcherNames[mtc]);
-                std::cout<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<" : "<<perf<<"\n";
+                qDebug()<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<" : "<<perf<<"\n";
             }
         }
     }
