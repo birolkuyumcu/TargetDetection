@@ -59,21 +59,25 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
 
         inputImage.copyTo(currentFrame);
 
-        if(run() == false)
+        if(run())
+        {
+            if(hMethod == featureBased)
+            {
+                featureBasedHomography();
+            }
+            else
+            {
+                flowBasedHomography();
+            }
+        }
+        else //  false
         {
             //wayBack();
             isHomographyCalc = false;
             return;
         }
 
-        if(hMethod == featureBased)
-        {
-            featureBasedHomography();
-        }
-        else
-        {
-            flowBasedHomography();
-        }
+
     }
 
 }
@@ -281,6 +285,7 @@ void AlignmentMatrixCalc::featureBasedHomography()
     else
     {
         isHomographyCalc = false;
+        stage=secondPass;
         qDebug()<<"Reset\n";
         //wayBack();
         return;
