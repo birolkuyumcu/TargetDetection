@@ -15,7 +15,7 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
@@ -127,19 +127,18 @@ static long processVideoAndGetScores(QString &videoFileName)
 
 
              //yerine calculateBinaryDiffImageAccording2pixelNeighborhood yazıldı.
-            cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
-            cv::imshow("sequentalImageDiff", sequentalImageDiff);
+            //cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
+            //cv::imshow("sequentalImageDiff", sequentalImageDiff);
 
 
-            cv::threshold(sequentalImageDiff, sequentalImageDiffBinary, _CVS_IS_PIXEL_DIFFERENT_THRES,
-                          255, cv::THRESH_BINARY);
+            //cv::threshold(sequentalImageDiff, sequentalImageDiffBinary, _CVS_IS_PIXEL_DIFFERENT_THRES,
+              //            255, cv::THRESH_BINARY);
 
 
-            /*sequentalImageDiffBinary.create(prevFrameAlligned.size(), prevFrameAlligned.type());
+            sequentalImageDiffBinary.create(maskedVideoFrame.size(), CV_8UC1);
             frameAlligner.calculateBinaryDiffImageAccording2pixelNeighborhood(prevFrameAlligned,
                                                                               maskedVideoFrame,
                                                                               sequentalImageDiffBinary);
-*/
 
             /* Şimdilik bu dursun
             cv::erode(alignedImage, alignedImage, cv::Mat());

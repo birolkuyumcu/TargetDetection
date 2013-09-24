@@ -102,10 +102,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
 
             //the rgb vector for position i,j in image1
             rgbVectorValueForImg1 = 0;
-            rgbVectorValueForImg1 = image1.at<cv::Vec3b>(j, i)[0] * image1.at<cv::Vec3b>(j, i)[0];
-            //rgbVectorValueForImg1 = image1.at<cv::Vec3b>(j, i)[0] * image1.at<cv::Vec3b>(j, i)[0];
-            //rgbVectorValueForImg1 += image1.at<cv::Vec3b>(j, i)[1] * image1.at<cv::Vec3b>(j, i)[1];
-            //rgbVectorValueForImg1 += image1.at<cv::Vec3b>(j, i)[2] * image1.at<cv::Vec3b>(j, i)[2];
+            rgbVectorValueForImg1 = image1.at<char>(j, i) * image1.at<char>(j, i);
 
             //loop for pixel neighborhood
             closePixelFound = 0;
@@ -116,10 +113,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
                 for(int  w = wMax; w >= wMin; w--)
                 {
                     rgbVectorValueForImg2 = 0;
-                    rgbVectorValueForImg2 = image2.at<cv::Vec3b>(h, w)[0] * image2.at<cv::Vec3b>(h, w)[0];
-                    //rgbVectorValueForImg2 = image2.at<cv::Vec3b>(h, w)[0] * image2.at<cv::Vec3b>(h, w)[0];
-                    //rgbVectorValueForImg2 += image2.at<cv::Vec3b>(h, w)[1] * image2.at<cv::Vec3b>(h, w)[1];
-                    //rgbVectorValueForImg2 += image2.at<cv::Vec3b>(h, w)[2] * image2.at<cv::Vec3b>(h, w)[2];
+                    rgbVectorValueForImg2 = image2.at<char>(h, w) * image2.at<char>(h, w);
 
                     if( abs(rgbVectorValueForImg2 - rgbVectorValueForImg1) <= _CVS_IS_PIXEL_DIFFERENT_THRES_SQUARE)
                     {
@@ -134,13 +128,10 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
                 }
             }
 
-            if(closePixelFound == 1)
+            if(closePixelFound == 0)
             {
-                //if a similar pixel found mark the position
-                outputImage.at<cv::Vec3b>(j, i)[0] = 100;
-                //outputImage.at<cv::Vec3b>(j, i)[0] = 255;
-                //outputImage.at<cv::Vec3b>(j, i)[1] = 255;
-                //outputImage.at<cv::Vec3b>(j, i)[2] = 255;
+                //if a similar pixel is not found mark the position
+                outputImage.at<char>(j, i) = 255;
             }
 
 
