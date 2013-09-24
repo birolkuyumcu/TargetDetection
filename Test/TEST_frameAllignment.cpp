@@ -15,7 +15,7 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 2; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
@@ -77,6 +77,7 @@ static long processVideoAndGetScores(QString &videoFileName)
     cv::Mat videoFrame;
     cv::Mat sequentalImageDiff;
     cv::Mat sequentalImageDiffBinary;
+    cv::Mat sequentalImageDiffBinary1;
 
     cv::Mat prevFrameAlligned;
     long sumNonZero = 0;
@@ -127,12 +128,12 @@ static long processVideoAndGetScores(QString &videoFileName)
 
 
              //yerine calculateBinaryDiffImageAccording2pixelNeighborhood yazıldı.
-            //cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
-            //cv::imshow("sequentalImageDiff", sequentalImageDiff);
+            cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
+            cv::imshow("sequentalImageDiff", sequentalImageDiff);
 
 
-            //cv::threshold(sequentalImageDiff, sequentalImageDiffBinary, _CVS_IS_PIXEL_DIFFERENT_THRES,
-              //            255, cv::THRESH_BINARY);
+            cv::threshold(sequentalImageDiff, sequentalImageDiffBinary1, _CVS_IS_PIXEL_DIFFERENT_THRES,
+                          255, cv::THRESH_BINARY);
 
 
             sequentalImageDiffBinary.create(maskedVideoFrame.size(), CV_8UC1);
@@ -147,7 +148,8 @@ static long processVideoAndGetScores(QString &videoFileName)
             cv::dilate(alignedImage, alignedImage, cv::Mat());
             */
 
-            cv::imshow("Result", sequentalImageDiffBinary);
+            cv::imshow("sequentalImageDiffBinaryPixelNeigh", sequentalImageDiffBinary);
+            cv::imshow("sequentalImageDiffBinaryNormal", sequentalImageDiffBinary1);
             cv::imshow("input", videoFrame);
             cv::waitKey(5);
             sumNonZero += cv::countNonZero(prevFrameAlligned);
