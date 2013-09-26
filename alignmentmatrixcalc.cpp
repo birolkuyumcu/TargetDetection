@@ -320,11 +320,19 @@ void AlignmentMatrixCalc::flowBasedHomography()
         }
     }
 
+    if(tempPrev.size() >= 4 && tempCurrent.size() >= 4)
+    {
+        homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod,
+                                        ransacReprojThreshold);
+        pointsCurrent = tempCurrent;
+        isHomographyCalc=true;
+    }
+    else
+    {
+        isHomographyCalc=false;
+    }
 
-    homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod,
-                                    ransacReprojThreshold);
-    pointsCurrent = tempCurrent;
-    isHomographyCalc=true;
+
 
     // Burda bir kontrol eklenmeli filitrelenen noktaların belli bir sayı altına düştüğünde
     // yeniden feature bazlı nokta tespit ettirilmeli
@@ -334,11 +342,11 @@ void AlignmentMatrixCalc::flowBasedHomography()
     }
 
     //If Homogrphy not valid !
-    if(isHomographyValid())
+    /*if(isHomographyValid())
     {
-        wayBack();
+      //  wayBack();
     }
-
+*/
 }
 
 
