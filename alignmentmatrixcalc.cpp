@@ -295,7 +295,8 @@ void AlignmentMatrixCalc::featureBasedHomography()
 
     if(!isHomographyValid())
     {
-        wayBack();
+     //   stage=secondPass;
+     //   wayBack();
     }
 
 
@@ -507,12 +508,13 @@ bool AlignmentMatrixCalc::isHomographyValid()
     {
        isHomographyCalc = false;
        qDebug()<<"Homography Matrix is Invalid : "<<colsDifference<<" "<<rowsDifference ;
-       errorCount++;
+    /*   errorCount++;
        if(errorCount >= 4)
        {
            stage=firstPass;
            errorCount=0;
        }
+       */
     }
 
     return isHomographyCalc;
