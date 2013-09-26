@@ -21,6 +21,7 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     isHomographyCalc=false;
     stage = firstPass;
     numOfPointsMin = 50;
+    errorCount=0;
 
     if(!cv::initModule_nonfree())
     {
@@ -34,6 +35,17 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
     {
         exc.showException("Empty Frame..." );
         return;
+    }
+
+    if(stage == secondPass)
+    {
+        errorCount++;
+        if(errorCount >= 4)
+        {
+            stage=firstPass;
+            errorCount=0;
+        }
+
     }
 
     if(stage == firstPass)

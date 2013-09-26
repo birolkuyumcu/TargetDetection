@@ -73,6 +73,7 @@ private:
     bool isHomographyCalc;
     ProcessStage stage;
     unsigned int numOfPointsMin;
+    unsigned int errorCount;
 
     //
     void featureBasedHomography();
