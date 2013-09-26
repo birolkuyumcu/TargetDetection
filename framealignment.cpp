@@ -87,7 +87,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
 
         //check boundary conditions
         if(hMin < 0) hMin = 0;
-        if(hMax > image1rowsCnt) hMax = image1rowsCnt;
+        if(hMax >= image1rowsCnt) hMax = image1rowsCnt-1;
 
         for (int i = 1; i < image1colsCnt - 1; i++) // for all columns    // (except first and last)
         {
@@ -97,7 +97,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
 
             //check boundary conditions
             if(wMin < 0) wMin = 0;
-            if(wMax > image1colsCnt) wMax = image1colsCnt;
+            if(wMax >= image1colsCnt) wMax = image1colsCnt-1;
 
 
             //the rgb vector for position i,j in image1
@@ -115,7 +115,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
                     rgbVectorValueForImg2 = 0;
                     rgbVectorValueForImg2 = image2.at<char>(h, w) * image2.at<char>(h, w);
 
-                    if( abs(rgbVectorValueForImg2 - rgbVectorValueForImg1) <= _CVS_IS_PIXEL_DIFFERENT_THRES_SQUARE)
+                    if( abs(long(rgbVectorValueForImg2 - rgbVectorValueForImg1) <= _CVS_IS_PIXEL_DIFFERENT_THRES_SQUARE))
                     {
                         //similar color pixel found
                         closePixelFound = 1;

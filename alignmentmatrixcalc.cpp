@@ -506,6 +506,13 @@ bool AlignmentMatrixCalc::isHomographyValid()
     else
     {
        isHomographyCalc = false;
+       qDebug()<<"Homography Matrix is Invalid : "<<colsDifference<<" "<<rowsDifference ;
+       errorCount++;
+       if(errorCount >= 4)
+       {
+           stage=firstPass;
+           errorCount=0;
+       }
     }
 
     return isHomographyCalc;

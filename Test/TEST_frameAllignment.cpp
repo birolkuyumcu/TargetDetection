@@ -113,7 +113,7 @@ static long processVideoAndGetScores(QString &videoFileName)
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {
-
+            qDebug()<<"Homography Matrix True";
             cv::Mat mask(videoFrame.size(), CV_8U);
             mask = cv::Scalar(255);
 
@@ -154,6 +154,10 @@ static long processVideoAndGetScores(QString &videoFileName)
             cv::waitKey(5);
             sumNonZero += cv::countNonZero(prevFrameAlligned);
 
+        }
+        else
+        {
+            qDebug()<<"Homography Matrix FALSE !!!!!!!!!";
         }
 
         frameCount++;
