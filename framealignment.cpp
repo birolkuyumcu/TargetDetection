@@ -102,7 +102,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
 
             //the rgb vector for position i,j in image1
             rgbVectorValueForImg1 = 0;
-            rgbVectorValueForImg1 = image1.at<char>(j, i) * image1.at<char>(j, i);
+            rgbVectorValueForImg1 = image1.at<char>(j, i);
 
             //loop for pixel neighborhood
             closePixelFound = 0;
@@ -113,9 +113,9 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
                 for(int  w = wMax; w >= wMin; w--)
                 {
                     rgbVectorValueForImg2 = 0;
-                    rgbVectorValueForImg2 = image2.at<char>(h, w) * image2.at<char>(h, w);
+                    rgbVectorValueForImg2 = image2.at<char>(h, w);
 
-                    if( abs(long(rgbVectorValueForImg2 - rgbVectorValueForImg1) <= _CVS_IS_PIXEL_DIFFERENT_THRES_SQUARE))
+                    if( abs((long)(rgbVectorValueForImg2 - rgbVectorValueForImg1)) <= _CVS_IS_PIXEL_DIFFERENT_THRES)
                     {
                         //similar color pixel found
                         closePixelFound = 1;

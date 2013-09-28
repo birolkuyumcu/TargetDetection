@@ -3,7 +3,7 @@
 
 #define TEST_VIDEO_FILE_CNT 14
 
-static long processVideoAndGetScores(QString &videoFileName);
+static long processVideoAndGetScores(QString &videoFileName, int startFrame);
 static void reportScoresForVideoFile(int videoFileIndex, long score);
 
 
@@ -12,16 +12,17 @@ void TEST_frameAllignment()
     QString videoFileName;
     long scoreForSingleVideo;
     long totalScoreForVideos = 0;
+    int startFrame = 0;
 
     //open videos sequentialy.
 
-    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
         videoFileName = "D:/cvs/data/testavi/output";
 #else
-        videoFileName = "test";//"output";
+        videoFileName = "output";//"output";
 #endif
 
         videoFileName +=  QString::number(i);
@@ -29,7 +30,7 @@ void TEST_frameAllignment()
 
 
         //process video and get results
-        scoreForSingleVideo = processVideoAndGetScores(videoFileName);
+        scoreForSingleVideo = processVideoAndGetScores(videoFileName, startFrame);
 
         //save scores to file
         reportScoresForVideoFile(i, scoreForSingleVideo);
@@ -68,7 +69,7 @@ static void reportScoresForVideoFile(int videoFileIndex, long score)
 
 }
 
-static long processVideoAndGetScores(QString &videoFileName)
+static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 {
     AlignmentMatrixCalc alignMatrixcalc;
     FrameAlignment frameAlligner;
@@ -94,6 +95,12 @@ static long processVideoAndGetScores(QString &videoFileName)
     videoCap.open(videoFileName.toStdString());
 
     //burası düzeltilecek düzgün init fonksiyonu koyulacak.
+    if(startFrame != 0)
+    {
+        videoCap.set(CV_CAP_PROP_POS_FRAMES, (double)startFrame);
+        frameCount = startFrame;
+    }
+
     videoCap.read(videoFrame);
     frameCount ++;
 
