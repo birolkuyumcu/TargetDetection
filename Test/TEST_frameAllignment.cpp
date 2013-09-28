@@ -15,13 +15,13 @@ void TEST_frameAllignment()
 
     //open videos sequentialy.
 
-    for(int i = 2; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
         videoFileName = "D:/cvs/data/testavi/output";
 #else
-        videoFileName = "rvid";//"output";
+        videoFileName = "test";//"output";
 #endif
 
         videoFileName +=  QString::number(i);
@@ -113,7 +113,6 @@ static long processVideoAndGetScores(QString &videoFileName)
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {
-            qDebug()<<"Homography Matrix True";
             cv::Mat mask(videoFrame.size(), CV_8U);
             mask = cv::Scalar(255);
 
@@ -126,42 +125,36 @@ static long processVideoAndGetScores(QString &videoFileName)
 
             maskedVideoFrame = videoFrame & mask;
 
-
-             //yerine calculateBinaryDiffImageAccording2pixelNeighborhood yazıldı.
-            cv::absdiff(prevFrameAlligned, maskedVideoFrame, sequentalImageDiff);
-            cv::imshow("sequentalImageDiff", sequentalImageDiff);
-
-
-            cv::threshold(sequentalImageDiff, sequentalImageDiffBinary1, _CVS_IS_PIXEL_DIFFERENT_THRES,
-                          255, cv::THRESH_BINARY);
-
-
             sequentalImageDiffBinary.create(maskedVideoFrame.size(), CV_8UC1);
             frameAlligner.calculateBinaryDiffImageAccording2pixelNeighborhood(prevFrameAlligned,
                                                                               maskedVideoFrame,
                                                                               sequentalImageDiffBinary);
 
-            /* Şimdilik bu dursun
-            cv::erode(alignedImage, alignedImage, cv::Mat());
-            cv::erode(alignedImage, alignedImage, cv::Mat());
-            cv::dilate(alignedImage, alignedImage, cv::Mat());
-            cv::dilate(alignedImage, alignedImage, cv::Mat());
-            */
-
             cv::imshow("sequentalImageDiffBinaryPixelNeigh", sequentalImageDiffBinary);
-            cv::imshow("sequentalImageDiffBinaryNormal", sequentalImageDiffBinary1);
-            cv::imshow("input", videoFrame);
-            cv::waitKey(5);
             sumNonZero += cv::countNonZero(prevFrameAlligned);
+
+
+            cv::putText(videoFrame, "Homograpy status: OK", cvPoint(10,35),
+                        cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(200,200,250), 1, CV_AA);
 
         }
         else
         {
-            qDebug()<<"Homography Matrix FALSE !!!!!!!!!";
+            cv::putText(videoFrame, "Homograpy status: Not Found!", cvPoint(10,35),
+                        cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(200,200,250), 1, CV_AA);
         }
 
         frameCount++;
-        qDebug()<<videoFileName<<frameCount;
+
+        QString videoInfo;
+
+        videoInfo = videoFileName + " @ " + QString::number(frameCount);
+
+        cv::putText(videoFrame, videoInfo.toStdString(), cvPoint(10,20),
+                    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(200,200,250), 1, CV_AA);
+
+        cv::imshow("input", videoFrame);
+        cv::waitKey(5);
     }
 
     return sumNonZero;

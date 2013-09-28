@@ -138,8 +138,8 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
         }
     }
 
+/*
 
-    /*
     // Set the unprocess pixels to 0
     outputImage.row(0).setTo(cv::Scalar(0));
     outputImage.row(outputImage.rows - 1).setTo(cv::Scalar(0));
