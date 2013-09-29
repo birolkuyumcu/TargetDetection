@@ -6,6 +6,24 @@
 static long processVideoAndGetScores(QString &videoFileName, int startFrame);
 static void reportScoresForVideoFile(int videoFileIndex, long score);
 
+//
+int64 times[10];
+bool measureStart[10]={false,false,false,false,false,
+                       false,false,false,false,false};
+void timeMeasure(int i)
+{
+    if(measureStart[i]==false)
+    {
+        times[i]=cv::getTickCount();
+        measureStart[i]=true;
+    }
+    else
+    {
+        qDebug()<<"Time Measurement "<<i<<" : "<<((double)cv::getTickCount() -times[i])/cv::getTickFrequency();
+        measureStart[i]=false;
+    }
+}
+//
 
 void TEST_frameAllignment()
 {
@@ -88,11 +106,11 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 
     long frameCount = 0;
 
-   // alignMatrixcalc.setHomographyMethod(flowBased);
-   // alignMatrixcalc.setDescriptorSimple("FAST");
+    alignMatrixcalc.setHomographyMethod(flowBased);
+    alignMatrixcalc.setDescriptorSimple("GFTT");
 
-    alignMatrixcalc.setDetectorSimple("SURF");
-    alignMatrixcalc.setDescriptorSimple("SURF");
+   // alignMatrixcalc.setDetectorSimple("STAR");
+   // alignMatrixcalc.setDescriptorSimple("ORB");
 
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
     alignMatrixcalc.setMatchingType(knnMatch);
@@ -122,8 +140,9 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
         currentFrame=videoFrame.clone();
 
         cv::cvtColor(currentFrame, currentFrame, CV_BGR2GRAY);
-
+        timeMeasure(1);
         alignMatrixcalc.process(currentFrame);
+        timeMeasure(1);
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {

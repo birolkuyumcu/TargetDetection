@@ -177,7 +177,7 @@ bool AlignmentMatrixCalc::run()
         qDebug()<<"Before retainBest :"<<keypointsPrev.size();
         cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
 
-        //cv::KeyPointsFilter::retainBest(keypointsPrev, 80 );
+      //  cv::KeyPointsFilter::retainBest(keypointsPrev, 80 );
         qDebug()<<"After retainBest :"<<keypointsPrev.size();
 
         if(keypointsPrev.size() >= numOfPointsMin)

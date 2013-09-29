@@ -11,6 +11,7 @@
 #include <QTextStream>
 
 void TEST_frameAllignment();
+void timeMeasure(int i);
 
 
 #endif // TEST_FRAMEALLIGNMENT_H

@@ -478,6 +478,7 @@ int main(int argc, char *argv[])
     //Test3();
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
+
     TEST_frameAllignment();
 
     return 0;
