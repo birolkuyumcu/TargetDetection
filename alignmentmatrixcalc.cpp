@@ -138,6 +138,8 @@ void AlignmentMatrixCalc::init(cv::Mat &frame)
             return;
         }
 
+        pointsPrev.clear();
+
         for(unsigned int i = 0; i<keypointsPrev.size(); i++)
         {
             pointsPrev.push_back(keypointsPrev[i].pt);
@@ -173,9 +175,9 @@ bool AlignmentMatrixCalc::run()
         detector->detect(prevFrame, keypointsPrev);
 
         qDebug()<<"Before retainBest :"<<keypointsPrev.size();
-        //cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
+        cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
 
-        cv::KeyPointsFilter::retainBest(keypointsPrev, 80 );
+        //cv::KeyPointsFilter::retainBest(keypointsPrev, 80 );
         qDebug()<<"After retainBest :"<<keypointsPrev.size();
 
         if(keypointsPrev.size() >= numOfPointsMin)
@@ -336,13 +338,14 @@ void AlignmentMatrixCalc::flowBasedHomography()
                                         ransacReprojThreshold);
       //  pointsCurrent = tempCurrent;
         isHomographyCalc=true;
+        isHomographyValid();
     }
     else
     {
         isHomographyCalc=false;
     }
 
-    isHomographyValid();
+
 
 
 /*
