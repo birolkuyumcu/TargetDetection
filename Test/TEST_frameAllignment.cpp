@@ -76,6 +76,8 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 
     cv::VideoCapture videoCap;
     cv::Mat videoFrame;
+    cv::Mat currentFrame;
+    cv::Mat prevFrame;
     cv::Mat sequentalImageDiff;
     cv::Mat sequentalImageDiffBinary;
     cv::Mat sequentalImageDiffBinary1;
@@ -86,11 +88,11 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 
     long frameCount = 0;
 
-    alignMatrixcalc.setHomographyMethod(flowBased);
-    alignMatrixcalc.setDescriptorSimple("FAST");
+   // alignMatrixcalc.setHomographyMethod(flowBased);
+   // alignMatrixcalc.setDescriptorSimple("FAST");
 
-   // alignMatrixcalc.setDetectorSimple("SURF");
-   // alignMatrixcalc.setDescriptorSimple("SURF");
+    alignMatrixcalc.setDetectorSimple("SURF");
+    alignMatrixcalc.setDescriptorSimple("SURF");
 
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
     alignMatrixcalc.setMatchingType(knnMatch);
@@ -108,32 +110,34 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
     frameCount ++;
 
     cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
-    cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+ //   cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
     //buna neden gerek var. sadece getHomography olsa olmuyor mu?
     alignMatrixcalc.process(videoFrame);
+    prevFrame=videoFrame.clone();
 
     while (videoCap.read(videoFrame))
     {
-        cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+ //       cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+        currentFrame=videoFrame.clone();
 
-        cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
+        cv::cvtColor(currentFrame, currentFrame, CV_BGR2GRAY);
 
-        alignMatrixcalc.process(videoFrame);
+        alignMatrixcalc.process(currentFrame);
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {
-            cv::Mat mask(videoFrame.size(), CV_8U);
+            cv::Mat mask(currentFrame.size(), CV_8U);
             mask = cv::Scalar(255);
 
-            cv::Mat maskedVideoFrame(videoFrame.size(), CV_8U);
+            cv::Mat maskedVideoFrame(currentFrame.size(), CV_8U);
             maskedVideoFrame = cv::Scalar(255);
 
-            frameAlligner.process(videoFrame, homograpyMatrix, prevFrameAlligned);
+            frameAlligner.process(prevFrame, homograpyMatrix, prevFrameAlligned);
 
             frameAlligner.process(mask, homograpyMatrix, mask);
 
-            maskedVideoFrame = videoFrame & mask;
+            maskedVideoFrame = currentFrame & mask;
 
             sequentalImageDiffBinary.create(maskedVideoFrame.size(), CV_8UC1);
             frameAlligner.calculateBinaryDiffImageAccording2pixelNeighborhood(prevFrameAlligned,
@@ -165,6 +169,7 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 
         cv::imshow("input", videoFrame);
         cv::waitKey(5);
+        prevFrame=currentFrame.clone();
     }
 
     return sumNonZero;
