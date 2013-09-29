@@ -86,9 +86,12 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 
     long frameCount = 0;
 
-   // alignMatrixcalc.setHomographyMethod(flowBased);
-    alignMatrixcalc.setDetectorSimple("SURF");
-    alignMatrixcalc.setDescriptorSimple("SURF");
+    alignMatrixcalc.setHomographyMethod(flowBased);
+    alignMatrixcalc.setDescriptorSimple("FAST");
+
+   // alignMatrixcalc.setDetectorSimple("SURF");
+   // alignMatrixcalc.setDescriptorSimple("SURF");
+
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
     alignMatrixcalc.setMatchingType(knnMatch);
 

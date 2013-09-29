@@ -65,7 +65,7 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
             else if(hMethod == flowBased)
             {
                 prevFrame = currentFrame;
-                pointsPrev = pointsCurrent;
+                // pointsPrev = pointsCurrent;
             }
         }
 
@@ -172,7 +172,11 @@ bool AlignmentMatrixCalc::run()
     {
         detector->detect(prevFrame, keypointsPrev);
 
-        cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
+        qDebug()<<"Before retainBest :"<<keypointsPrev.size();
+        //cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
+
+        cv::KeyPointsFilter::retainBest(keypointsPrev, 80 );
+        qDebug()<<"After retainBest :"<<keypointsPrev.size();
 
         if(keypointsPrev.size() >= numOfPointsMin)
         {
@@ -183,6 +187,8 @@ bool AlignmentMatrixCalc::run()
             stage = secondPass;
             return false;
         }
+
+        pointsPrev.clear();
 
         for(unsigned int i=0; i < keypointsPrev.size(); i++)
         {
@@ -309,7 +315,10 @@ void AlignmentMatrixCalc::flowBasedHomography()
     std::vector<cv::Point2f>tempPrev;
     std::vector<cv::Point2f>tempCurrent;
 
+    pointsCurrent.clear();
     calcOpticalFlowPyrLK(prevFrame, currentFrame, pointsPrev, pointsCurrent, status, err);
+
+    qDebug()<<"\n\n Prev Frame Features: "<<pointsPrev.size();
 
     for (unsigned int i=0; i < pointsPrev.size(); i++)
     {
@@ -319,12 +328,13 @@ void AlignmentMatrixCalc::flowBasedHomography()
             tempCurrent.push_back(pointsCurrent[i]);
         }
     }
+    qDebug()<<"After Flow Filtered Features : "<<tempCurrent.size();
 
     if(tempPrev.size() >= 4 && tempCurrent.size() >= 4)
     {
         homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod,
                                         ransacReprojThreshold);
-        pointsCurrent = tempCurrent;
+      //  pointsCurrent = tempCurrent;
         isHomographyCalc=true;
     }
     else
@@ -332,8 +342,10 @@ void AlignmentMatrixCalc::flowBasedHomography()
         isHomographyCalc=false;
     }
 
+    isHomographyValid();
 
 
+/*
     // Burda bir kontrol eklenmeli filitrelenen noktaların belli bir sayı altına düştüğünde
     // yeniden feature bazlı nokta tespit ettirilmeli
     if(pointsCurrent.size() < 50)
