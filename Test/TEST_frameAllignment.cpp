@@ -10,17 +10,18 @@ static void reportScoresForVideoFile(int videoFileIndex, long score);
 int64 times[10];
 bool measureStart[10]={false,false,false,false,false,
                        false,false,false,false,false};
+
 void timeMeasure(int i)
 {
-    if(measureStart[i]==false)
+    if(measureStart[i] == false)
     {
-        times[i]=cv::getTickCount();
-        measureStart[i]=true;
+        times[i] = cv::getTickCount();
+        measureStart[i] = true;
     }
     else
     {
-        qDebug()<<"Time Measurement "<<i<<" : "<<((double)cv::getTickCount() -times[i])/cv::getTickFrequency();
-        measureStart[i]=false;
+        qDebug()<<"Time Measurement "<<i<<" : "<<((double)cv::getTickCount() - times[i]) / cv::getTickFrequency();
+        measureStart[i] = false;
     }
 }
 //
@@ -30,11 +31,11 @@ void TEST_frameAllignment()
     QString videoFileName;
     long scoreForSingleVideo;
     long totalScoreForVideos = 0;
-    int startFrame = 0;
+    int startFrame = 200;
 
     //open videos sequentialy.
 
-    for(int i = 0; i <= TEST_VIDEO_FILE_CNT; ++i)
+    for(int i = 1; i <= TEST_VIDEO_FILE_CNT; ++i)
     {
         //determine video fileName
 #ifdef WIN32
@@ -106,11 +107,11 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 
     long frameCount = 0;
 
-    alignMatrixcalc.setHomographyMethod(flowBased);
-    alignMatrixcalc.setDescriptorSimple("GFTT");
+    //alignMatrixcalc.setHomographyMethod(flowBased);
+    //alignMatrixcalc.setDescriptorSimple("GFTT");
 
-   // alignMatrixcalc.setDetectorSimple("STAR");
-   // alignMatrixcalc.setDescriptorSimple("ORB");
+    alignMatrixcalc.setDetectorSimple("SURF");
+    alignMatrixcalc.setDescriptorSimple("SURF");
 
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
     alignMatrixcalc.setMatchingType(knnMatch);
@@ -128,7 +129,7 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
     frameCount ++;
 
     cv::cvtColor(videoFrame, videoFrame, CV_BGR2GRAY);
- //   cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+    cv::resize(videoFrame, videoFrame, cv::Size(640,480));
 
     //buna neden gerek var. sadece getHomography olsa olmuyor mu?
     alignMatrixcalc.process(videoFrame);
@@ -136,10 +137,11 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
 
     while (videoCap.read(videoFrame))
     {
- //       cv::resize(videoFrame, videoFrame, cv::Size(640,480));
-        currentFrame=videoFrame.clone();
+        cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+        currentFrame = videoFrame.clone();
 
         cv::cvtColor(currentFrame, currentFrame, CV_BGR2GRAY);
+
         timeMeasure(1);
         alignMatrixcalc.process(currentFrame);
         timeMeasure(1);
@@ -186,9 +188,11 @@ static long processVideoAndGetScores(QString &videoFileName, int startFrame)
         cv::putText(videoFrame, videoInfo.toStdString(), cvPoint(10,20),
                     cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(200,200,250), 1, CV_AA);
 
+        prevFrame = currentFrame.clone();
+
         cv::imshow("input", videoFrame);
         cv::waitKey(5);
-        prevFrame=currentFrame.clone();
+
     }
 
     return sumNonZero;
