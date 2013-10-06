@@ -4,6 +4,7 @@
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
 #include "Test/TEST_frameAllignment.h"
+#include <time.h>
 
 void Test()
 {
@@ -121,8 +122,8 @@ void Test3()
     FrameAlignment aligner;
 
     cv::Mat prev;
-    calc.setDetectorSimple("SURF");
-    calc.setDescriptorSimple("SURF");
+    calc.setDetectorSimple("SIFT");
+    calc.setDescriptorSimple("ORB");
     cv::waitKey(0);
   //  calc.setDetectorSimple("GridORB");
 
@@ -295,9 +296,9 @@ void produceArtificialDataset(cv::Mat &baseFrame,int n,std::vector<cv::Mat> &fra
 {
     // baseFrame (1280x720) den bir dizi frame hazırlama (640x480) ( n + 1 adet )
     // by using random walk start from center (320,120)
-    int walkX = 320;
-    int walkY = 120;
-
+    int walkX = 0;
+    int walkY = 0;
+    srand (time(NULL));
     qDebug()<<"1 \n";
     for(int i=0;i < n+1; i++)
     {
@@ -306,8 +307,11 @@ void produceArtificialDataset(cv::Mat &baseFrame,int n,std::vector<cv::Mat> &fra
         frameList.push_back(temp);
         cv::imshow("Result", temp);
         cv::waitKey(100);
-        walkX += (20-(rand()%40));
-        walkY += (10-(rand()%20));
+        walkX += ((rand()%5));
+        walkY += ((rand()%3));
+
+     //   walkX += (20-(rand()%40));
+     //   walkY += (10-(rand()%20));
     }
   //  qDebug()<<"1 Ends \n";
 
@@ -324,6 +328,7 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
     cv::Mat alignedImage;
     cv::Mat homographMatrix;
     double sumNonZero = 0.0;
+    double activeframes=0;
 
     calc.setDetectorSimple(fName);
     calc.setDescriptorSimple(dName);
@@ -333,13 +338,14 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
 
     for(unsigned int i = 1; i < frameList.size(); i++)
     {
-        qDebug()<<" 2 ";
+    //    qDebug()<<" 2 ";
 
         calc.process(frameList[i]);
 
         if(calc.getHomography(homographMatrix) == true)
         {
-            qDebug()<<" 3 ";
+   //         qDebug()<<" 3 ";
+            activeframes += 1;
 
             cv::Mat mask(frameList[i].size(), CV_8U);
 
@@ -368,9 +374,12 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
 
     }
 
-    qDebug()<<" 5 \n";
+ //   qDebug()<<" 5 \n";
     // return avarge of them (cout / n ) low is better...
-    sumNonZero = sumNonZero / frameList.size();
+    if( activeframes > 0)
+      sumNonZero = sumNonZero / activeframes;
+    else
+      sumNonZero = -1;
     return sumNonZero;
 }
 
@@ -449,19 +458,33 @@ void ArtificalPeformanceTester()
 #endif
     // Base Frame 1280x720
 
-    int nTimes=5;
+    int nTimes=10;
 
     qDebug()<<"Test Started \n";
     std::vector<cv::Mat> frameList;
 
     produceArtificialDataset(baseFrame,nTimes,frameList);
 
+
+
+
+
     for ( int mtc = 0; mtc < 6 ; mtc++ ){
         for( int dsc = 0 ; dsc < 6 ; dsc++){
-            for( int ftr = 0 ; ftr < 10; ftr++){
+            for( int ftr = 0 ; ftr < 8; ftr++){
+                //
+                if(ftr == 3 && dsc == 2 )
+                    continue;
+                //
+                QFile file("d:/ArtificalPeformanceTest.txt");
+                file.open(QIODevice::Append);
+                QTextStream logOut(&file);
                 qDebug()<< "Test for "<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<"\n";
                 perf=ApplyTest(frameList,featureDetectorNames[ftr],descriptorExtractorNames[dsc],matcherNames[mtc]);
                 qDebug()<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<" : "<<perf<<"\n";
+                logOut<<featureDetectorNames[ftr]<<" "<<descriptorExtractorNames[dsc]<<" "<<matcherNames[mtc]<<" "<<featureDetectorNames[ftr]<<"-"<<descriptorExtractorNames[dsc]<<"-"<<matcherNames[mtc]<<"  "<<perf<<"\r\n";
+                logOut.atEnd();
+                file.close();
             }
         }
     }
@@ -475,11 +498,11 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
 
-    //Test3();
-    //ArtificalPeformanceTester();
+    //    Test3();
+    ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
-    TEST_frameAllignment();
+    //TEST_frameAllignment();
 
     return 0;
 }
