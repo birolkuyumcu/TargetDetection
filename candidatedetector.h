@@ -8,6 +8,10 @@ class CandidateDetectorSettings
 {
 public:
     int dummy;
+    int minWidth;
+    int maxWidth;
+    int minHeight;
+    int maxHeight;
 };
 
 class CandidateDetector
@@ -18,7 +22,11 @@ public:
     void getSettings(CandidateDetectorSettings& _settings);
     void saveSettings();
     bool loadSettings();
-    void process(cv::Mat& inputImage);
+    void process(cv::Mat inputImage);
+
+    //
+    std::vector<std::vector<cv::Point> > candidateList;
+    std::vector<cv::RotatedRect> candidateRRectsList;
 
 private:
     CandidateDetectorSettings   settings;
