@@ -499,7 +499,17 @@ void ArtificalPeformanceTester()
 
 }
 
+void newPreProc(cv::Mat in, cv::Mat& out)
+{
+    cv::equalizeHist(in,out);
+    cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
+    cv::morphologyEx(out,out,CV_MOP_GRADIENT,element);
+    cv::threshold(out,out,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+}
+
 void Test5()
+
+
 {
     char Buf[1024];
     char *wName = (char *)"Test";
@@ -523,7 +533,7 @@ void Test5()
     calc.process(pFrame);
     prev=pFrame;
 
-    for(int i=0;i<1820;i+=10)
+    for(int i=0;i<1820;i+=5)
     {
         double t = (double)cv::getTickCount();
 
@@ -537,12 +547,13 @@ void Test5()
         if(frame.empty())
             break;
          pFrame=frame.clone();
+        // newPreProc(pFrame,pFrame);
 
         calc.process(pFrame);
 
         cv::Mat aPrev;
         cv::Mat H;
-
+        cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
         if(calc.getHomography(H) == true){
             cv::Mat mask(prev.size(),CV_8U);
             mask=cv::Scalar(255);
@@ -555,7 +566,10 @@ void Test5()
             qDebug()<<"Processing Time :"<<t<<"\n\n";
             cv::Mat cFrame;
 
+            cv::dilate(aPrev,aPrev, element,cv::Point(-1,-1),4 );
+            cv::erode(aPrev,aPrev, element,cv::Point(-1,-1),4 );
             cDet.process(aPrev);
+            cDet.showCandidates(frame);
             cv::imshow(wName,aPrev);
             cv::imshow("Out",mask);
             cv::waitKey(1);

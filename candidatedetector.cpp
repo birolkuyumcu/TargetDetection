@@ -3,10 +3,10 @@
 CandidateDetector::CandidateDetector()
 {
     exc.setModuleName("CandidateDetector");
-    settings.minWidth=3;
-    settings.maxWidth=20;
+    settings.minWidth=4;
+    settings.maxWidth=50;
     settings.minHeight=10;
-    settings.maxHeight=70;
+    settings.maxHeight=100;
 
 }
 
@@ -26,8 +26,6 @@ void CandidateDetector::process(cv::Mat inputImage)
         exc.showException("Input Image must be a Gray Level ( single channel )!" );
         return;
     }
-    cv::Mat cImg;
-    cvtColor(inputImage,cImg,CV_GRAY2BGR);
 
     candidateList.clear();
     candidateRRectsList.clear();
@@ -48,19 +46,28 @@ void CandidateDetector::process(cv::Mat inputImage)
 
     }
 
-    // debuging
 
+}
 
+void CandidateDetector::showCandidates(cv::Mat inputImage)
+{
+    // for debuging
+
+    if(inputImage.channels() == 1)
+    {
+        cv::cvtColor(inputImage,inputImage,CV_GRAY2RGB);
+    }
     for( int i = 0; i < candidateList.size() ; i++ )
     {
 
         cv::Point2f vertices[4];
         candidateRRectsList[i].points(vertices);
         for (int i = 0; i < 4; i++)
-            cv::line(cImg, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
-        cv::circle(cImg,candidateRRectsList[i].center,3,cv::Scalar(0,0,255));
+            cv::line(inputImage, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
+        cv::circle(inputImage,candidateRRectsList[i].center,3,cv::Scalar(0,0,255),-1);
     }
-    imshow("Candidates", cImg );
+    imshow("Candidates", inputImage );
+
 
 }
 

@@ -23,6 +23,7 @@ public:
     void saveSettings();
     bool loadSettings();
     void process(cv::Mat inputImage);
+    void showCandidates(cv::Mat inputImage);
 
     //
     std::vector<std::vector<cv::Point> > candidateList;
