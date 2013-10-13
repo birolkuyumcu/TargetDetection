@@ -23,6 +23,7 @@ void Test()
     cv::absdiff(aPrev,img_2,aPrev);
     cv::imshow("Sonuç",aPrev);
 
+
 //     cv::imshow("Sonuc",img_1);
      cv::waitKey(0);
 }
@@ -120,11 +121,12 @@ void Test3()
     cv::imshow(wName,pFrame);
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
+    CandidateDetector cDet;
 
     cv::Mat prev;
     calc.setDetectorSimple("SIFT");
     calc.setDescriptorSimple("ORB");
-    cv::waitKey(0);
+   // cv::waitKey(0);
   //  calc.setDetectorSimple("GridORB");
 
    // calc.setHomographyMethod(flowBased);  // featurebased a göre çok hızlı
@@ -168,6 +170,7 @@ void Test3()
             qDebug()<<"Processing Time :"<<t<<"\n\n";
             cv::Mat cFrame;
         //    FindCandidate(aPrev,frame,cFrame);
+            cDet.process(aPrev);
             cv::imshow(wName,aPrev);
             cv::imshow("Out",mask);
             cv::waitKey(1);
@@ -324,6 +327,7 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
 
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
+    CandidateDetector cDet;
 
     cv::Mat alignedImage;
     cv::Mat homographMatrix;
@@ -359,6 +363,8 @@ double ApplyTest(std::vector<cv::Mat> frameList,const char *fName , const char *
             cv::absdiff(alignedImage, mask, alignedImage);
             cv::threshold(alignedImage, alignedImage, 0, 255, cv::THRESH_BINARY|cv::THRESH_OTSU);
             cv::imshow("Result", alignedImage);
+
+        //    cDet.process(alignedImage);
 
             // count non-zero pixels
             sumNonZero += cv::countNonZero(alignedImage);
@@ -493,13 +499,88 @@ void ArtificalPeformanceTester()
 
 }
 
+void Test5()
+{
+    char Buf[1024];
+    char *wName = (char *)"Test";
+    cv::Mat frame;
+    cv::Mat pFrame;
+    cv::namedWindow(wName);
+#ifdef WIN32
+    frame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+#else
+    frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+#endif
+  //  testPP(frame,pFrame);
+
+    cv::imshow(wName,frame);
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+    CandidateDetector cDet;
+
+    cv::Mat prev;
+    pFrame=frame.clone();
+    calc.process(pFrame);
+    prev=pFrame;
+
+    for(int i=0;i<1820;i+=10)
+    {
+        double t = (double)cv::getTickCount();
+
+#ifdef WIN32
+        sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
+#else
+        sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
+#endif
+        qDebug()<<Buf<<"\n";
+        frame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
+        if(frame.empty())
+            break;
+         pFrame=frame.clone();
+
+        calc.process(pFrame);
+
+        cv::Mat aPrev;
+        cv::Mat H;
+
+        if(calc.getHomography(H) == true){
+            cv::Mat mask(prev.size(),CV_8U);
+            mask=cv::Scalar(255);
+            aligner.process(prev,H,aPrev);
+            aligner.process(mask,H,mask);
+            mask=pFrame&mask;
+            cv::absdiff(aPrev,mask,aPrev);
+            cv::threshold(aPrev,aPrev,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+            t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+            qDebug()<<"Processing Time :"<<t<<"\n\n";
+            cv::Mat cFrame;
+
+            cDet.process(aPrev);
+            cv::imshow(wName,aPrev);
+            cv::imshow("Out",mask);
+            cv::waitKey(1);
+            qDebug()<<i<<"\n";
+        }
+        else
+        {
+            i-=9;
+        }
+
+
+
+       // prev.~Mat();
+        prev=pFrame;
+    }
+
+}
+
 int main(int argc, char *argv[])
 {
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
 
-    //    Test3();
-    ArtificalPeformanceTester();
+     Test5();
+    //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     //TEST_frameAllignment();
