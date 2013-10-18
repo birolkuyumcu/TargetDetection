@@ -527,6 +527,7 @@ void Test5()
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
     CandidateDetector cDet;
+    CandidateFilter cFilt;
 
     cv::Mat prev;
     pFrame=frame.clone();
@@ -569,7 +570,9 @@ void Test5()
             cv::dilate(aPrev,aPrev, element,cv::Point(-1,-1),4 );
             cv::erode(aPrev,aPrev, element,cv::Point(-1,-1),4 );
             cDet.process(aPrev);
-            cDet.showCandidates(frame);
+            cFilt.process(&cDet.candidateRRectsList);
+          //  cDet.showCandidates(frame);
+            cFilt.showTargets(frame);
             cv::imshow(wName,aPrev);
             cv::imshow("Out",mask);
             cv::waitKey(1);

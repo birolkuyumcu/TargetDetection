@@ -72,6 +72,7 @@ public:
     void processUnmatchedCandidates();
     void init();
     void match();
+    void showTargets(cv::Mat& inputImage);
     //
     std::vector<Target> targetList;
     std::vector<cv::RotatedRect> *candidateList;
