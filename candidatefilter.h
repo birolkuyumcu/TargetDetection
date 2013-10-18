@@ -66,13 +66,16 @@ public:
     void getSettings(CandidateFilterSettings& _settings);
     void saveSettings();
     bool loadSettings();
-    void process(cv::Mat& inputImage);
+    //void process(cv::Mat& inputImage);
     void process(std::vector<cv::RotatedRect> *iCandidateList);
+    void processUnmatchedTargets();
+    void processUnmatchedCandidates();
     void init();
     void match();
     //
     std::vector<Target> targetList;
     std::vector<cv::RotatedRect> *candidateList;
+    std::vector<bool> isCandidateMatched;
 
 private:
     CandidateFilterSettings settings;

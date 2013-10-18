@@ -13,6 +13,25 @@ void CandidateFilter::process(std::vector<cv::RotatedRect> *iCandidateList)
         init();
         return;
     }
+    if(candidateList->size()> 0)
+    {
+        match();
+    }
+    processUnmatchedTargets();
+    processUnmatchedCandidates();
+}
+
+void CandidateFilter::processUnmatchedTargets()
+{
+    for(int j=0;j<targetList.size();j++)
+    {
+         if( targetList.at(j).isMatched == false )
+         {
+             
+         }
+             
+    }
+    
 }
 
 void CandidateFilter::init()
@@ -32,6 +51,8 @@ void CandidateFilter::match()
 {
 
     std::list<MatchItem> matchTable;
+    isCandidateMatched.reserve(candidateList->size());
+    isCandidateMatched.assign(isCandidateMatched.size(),false);
 
     for(int j=0;j<targetList.size();j++)
     {
@@ -60,11 +81,22 @@ void CandidateFilter::match()
 //        if(temp.distance > distanceThreshod)  break;
         int mTarget=temp.targetIndex;
         int mCandidate=temp.candidateIndex;
+        // process Matched Targets
         targetList.at(temp.targetIndex).location=candidateList->at(temp.candidateIndex);
         targetList.at(temp.targetIndex).isMatched=true;
         targetList.at(temp.targetIndex).statusCounter++;
-        if(targetList.at(temp.targetIndex).statusCounter > 3)
+        if( targetList.at(temp.targetIndex).status == candidate )
+        {
+            if(targetList.at(temp.targetIndex).statusCounter > 3)
+                targetList.at(temp.targetIndex).status=visible;
+        }
+        else if( targetList.at(temp.targetIndex).status == invisible )
+        {
             targetList.at(temp.targetIndex).status=visible;
+            
+        }
+        // Eliminate Matched  Candidates
+        isCandidateMatched[temp.candidateIndex]=true;
         // Eşleşen indexleri listeden kaldır.
         std::list<MatchItem>::iterator removeIndex;
         for( removeIndex = matchTable.begin(); removeIndex != matchTable.end(); removeIndex++ )
@@ -87,4 +119,9 @@ float CandidateFilter::calculateDistance(cv::RotatedRect &r1, cv::RotatedRect &r
     float deltaX=(r1.center.x-r2.center.x);
     float deltaY=(r1.center.y-r2.center.y);
     return sqrtf(deltaX*deltaX+deltaY*deltaY);
+}
+
+
+void CandidateFilter::processUnmatchedCandidates()
+{
 }
