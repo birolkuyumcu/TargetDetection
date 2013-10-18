@@ -69,7 +69,8 @@ void CandidateFilter::init()
 void CandidateFilter::match()
 {
 
-    std::list<MatchItem> matchTable;
+    std::vector<MatchItem> matchTable;
+
     isCandidateMatched.reserve(candidateList->size());
     isCandidateMatched.assign(candidateList->size(),false);
 
@@ -83,14 +84,17 @@ void CandidateFilter::match()
             temp.candidateIndex=i;
             temp.targetIndex=j;
             temp.distance=calculateDistance(candidateList->at(i),targetList.at(j).location);
-            matchTable.push_back(temp);
+            if(temp.distance <= settings.distanceThreshold ) // distanceThreshold dan büyük olan uzaklıkları tabloya ekleme
+               matchTable.push_back(temp);
 
         }
     }
+    if(matchTable.size() == 0)
+        return;
 
-    matchTable.sort();
+    std::sort(matchTable.begin(),matchTable.end());
 
-    std::list<MatchItem>::iterator tableIndex;
+    std::vector<MatchItem>::iterator tableIndex;
 
     for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); ++tableIndex )
     {
@@ -101,6 +105,8 @@ void CandidateFilter::match()
         int mTarget=temp.targetIndex;
         int mCandidate=temp.candidateIndex;
         // process Matched Targets
+        if(isCandidateMatched[mCandidate] ||targetList.at(mTarget).isMatched ) // daha önceden eşleşen bir Target Yada Candidate ise  bir sonraki iterasyona git
+            continue;
         targetList.at(temp.targetIndex).location=candidateList->at(temp.candidateIndex);
         targetList.at(temp.targetIndex).isMatched=true;
         targetList.at(temp.targetIndex).statusCounter++;
@@ -116,15 +122,6 @@ void CandidateFilter::match()
         }
         // Eliminate Matched  Candidates
         isCandidateMatched[mCandidate]=true;
-        // Eşleşen indexleri listeden kaldır.
-        std::list<MatchItem>::iterator removeIndex;
-        for( removeIndex = matchTable.begin(); removeIndex != matchTable.end(); ++removeIndex )
-        {
-            MatchItem removeTemp=*removeIndex;
-            if(removeTemp.candidateIndex == mCandidate || removeTemp.targetIndex == mTarget)
-                matchTable.erase(removeIndex);
-
-        }
 
     }
 
