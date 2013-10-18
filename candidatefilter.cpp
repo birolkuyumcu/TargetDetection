@@ -30,19 +30,61 @@ void CandidateFilter::init()
 
 void CandidateFilter::match()
 {
-    std::vector<std::vector<float>> distanceMatrix;
-    distanceMatrix.reserve(candidateList->size());
-    for(int i=0;i<candidateList->size();i++)
+
+    std::list<MatchItem> matchTable;
+
+    for(int j=0;j<targetList.size();j++)
     {
-        for(int j=0;j<targetList.size();j++)
+        targetList.at(j).isMatched=false;
+        for(int i=0;i<candidateList->size();i++)
         {
-            distanceMatrix[i].push_back(calculateDistance(candidateList->at(i),targetList.at(j).location));
+
+            MatchItem temp;
+            temp.candidateIndex=i;
+            temp.targetIndex=j;
+            temp.distance=calculateDistance(candidateList->at(i),targetList.at(j).location);
+            matchTable.push_back(temp);
+
         }
     }
+
+    matchTable.sort();
+
+    std::list<MatchItem>::iterator tableIndex;
+
+    for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); tableIndex++ )
+    {
+      //cout << *theIterator;
+        // Eşleştir
+        MatchItem temp=*tableIndex;
+//        if(temp.distance > distanceThreshod)  break;
+        int mTarget=temp.targetIndex;
+        int mCandidate=temp.candidateIndex;
+        targetList.at(temp.targetIndex).location=candidateList->at(temp.candidateIndex);
+        targetList.at(temp.targetIndex).isMatched=true;
+        targetList.at(temp.targetIndex).statusCounter++;
+        if(targetList.at(temp.targetIndex).statusCounter > 3)
+            targetList.at(temp.targetIndex).status=visible;
+        // Eşleşen indexleri listeden kaldır.
+        std::list<MatchItem>::iterator removeIndex;
+        for( removeIndex = matchTable.begin(); removeIndex != matchTable.end(); removeIndex++ )
+        {
+            MatchItem removeTemp=*removeIndex;
+            if(removeTemp.candidateIndex == mCandidate || removeTemp.targetIndex == mTarget)
+                matchTable.erase(removeIndex);
+
+        }
+
+    }
+
+
+
 
 }
 
 float CandidateFilter::calculateDistance(cv::RotatedRect &r1, cv::RotatedRect &r2)
 {
-    return 0;
+    float deltaX=(r1.center.x-r2.center.x);
+    float deltaY=(r1.center.y-r2.center.y);
+    return sqrtf(deltaX*deltaX+deltaY*deltaY);
 }
