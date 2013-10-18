@@ -2,6 +2,9 @@
 
 CandidateFilter::CandidateFilter()
 {
+    settings.distanceThreshold = 50;
+    settings.visibilityThreshold = 3;
+    settings.invisibilityThreshold = 5;
 }
 
 
@@ -40,7 +43,7 @@ void CandidateFilter::processUnmatchedTargets()
             else if(  tmp.status == invisible)
             {
                 tmp.statusCounter++;
-                if( tmp.statusCounter > 3 )
+                if( tmp.statusCounter > settings.invisibilityThreshold )
                     targetList.erase(it);
             }
 
@@ -68,7 +71,7 @@ void CandidateFilter::match()
 
     std::list<MatchItem> matchTable;
     isCandidateMatched.reserve(candidateList->size());
-    isCandidateMatched.assign(isCandidateMatched.size(),false);
+    isCandidateMatched.assign(candidateList->size(),false);
 
     for(int j=0;j<targetList.size();j++)
     {
@@ -89,7 +92,7 @@ void CandidateFilter::match()
 
     std::list<MatchItem>::iterator tableIndex;
 
-    for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); tableIndex++ )
+    for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); ++tableIndex )
     {
       //cout << *theIterator;
         // Eşleştir
@@ -103,7 +106,7 @@ void CandidateFilter::match()
         targetList.at(temp.targetIndex).statusCounter++;
         if( targetList.at(temp.targetIndex).status == candidate )
         {
-            if(targetList.at(temp.targetIndex).statusCounter > 3)
+            if(targetList.at(temp.targetIndex).statusCounter > settings.visibilityThreshold)
                 targetList.at(temp.targetIndex).status=visible;
         }
         else if( targetList.at(temp.targetIndex).status == invisible )
@@ -112,10 +115,10 @@ void CandidateFilter::match()
             
         }
         // Eliminate Matched  Candidates
-        isCandidateMatched[temp.candidateIndex]=true;
+        isCandidateMatched[mCandidate]=true;
         // Eşleşen indexleri listeden kaldır.
         std::list<MatchItem>::iterator removeIndex;
-        for( removeIndex = matchTable.begin(); removeIndex != matchTable.end(); removeIndex++ )
+        for( removeIndex = matchTable.begin(); removeIndex != matchTable.end(); ++removeIndex )
         {
             MatchItem removeTemp=*removeIndex;
             if(removeTemp.candidateIndex == mCandidate || removeTemp.targetIndex == mTarget)

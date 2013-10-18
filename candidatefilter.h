@@ -16,7 +16,9 @@ enum TargetState
 class CandidateFilterSettings
 {
 public:
-    int dummy;
+    int visibilityThreshold;
+    int invisibilityThreshold;
+    float distanceThreshold;
 };
 
 class Target
