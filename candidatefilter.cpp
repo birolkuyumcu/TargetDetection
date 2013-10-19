@@ -5,6 +5,7 @@ CandidateFilter::CandidateFilter()
     settings.distanceThreshold = 50;
     settings.visibilityThreshold = 3;
     settings.invisibilityThreshold = 5;
+    targetIdCounter=0;
 }
 
 
@@ -72,6 +73,7 @@ void CandidateFilter::init()
         temp.location=candidateList->at(i);
         temp.status=candidate;
         temp.statusCounter=1;
+        temp.targetId=++targetIdCounter;
         targetList.push_back(temp);
 
     }
@@ -187,7 +189,9 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
 
         for (int i = 0; i < 4; i++)
             cv::line(inputImage, vertices[i], vertices[(i+1)%4],color,thickness,linetype);
-        cv::putText(inputImage,targetStatus,temp.location.center,
+        char Buf[512];
+        sprintf(Buf,"%s-%d%c",targetStatus,temp.targetId,0);
+        cv::putText(inputImage,Buf,temp.location.center,
                     cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, color, 1);
     //    cv::circle(inputImage,temp.location.center,3,cv::Scalar(0,0,255),-1);
     }
@@ -214,6 +218,7 @@ void CandidateFilter::processUnmatchedCandidates()
             temp.location=candidateList->at(i);
             temp.status=candidate;
             temp.statusCounter=1;
+            temp.targetId=++targetIdCounter;
             targetList.push_back(temp);
         }
 

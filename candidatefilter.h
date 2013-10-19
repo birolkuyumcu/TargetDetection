@@ -28,6 +28,7 @@ public:
     TargetState status;
     unsigned statusCounter;
     bool isMatched;
+    unsigned targetId;
 
 };
 
@@ -83,6 +84,7 @@ public:
 private:
     CandidateFilterSettings settings;
     Exception               exc;
+    unsigned targetIdCounter;
     float calculateDistance(cv::RotatedRect& r1,cv::RotatedRect& r2);
 };
 
