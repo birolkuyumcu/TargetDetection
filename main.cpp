@@ -529,12 +529,14 @@ void Test5()
     CandidateDetector cDet;
     CandidateFilter cFilt;
 
+    calc.setHomographyMethod(featureBased);
+
     cv::Mat prev;
     pFrame=frame.clone();
     calc.process(pFrame);
     prev=pFrame;
 
-    for(int i=0;i<1820;i+=5)
+    for(int i=1;i<1820;i+=5)
     {
         double t = (double)cv::getTickCount();
 
@@ -595,7 +597,7 @@ int main(int argc, char *argv[])
 {
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
-
+    // cvUseOptimized(true);
      Test5();
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
