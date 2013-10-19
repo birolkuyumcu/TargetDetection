@@ -35,21 +35,18 @@ void CandidateFilter::processUnmatchedTargets()
 
         if(it->isMatched == false ) // Unmatched Targets
         {
-           // qDebug()<<"Unmatched Targets \n";
             if(  it->status == visible)
             {
-                qDebug()<<"Unmatched Targets  Visible\n";
                 it->status = invisible;
                 it->statusCounter=1;
 
             }
             else if( it->status == invisible)
             {
-                qDebug()<<"Unmatched Targets  Invisible\n";
                 it->statusCounter++;
                 if(it->statusCounter > settings.invisibilityThreshold )
                 {
-                    it=targetList.erase(it);
+                    it=targetList.erase(it); // after erase it points to nothing so incrimenting rises a error
                     if(it != targetList.begin())
                         --it;
                 }
@@ -57,7 +54,6 @@ void CandidateFilter::processUnmatchedTargets()
             }
             else if (it->status == candidate)
             {
-                qDebug()<<"Unmatched Targets  Candidate\n";
                 it=targetList.erase(it);
                 if(it != targetList.begin())
                     --it;
@@ -81,8 +77,7 @@ void CandidateFilter::init()
         targetList.push_back(temp);
 
     }
-    qDebug()<<"Candidate Filter Init\n\n";
-}
+ }
 
 void CandidateFilter::match()
 {
@@ -116,30 +111,27 @@ void CandidateFilter::match()
 
     for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); ++tableIndex )
     {
-      //cout << *theIterator;
         // Eşleştir
         MatchItem temp=*tableIndex;
-//        if(temp.distance > distanceThreshod)  break;
         int mTarget=temp.targetIndex;
         int mCandidate=temp.candidateIndex;
         // process Matched Targets
         if(isCandidateMatched[mCandidate] ||targetList.at(mTarget).isMatched ) // daha önceden eşleşen bir Target Yada Candidate ise  bir sonraki iterasyona git
             continue;
-        targetList.at(temp.targetIndex).location=candidateList->at(temp.candidateIndex);
-        targetList.at(temp.targetIndex).isMatched=true;
-        targetList.at(temp.targetIndex).statusCounter++;
-        qDebug()<<"Candidate :"<<mCandidate<<" matched to Target : "<<mTarget<<"\n";
-        if( targetList.at(temp.targetIndex).status == candidate )
+        targetList.at(mTarget).location=candidateList->at(mCandidate);
+        targetList.at(mTarget).isMatched=true;
+        targetList.at(mTarget).statusCounter++;
+        if( targetList.at(mTarget).status == candidate )
         {
-            if(targetList.at(temp.targetIndex).statusCounter > settings.visibilityThreshold)
-                targetList.at(temp.targetIndex).status=visible;
+            if(targetList.at(mTarget).statusCounter > settings.visibilityThreshold)
+                targetList.at(mTarget).status=visible;
         }
-        else if( targetList.at(temp.targetIndex).status == invisible )
+        else if( targetList.at(mTarget).status == invisible )
         {
-            targetList.at(temp.targetIndex).status=visible;
+            targetList.at(mTarget).status=visible;
             
         }
-        // Eliminate Matched  Candidates
+        // Signing Matched  Candidates so dont match again...
         isCandidateMatched[mCandidate]=true;
 
     }
@@ -151,7 +143,7 @@ void CandidateFilter::match()
 
 void CandidateFilter::showTargets(cv::Mat &inputImage)
 {
-    // for debuging
+    // for debuging purposes
 
     if(inputImage.channels() == 1)
     {
@@ -196,7 +188,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
         char Buf[512];
         sprintf(Buf,"%s-%d%c",targetStatus,temp.targetId,0);
         cv::putText(inputImage,Buf,temp.location.center,
-                    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, color, 1);
+                    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(0,255,255), 1);
     //    cv::circle(inputImage,temp.location.center,3,cv::Scalar(0,0,255),-1);
     }
     imshow("Targets", inputImage );

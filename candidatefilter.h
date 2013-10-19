@@ -41,26 +41,6 @@ public:
     bool operator<(const MatchItem &other) const { return distance < other.distance; }
 };
 
-/*
- * Aday Listesini al
- ilk giriş ise hepsini  targetList ‘e  aday olarak ekle (status candidate)
- Nesne Listesi ile eşleştirme yap ( Eşletirme Kıstası Ne  ? )
- Eşleşen Nesnenin durumu aday ise belirginlik sayısını artır
- Belirginlik sayısı eşik değere ulaştıysa durumunu görülebilire çevir
- Eşleşenlerin konumlarını güncelle
- Eşleşme olmayan görülebilir nesnelerin görünmezlik sayısını artır
-Görünmezlik sayısı eşik değeri aşmışsa nesneyi sil
- Eşleşmeyenleri  Nesne Listesine  aday olarak ekle
-
-Eşleştirme ;
-Her Aday için her nesneye olan uzaklığı hesapla
-Her Adayın en yakın olduğu nesneye eğer eşik değerinden yakınsa ata
-eşleştirilenleri listeden kaldır
-
-
-
- **/
-
 class CandidateFilter
 {
 public:
@@ -69,7 +49,6 @@ public:
     void getSettings(CandidateFilterSettings& _settings);
     void saveSettings();
     bool loadSettings();
-    //void process(cv::Mat& inputImage);
     void process(std::vector<cv::RotatedRect> *iCandidateList);
     void processUnmatchedTargets();
     void processUnmatchedCandidates();

@@ -536,7 +536,7 @@ void Test5()
     calc.process(pFrame);
     prev=pFrame;
 
-    for(int i=1;i<1820;i+=5)
+    for(int i=1;i<1820;i+=3)
     {
         double t = (double)cv::getTickCount();
 
@@ -582,7 +582,7 @@ void Test5()
         }
         else
         {
-            i-=9;
+            // i-=2;
         }
 
 
