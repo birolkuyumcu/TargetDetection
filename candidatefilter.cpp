@@ -28,29 +28,40 @@ void CandidateFilter::processUnmatchedTargets()
 {
     std::vector<Target>::iterator it;
 
-    for(it = targetList.begin() ; it < targetList.end() ; it++)
+    for(it = targetList.begin() ; it < targetList.end() ; ++it)
     {
-        Target tmp=*it;
 
-        if( tmp.isMatched == false ) // Unmatched Targets
+        if(it->isMatched == false ) // Unmatched Targets
         {
-            if(  tmp.status == visible ||   tmp.status == candidate)
+           // qDebug()<<"Unmatched Targets \n";
+            if(  it->status == visible)
             {
-                tmp.status = invisible;
-                tmp.statusCounter=1;
+                qDebug()<<"Unmatched Targets  Visible\n";
+                it->status = invisible;
+                it->statusCounter=1;
 
             }
-            else if(  tmp.status == invisible)
+            else if( it->status == invisible)
             {
-                tmp.statusCounter++;
-                if( tmp.statusCounter > settings.invisibilityThreshold )
-                    targetList.erase(it);
+                qDebug()<<"Unmatched Targets  Invisible\n";
+                it->statusCounter++;
+                if(it->statusCounter > settings.invisibilityThreshold )
+                    it=targetList.erase(it);
+                if(it != targetList.begin())
+                    it--;
             }
+            else if (it->status == candidate)
+            {
+                qDebug()<<"Unmatched Targets  Candidate\n";
+                it=targetList.erase(it);
+                if(it != targetList.begin())
+                    it--;
+            }
+
 
         }
-
     }
-    
+
 }
 
 void CandidateFilter::init()
@@ -64,6 +75,7 @@ void CandidateFilter::init()
         targetList.push_back(temp);
 
     }
+    qDebug()<<"Candidate Filter Init\n\n";
 }
 
 void CandidateFilter::match()
@@ -110,6 +122,7 @@ void CandidateFilter::match()
         targetList.at(temp.targetIndex).location=candidateList->at(temp.candidateIndex);
         targetList.at(temp.targetIndex).isMatched=true;
         targetList.at(temp.targetIndex).statusCounter++;
+        qDebug()<<"Candidate :"<<mCandidate<<" matched to Target : "<<mTarget<<"\n";
         if( targetList.at(temp.targetIndex).status == candidate )
         {
             if(targetList.at(temp.targetIndex).statusCounter > settings.visibilityThreshold)
@@ -138,6 +151,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
     {
         cv::cvtColor(inputImage,inputImage,CV_GRAY2RGB);
     }
+    char *targetStatus;
     for( int i = 0; i < targetList.size() ; i++ )
     {
         Target temp=targetList[i];
@@ -146,27 +160,36 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
         temp.location.points(vertices);
         int linetype;
         int thickness;
+        cv::Scalar color;
         if(temp.status == candidate )
         {
+            color=cv::Scalar( 0,0,255);
             linetype  = 4 ;
             thickness = 2;
+            targetStatus="C";
 
         }
         else if (temp.status == visible )
         {
+            color=cv::Scalar( 0,255,0);
             linetype  = 8 ;
             thickness = 3;
+            targetStatus="V";
         }
         else
         {
-            linetype  = CV_AA ;
+           color=cv::Scalar(255,0,0);
+            linetype  = 4 ;
             thickness = 1;
+            targetStatus="I";
         }
 
 
         for (int i = 0; i < 4; i++)
-            cv::line(inputImage, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0),thickness,linetype);
-        cv::circle(inputImage,temp.location.center,3,cv::Scalar(0,0,255),-1);
+            cv::line(inputImage, vertices[i], vertices[(i+1)%4],color,thickness,linetype);
+        cv::putText(inputImage,targetStatus,temp.location.center,
+                    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, color, 1);
+    //    cv::circle(inputImage,temp.location.center,3,cv::Scalar(0,0,255),-1);
     }
     imshow("Targets", inputImage );
 
