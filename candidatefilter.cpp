@@ -2,7 +2,7 @@
 
 CandidateFilter::CandidateFilter()
 {
-    settings.distanceThreshold = 50;
+    settings.distanceThreshold = 100;
     settings.visibilityThreshold = 3;
     settings.invisibilityThreshold = 5;
     targetIdCounter=0;
@@ -49,14 +49,15 @@ void CandidateFilter::processUnmatchedTargets()
                 if(it->statusCounter > settings.invisibilityThreshold )
                     it=targetList.erase(it);
                 if(it != targetList.begin())
-                    it--;
+                    --it;
+
             }
             else if (it->status == candidate)
             {
                 qDebug()<<"Unmatched Targets  Candidate\n";
                 it=targetList.erase(it);
                 if(it != targetList.begin())
-                    it--;
+                    --it;
             }
 
 

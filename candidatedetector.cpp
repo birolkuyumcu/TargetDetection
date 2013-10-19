@@ -30,7 +30,7 @@ void CandidateDetector::process(cv::Mat inputImage)
     candidateList.clear();
     candidateRRectsList.clear();
 
-    findContours( inputImage, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    findContours( inputImage, contours, hierarchy, CV_RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
 
     for(int i=0 ; i < contours.size() ; i++ )
