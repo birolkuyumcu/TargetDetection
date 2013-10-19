@@ -20,9 +20,10 @@ void CandidateFilter::process(std::vector<cv::RotatedRect> *iCandidateList)
     if(candidateList->size()> 0)
     {
         match();
+        processUnmatchedTargets();
+        processUnmatchedCandidates();
     }
-    processUnmatchedTargets();
-    processUnmatchedCandidates();
+
 }
 
 void CandidateFilter::processUnmatchedTargets()
