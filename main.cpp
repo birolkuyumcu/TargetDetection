@@ -507,6 +507,14 @@ void newPreProc(cv::Mat in, cv::Mat& out)
     cv::threshold(out,out,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
 }
 
+// Perform in-place unsharp masking operation
+void unsharpMask(cv::Mat& im)
+{
+    cv::Mat tmp;
+    cv::GaussianBlur(im, tmp, cv::Size(5,5), 5);
+    cv::addWeighted(im, 1.5, tmp, -0.5, 0, im);
+}
+
 void Test5()
 
 
@@ -529,11 +537,21 @@ void Test5()
     CandidateDetector cDet;
     CandidateFilter cFilt;
 
-    calc.setHomographyMethod(featureBased);
+    Preprocess preProcess;
+    PreprocessSettings p;
+
+    p.method=DoG;
+
+    preProcess.set(p);
+    //calc.setDetectorSimple("HARRIS");
+   // calc.setHomographyMethod(featureBased);
 
     cv::Mat prev;
     pFrame=frame.clone();
+    //preProcess.process(pFrame);
+   // unsharpMask(pFrame);  // pek bir faydası olmadı
     calc.process(pFrame);
+
     prev=pFrame;
 
     for(int i=1;i<1820;i+=3)
@@ -551,7 +569,8 @@ void Test5()
             break;
          pFrame=frame.clone();
         // newPreProc(pFrame,pFrame);
-
+       // preProcess.process(pFrame);
+       // unsharpMask(pFrame);
         calc.process(pFrame);
 
         cv::Mat aPrev;
@@ -597,7 +616,7 @@ int main(int argc, char *argv[])
 {
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
-    // cvUseOptimized(true);
+    // cvUseOptimized(true); // faydası görünmüyor
      Test5();
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
