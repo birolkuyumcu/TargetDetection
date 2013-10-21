@@ -5,19 +5,21 @@ CandidateFilter::CandidateFilter()
     settings.distanceThreshold = 100;
     settings.visibilityThreshold = 3;
     settings.invisibilityThreshold = 9;
-    targetIdCounter=0;
+    targetIdCounter = 0;
 }
 
 
 void CandidateFilter::process(std::vector<cv::RotatedRect> *iCandidateList)
 {
-    candidateList=iCandidateList;
-    if(targetList.size()==0)
+    candidateList = iCandidateList;
+
+    if(targetList.size() == 0)
     {
         init();
-        return;
+        return; // TODO: multiple return forbidden
     }
-    if(candidateList->size()> 0)
+
+    if(candidateList->size() > 0)
     {
         match();
         processUnmatchedTargets();
@@ -67,13 +69,14 @@ void CandidateFilter::processUnmatchedTargets()
 
 void CandidateFilter::init()
 {
-    for(int i=0;i<candidateList->size();i++)
+    for(int i = 0; i<candidateList->size(); i++)
     {
+
         Target temp;
-        temp.location=candidateList->at(i);
-        temp.status=candidate;
-        temp.statusCounter=1;
-        temp.targetId=++targetIdCounter;
+        temp.location = candidateList->at(i);
+        temp.status = candidate;
+        temp.statusCounter = 1;
+        temp.targetId = ++targetIdCounter;
         targetList.push_back(temp);
 
     }
@@ -85,59 +88,69 @@ void CandidateFilter::match()
     std::vector<MatchItem> matchTable;
 
     isCandidateMatched.reserve(candidateList->size());
-    isCandidateMatched.assign(candidateList->size(),false);
+    isCandidateMatched.assign(candidateList->size(), false);
 
-    for(int j=0;j<targetList.size();j++)
+    for(int j=0; j<targetList.size(); j++)
     {
-        targetList.at(j).isMatched=false;
-        for(int i=0;i<candidateList->size();i++)
+        targetList.at(j).isMatched = false;
+
+        for(int i = 0; i < candidateList->size(); i++)
         {
 
             MatchItem temp;
-            temp.candidateIndex=i;
-            temp.targetIndex=j;
-            temp.distance=calculateDistance(candidateList->at(i),targetList.at(j).location);
+            temp.candidateIndex = i;
+            temp.targetIndex = j;
+            temp.distance = calculateDistance(candidateList->at(i),targetList.at(j).location);
+
             if(temp.distance <= settings.distanceThreshold ) // distanceThreshold dan büyük olan uzaklıkları tabloya ekleme
+            {
                matchTable.push_back(temp);
+            }
 
         }
     }
     if(matchTable.size() == 0)
-        return;
+    {
+        return; //multiple return is forbidded
+    }
 
-    std::sort(matchTable.begin(),matchTable.end());
+    std::sort(matchTable.begin(), matchTable.end());
 
     std::vector<MatchItem>::iterator tableIndex;
 
     for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); ++tableIndex )
     {
         // Eşleştir
-        MatchItem temp=*tableIndex;
-        int mTarget=temp.targetIndex;
-        int mCandidate=temp.candidateIndex;
+        MatchItem temp = *tableIndex;
+        int mTarget = temp.targetIndex;
+        int mCandidate = temp.candidateIndex;
+
         // process Matched Targets
         if(isCandidateMatched[mCandidate] ||targetList.at(mTarget).isMatched ) // daha önceden eşleşen bir Target Yada Candidate ise  bir sonraki iterasyona git
+        {
             continue;
-        targetList.at(mTarget).location=candidateList->at(mCandidate);
-        targetList.at(mTarget).isMatched=true;
+        }
+
+        targetList.at(mTarget).location = candidateList->at(mCandidate);
+        targetList.at(mTarget).isMatched = true;
         targetList.at(mTarget).statusCounter++;
+
         if( targetList.at(mTarget).status == candidate )
         {
             if(targetList.at(mTarget).statusCounter > settings.visibilityThreshold)
-                targetList.at(mTarget).status=visible;
+            {
+                targetList.at(mTarget).status = visible;
+            }
         }
         else if( targetList.at(mTarget).status == invisible )
         {
-            targetList.at(mTarget).status=visible;
+            targetList.at(mTarget).status = visible;
             
         }
         // Signing Matched  Candidates so dont match again...
-        isCandidateMatched[mCandidate]=true;
+        isCandidateMatched[mCandidate] = true;
 
     }
-
-
-
 
 }
 
@@ -149,6 +162,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
     {
         cv::cvtColor(inputImage,inputImage,CV_GRAY2RGB);
     }
+
     char *targetStatus;
     for( int i = 0; i < targetList.size() ; i++ )
     {
@@ -164,7 +178,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
             color=cv::Scalar( 0,0,255);
             linetype  = 4 ;
             thickness = 2;
-            targetStatus="C";
+            targetStatus = "C";
 
         }
         else if (temp.status == visible )
@@ -172,19 +186,22 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
             color=cv::Scalar( 0,255,0);
             linetype  = 8 ;
             thickness = 3;
-            targetStatus="V";
+            targetStatus = "V";
         }
         else
         {
            color=cv::Scalar(255,0,0);
             linetype  = 4 ;
             thickness = 1;
-            targetStatus="I";
+            targetStatus = "I";
         }
 
 
         for (int i = 0; i < 4; i++)
+        {
             cv::line(inputImage, vertices[i], vertices[(i+1)%4],color,thickness,linetype);
+        }
+
         char Buf[512];
         sprintf(Buf,"%s-%d%c",targetStatus,temp.targetId,0);
         cv::putText(inputImage,Buf,temp.location.center,
@@ -205,7 +222,7 @@ float CandidateFilter::calculateDistance(cv::RotatedRect &r1, cv::RotatedRect &r
 
 void CandidateFilter::processUnmatchedCandidates()
 {
-    for(int i=0;i<candidateList->size();i++)
+    for(int i = 0; i<candidateList->size(); i++)
     {
         if(isCandidateMatched[i] == false )
         {

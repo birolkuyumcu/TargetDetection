@@ -4,7 +4,7 @@
 #define TEST_VIDEO_FILE_CNT 14
 
 static long processVideoAndGetScores(QString &videoFileName, int startFrame);
-static void reportScoresForVideoFile(int videoFileIndex, long score);
+static void reportScoresForVideoFile(int videoFileIndex, AllignementTestScore score);
 
 //
 int64 times[10];
@@ -25,6 +25,19 @@ void timeMeasure(int i)
     }
 }
 //
+
+
+typedef struct
+{
+    long TotalTimeSn;
+    int fps;
+    float homograpyFoundPercent;
+    float whitePixelPerFrame;
+    QString HomographyMethod;
+    QString usedDetector;
+    QString usedDescriptor;
+
+}AllignementTestScore;
 
 void TEST_frameAllignment()
 {
@@ -65,7 +78,7 @@ void TEST_frameAllignment()
 }
 
 
-static void reportScoresForVideoFile(int videoFileIndex, long score)
+static void reportScoresForVideoFile(int videoFileIndex, AllignementTestScore score)
 {
     QFile file("testScore.txt");
 
@@ -88,7 +101,7 @@ static void reportScoresForVideoFile(int videoFileIndex, long score)
 
 }
 
-static long processVideoAndGetScores(QString &videoFileName, int startFrame)
+static void processVideoAndGetScores(QString &videoFileName, int startFrame, AllignementTestScore& score)
 {
     AlignmentMatrixCalc alignMatrixcalc;
     FrameAlignment frameAlligner;
