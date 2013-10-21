@@ -4,7 +4,7 @@
 #define TEST_VIDEO_FILE_CNT 14
 
 static void processVideoAndGetScores(QString &videoFileName, int startFrame, AllignementTestScore& score);
-static void reportScoresForVideoFile(int videoFileIndex, AllignementTestScore score);
+static void reportScoresForVideoFile(AllignementTestScore score);
 
 //
 int64 times[10];
@@ -37,7 +37,7 @@ void TEST_frameAllignment()
 {
     QString videoFileName;
     AllignementTestScore scoreForSingleVideo;
-    int startFrame = 200;
+    int startFrame = 260;
 
     //open videos sequentialy.
 
@@ -53,12 +53,14 @@ void TEST_frameAllignment()
         videoFileName +=  QString::number(i);
         videoFileName += ".avi";
 
+        scoreForSingleVideo.videoFileName = videoFileName;
+
 
         //process video and get results
         processVideoAndGetScores(videoFileName, startFrame, scoreForSingleVideo);
 
         //save scores to file
-        reportScoresForVideoFile(i, scoreForSingleVideo);
+        reportScoresForVideoFile(scoreForSingleVideo);
 
         //TODOtotalScoreForVideos += scoreForSingleVideo;
 
@@ -71,29 +73,29 @@ void TEST_frameAllignment()
 }
 
 
-static void reportScoresForVideoFile(int videoFileIndex, AllignementTestScore score)
+static void reportScoresForVideoFile(AllignementTestScore score)
 {
     QFile file("testScore.txt");
 
-    /* Baştan yazılacak
     if (file.open(QIODevice::Append) )
     {
         QTextStream out(&file);
 
-        if(videoFileIndex == 0)
-        {
-            //total score for videos
-            out<<"Total Score    :"<<score;
-        }
-        else
-        {
-                out<<videoFileIndex<<".avi    :"<<score;
-        }
+        //total score for videos
+        out<<"------------------------------------------------------"<<"\r\n";
+        out<<"Video File Name                 :"<<score.videoFileName<<"\r\n";
+        out<<"Homography Method               :"<<score.HomographyMethod<<"\r\n";
+        out<<"Used Detector                   :"<<score.usedDetector<<"\r\n";
+        out<<"Used Descriptor                 :"<<score.usedDescriptor<<"\r\n";
+        out<<"Neighbourhood Filter Size       :"<<score.neighbourhoodFilterSize<<"\r\n";
+        out<<"White Pixel PerFramePixels      :"<<score.whitePixelPerFramePixels<<"\r\n";
+        out<<"homograpyFoundPercent           :"<<score.homograpyFoundPercent<<"\r\n";
+        out<<"Processing fps                  :"<<score.fps<<"\r\n";
+        out<<"Total Processing TimeSn         :"<<score.TotalTimeSn<<"\r\n";
+        out<<"--------------------------------------------------------"<<"\r\n";
 
         file.close();
     }
-    */
-
 }
 
 static void processVideoAndGetScores(QString &videoFileName, int startFrame, AllignementTestScore& score)
@@ -115,6 +117,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
     long frameCount = 0;
     long homographyFoundFrameCount = 0;
+    long totalProcessedFrameCount = 0;
 
 
     QString         TestDetectorName = "SURF";
@@ -151,7 +154,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
     //buna neden gerek var. sadece getHomography olsa olmuyor mu?
     alignMatrixcalc.process(videoFrame);
-    prevFrame=videoFrame.clone();
+    prevFrame = videoFrame.clone();
 
     timeMeasure(1);
 
@@ -200,6 +203,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
         }
 
         frameCount++;
+        totalProcessedFrameCount ++;
 
         QString videoInfo;
 
@@ -214,10 +218,11 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
         cv::waitKey(5);
     }
 
+    score.neighbourhoodFilterSize = _CVS_PIXEL_NEIGHBORHOOD_DIST;
     score.TotalTimeSn = timeMeasure(1);
-    score.fps = (1.0 * frameCount) / score.TotalTimeSn;
-    score.homograpyFoundPercent = ((homographyFoundFrameCount * 1.0) / frameCount) * 100;
-    score.whitePixelPerFrame = (sumNonZero * 1.0) / homographyFoundFrameCount;
+    score.fps = (1.0 * totalProcessedFrameCount) / score.TotalTimeSn;
+    score.homograpyFoundPercent = ((homographyFoundFrameCount * 1.0) / totalProcessedFrameCount) * 100;
+    score.whitePixelPerFramePixels = (sumNonZero * 1.0) / homographyFoundFrameCount / (640 * 480);
 
 }
 

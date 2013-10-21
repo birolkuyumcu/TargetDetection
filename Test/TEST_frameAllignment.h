@@ -16,11 +16,12 @@ typedef struct
     long    TotalTimeSn;
     int     fps;
     float   homograpyFoundPercent;
-    float   whitePixelPerFrame;
+    float   whitePixelPerFramePixels;
     QString HomographyMethod;
     QString usedDetector;
     QString usedDescriptor;
-
+    QString videoFileName;
+    int     neighbourhoodFilterSize;
 }AllignementTestScore;
 
 void TEST_frameAllignment();

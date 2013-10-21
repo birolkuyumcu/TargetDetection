@@ -617,11 +617,11 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
     // cvUseOptimized(true); // faydası görünmüyor
-     Test5();
+     //Test5();
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
-    //TEST_frameAllignment();
+    TEST_frameAllignment();
 
     return 0;
 }
