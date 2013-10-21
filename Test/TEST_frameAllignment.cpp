@@ -72,15 +72,17 @@ void TEST_frameAllignment()
 
 }
 
-
 static void reportScoresForVideoFile(AllignementTestScore score)
 {
+    static bool captionWriten = 0;
+
     QFile file("testScore.txt");
 
     if (file.open(QIODevice::Append) )
     {
         QTextStream out(&file);
 
+#ifdef _CVS_READABLE_TEST_RESULT
         //total score for videos
         out<<"------------------------------------------------------"<<"\r\n";
         out<<"Video File Name                 :"<<score.videoFileName<<"\r\n";
@@ -93,6 +95,51 @@ static void reportScoresForVideoFile(AllignementTestScore score)
         out<<"Processing fps                  :"<<score.fps<<"\r\n";
         out<<"Total Processing TimeSn         :"<<score.TotalTimeSn<<"\r\n";
         out<<"--------------------------------------------------------"<<"\r\n";
+#else
+        if(captionWriten == 0)
+        {
+            out.setFieldWidth(0);
+            out<<"videoFile";
+            out.setFieldWidth(15);
+            out<<"HomgrpMet";
+            out.setFieldWidth(10);
+            out<<"Detec.";
+            out.setFieldWidth(20);
+            out<<"Descr.";
+            out.setFieldWidth(10);
+            out<<"nghFilter";
+            out.setFieldWidth(20);
+            out<<"wPixelPerFPixels";
+            out.setFieldWidth(15);
+            out<<"homogFndPer";
+            out.setFieldWidth(10);
+            out<<"fps";
+            out.setFieldWidth(10);
+            out<<"TtlTime"<<"\r\n";
+
+            captionWriten = 1;
+        }
+
+        out.setFieldWidth(0);
+        out<<score.videoFileName;
+        out.setFieldWidth(15);
+        out<<score.HomographyMethod;
+        out.setFieldWidth(10);
+        out<<score.usedDetector;
+        out.setFieldWidth(20);
+        out<<score.usedDescriptor;
+        out.setFieldWidth(10);
+        out<<score.neighbourhoodFilterSize;
+        out.setFieldWidth(20);
+        out<<score.whitePixelPerFramePixels;
+        out.setFieldWidth(15);
+        out<<score.homograpyFoundPercent;
+        out.setFieldWidth(10);
+        out<<score.fps;
+        out.setFieldWidth(10);
+        out<<score.TotalTimeSn<<"\r\n";
+
+#endif
 
         file.close();
     }
@@ -128,7 +175,8 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
     score.usedDetector      = TestDetectorName;
     score.usedDescriptor    = TestDescriptorName;
-    score.HomographyMethod  = TestHomograpyMethod;
+
+    score.HomographyMethod  = (TestHomograpyMethod == featureBased)?"featureBased":"flowBased";
 
     alignMatrixcalc.setHomographyMethod(TestHomograpyMethod);
     alignMatrixcalc.setDetectorSimple(TestDetectorName);
