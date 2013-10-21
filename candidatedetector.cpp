@@ -19,32 +19,33 @@ void CandidateDetector::process(cv::Mat inputImage)
     if( inputImage.empty() )
     {
         exc.showException("Input Image is Empty !" );
-        return; //multiple return is forbidded
     }
-    if( inputImage.channels() != 1)
+    else if( inputImage.channels() != 1)
     {
         exc.showException("Input Image must be a Gray Level ( single channel )!" );
-        return; //multiple return is forbidded.
     }
-
-    candidateList.clear();
-    candidateRRectsList.clear();
-
-    findContours( inputImage, contours, hierarchy, CV_RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-
-    for(int i=0 ; i < contours.size() ; i++ )
+    else
     {
-        std::vector<cv::Point> tempContour;
-        cv::approxPolyDP(cv::Mat(contours[i]),tempContour, 3, true);
-        cv::RotatedRect tempRect=cv::minAreaRect(contours[i]);
 
-        if( (tempRect.size.width < settings.maxWidth  && tempRect.size.width > settings.minWidth) && (tempRect.size.height < settings.maxHeight  && tempRect.size.height > settings.minHeight) )
+        candidateList.clear();
+        candidateRRectsList.clear();
+
+        findContours( inputImage, contours, hierarchy, CV_RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+
+        for(int i=0 ; i < contours.size() ; i++ )
         {
-            candidateList.push_back(tempContour);
-            candidateRRectsList.push_back(tempRect);
-        }
+            std::vector<cv::Point> tempContour;
+            cv::approxPolyDP(cv::Mat(contours[i]),tempContour, 3, true);
+            cv::RotatedRect tempRect=cv::minAreaRect(contours[i]);
 
+            if( (tempRect.size.width < settings.maxWidth  && tempRect.size.width > settings.minWidth) && (tempRect.size.height < settings.maxHeight  && tempRect.size.height > settings.minHeight) )
+            {
+                candidateList.push_back(tempContour);
+                candidateRRectsList.push_back(tempRect);
+            }
+
+        }
     }
 
 

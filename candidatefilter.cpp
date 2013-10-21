@@ -16,10 +16,8 @@ void CandidateFilter::process(std::vector<cv::RotatedRect> *iCandidateList)
     if(targetList.size() == 0)
     {
         init();
-        return; // TODO: multiple return forbidden
     }
-
-    if(candidateList->size() > 0)
+    else if(candidateList->size() > 0)
     {
         match();
         processUnmatchedTargets();
