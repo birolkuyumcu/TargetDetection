@@ -3,7 +3,7 @@
 
 #define TEST_VIDEO_FILE_CNT 14
 
-static long processVideoAndGetScores(QString &videoFileName, int startFrame);
+static void processVideoAndGetScores(QString &videoFileName, int startFrame, AllignementTestScore& score);
 static void reportScoresForVideoFile(int videoFileIndex, AllignementTestScore score);
 
 //
@@ -11,8 +11,10 @@ int64 times[10];
 bool measureStart[10]={false,false,false,false,false,
                        false,false,false,false,false};
 
-void timeMeasure(int i)
+long int timeMeasure(int i)
 {
+    long timeResult = 0;
+
     if(measureStart[i] == false)
     {
         times[i] = cv::getTickCount();
@@ -20,30 +22,21 @@ void timeMeasure(int i)
     }
     else
     {
-        qDebug()<<"Time Measurement "<<i<<" : "<<((double)cv::getTickCount() - times[i]) / cv::getTickFrequency();
+        timeResult = ((double)cv::getTickCount() - times[i]) / cv::getTickFrequency();
+        qDebug()<<"Time Measurement "<<i<<" : "<<timeResult;
+
         measureStart[i] = false;
     }
+
+    return timeResult;
 }
 //
 
 
-typedef struct
-{
-    long TotalTimeSn;
-    int fps;
-    float homograpyFoundPercent;
-    float whitePixelPerFrame;
-    QString HomographyMethod;
-    QString usedDetector;
-    QString usedDescriptor;
-
-}AllignementTestScore;
-
 void TEST_frameAllignment()
 {
     QString videoFileName;
-    long scoreForSingleVideo;
-    long totalScoreForVideos = 0;
+    AllignementTestScore scoreForSingleVideo;
     int startFrame = 200;
 
     //open videos sequentialy.
@@ -62,18 +55,18 @@ void TEST_frameAllignment()
 
 
         //process video and get results
-        scoreForSingleVideo = processVideoAndGetScores(videoFileName, startFrame);
+        processVideoAndGetScores(videoFileName, startFrame, scoreForSingleVideo);
 
         //save scores to file
         reportScoresForVideoFile(i, scoreForSingleVideo);
 
-        totalScoreForVideos += scoreForSingleVideo;
+        //TODOtotalScoreForVideos += scoreForSingleVideo;
 
-        scoreForSingleVideo = 0;
+        //TODOscoreForSingleVideo = 0;
     }
 
     //report total score, variable 0 express total score
-    reportScoresForVideoFile(0, totalScoreForVideos);
+    //TODOreportScoresForVideoFile(0, totalScoreForVideos);
 
 }
 
@@ -82,6 +75,7 @@ static void reportScoresForVideoFile(int videoFileIndex, AllignementTestScore sc
 {
     QFile file("testScore.txt");
 
+    /* Baştan yazılacak
     if (file.open(QIODevice::Append) )
     {
         QTextStream out(&file);
@@ -98,6 +92,7 @@ static void reportScoresForVideoFile(int videoFileIndex, AllignementTestScore sc
 
         file.close();
     }
+    */
 
 }
 
@@ -119,12 +114,22 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
     cv::Mat homograpyMatrix;
 
     long frameCount = 0;
+    long homographyFoundFrameCount = 0;
 
-    //alignMatrixcalc.setHomographyMethod(flowBased);
-    //alignMatrixcalc.setDescriptorSimple("GFTT");
 
-    alignMatrixcalc.setDetectorSimple("SURF");
-    alignMatrixcalc.setDescriptorSimple("SURF");
+    QString         TestDetectorName = "SURF";
+    QString         TestDescriptorName = "SURF";
+    HomograpyMethod TestHomograpyMethod = featureBased;
+
+
+
+    score.usedDetector      = TestDetectorName;
+    score.usedDescriptor    = TestDescriptorName;
+    score.HomographyMethod  = TestHomograpyMethod;
+
+    alignMatrixcalc.setHomographyMethod(TestHomograpyMethod);
+    alignMatrixcalc.setDetectorSimple(TestDetectorName);
+    alignMatrixcalc.setDescriptorSimple(TestDescriptorName);
 
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
     alignMatrixcalc.setMatchingType(knnMatch);
@@ -148,6 +153,8 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
     alignMatrixcalc.process(videoFrame);
     prevFrame=videoFrame.clone();
 
+    timeMeasure(1);
+
     while (videoCap.read(videoFrame))
     {
         cv::resize(videoFrame, videoFrame, cv::Size(640,480));
@@ -155,9 +162,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
         cv::cvtColor(currentFrame, currentFrame, CV_BGR2GRAY);
 
-        timeMeasure(1);
         alignMatrixcalc.process(currentFrame);
-        timeMeasure(1);
 
         if(alignMatrixcalc.getHomography(homograpyMatrix) == true)
         {
@@ -185,6 +190,8 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
             cv::putText(videoFrame, "Homograpy status: OK", cvPoint(10,35),
                         cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(200,200,250), 1, CV_AA);
 
+            homographyFoundFrameCount ++;
+
         }
         else
         {
@@ -205,9 +212,12 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
         cv::imshow("input", videoFrame);
         cv::waitKey(5);
-
     }
 
-    return sumNonZero;
+    score.TotalTimeSn = timeMeasure(1);
+    score.fps = (1.0 * frameCount) / score.TotalTimeSn;
+    score.homograpyFoundPercent = ((homographyFoundFrameCount * 1.0) / frameCount) * 100;
+    score.whitePixelPerFrame = (sumNonZero * 1.0) / homographyFoundFrameCount;
+
 }
 

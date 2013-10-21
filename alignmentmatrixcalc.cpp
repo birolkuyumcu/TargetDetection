@@ -370,19 +370,19 @@ void AlignmentMatrixCalc::setDetector(cv::Ptr<cv::FeatureDetector> idetector)
     detector = idetector;
 }
 
-void AlignmentMatrixCalc::setDetectorSimple(const char *detectorName)
+void AlignmentMatrixCalc::setDetectorSimple(QString detectorName)
 {
-    setDetector(cv::FeatureDetector::create(detectorName ));
+    setDetector(cv::FeatureDetector::create(detectorName.toStdString()));
 }
 
 void AlignmentMatrixCalc::setDescriptor(cv::Ptr<cv::DescriptorExtractor> idescriptor)
 {
-    descriptor=idescriptor;
+    descriptor = idescriptor;
 }
 
-void AlignmentMatrixCalc::setDescriptorSimple(const char *descriptorName)
+void AlignmentMatrixCalc::setDescriptorSimple(QString descriptorName)
 {
-    setDescriptor(cv::DescriptorExtractor::create(descriptorName));
+    setDescriptor(cv::DescriptorExtractor::create(descriptorName.toStdString()));
 }
 
 void AlignmentMatrixCalc::setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher)

@@ -10,8 +10,23 @@
 #include <QFile>
 #include <QTextStream>
 
+
+typedef struct
+{
+    long    TotalTimeSn;
+    int     fps;
+    float   homograpyFoundPercent;
+    float   whitePixelPerFrame;
+    QString HomographyMethod;
+    QString usedDetector;
+    QString usedDescriptor;
+
+}AllignementTestScore;
+
 void TEST_frameAllignment();
-void timeMeasure(int i);
+long int timeMeasure(int i);
+
+
 
 
 #endif // TEST_FRAMEALLIGNMENT_H

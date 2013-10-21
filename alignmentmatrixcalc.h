@@ -88,9 +88,9 @@ private:
     //
 public:
     void setDetector(cv::Ptr<cv::FeatureDetector> idetector);
-    void setDetectorSimple(const char *detectorName);
+    void setDetectorSimple(QString detectorName);
     void setDescriptor(cv::Ptr<cv::DescriptorExtractor> idescriptor);
-    void setDescriptorSimple(const char* descriptorName);
+    void setDescriptorSimple(QString descriptorName);
     void setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher);
     void setMatcherSimple(const char* matcherName);
     void setHomographyMethod(HomograpyMethod ihMethod);
