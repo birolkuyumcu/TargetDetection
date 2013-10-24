@@ -14,7 +14,7 @@
 typedef struct
 {
     long    TotalTimeSn;
-    int     fps;
+    float   fps;
     float   homograpyFoundPercent;
     float   whitePixelPerFramePixels;
     QString HomographyMethod;

@@ -37,7 +37,7 @@ void TEST_frameAllignment()
 {
     QString videoFileName;
     AllignementTestScore scoreForSingleVideo;
-    int startFrame = 260;
+    int startFrame = 0;
 
     //open videos sequentialy.
 
@@ -186,7 +186,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
     alignMatrixcalc.setMatchingType(knnMatch);
 
     videoCap.open(videoFileName.toStdString());
-
+    qDebug()<<videoFileName;
     //burası düzeltilecek düzgün init fonksiyonu koyulacak.
     if(startFrame != 0)
     {
