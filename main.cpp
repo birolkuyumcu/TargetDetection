@@ -628,6 +628,11 @@ void Test6()
     cv::Mat prevFrame;
     cv::Mat alignedPrevFrame;
     cv::Mat currentDiffImage;
+    cv::Mat mhiImage;
+    std::vector<cv::Mat>diffImageList;
+    int nHistory=5;
+    float weights[5]={0.4,0.6,0.8,1,1};
+
 
     cv::namedWindow(wName);
 #ifdef WIN32
@@ -639,8 +644,8 @@ void Test6()
     cv::imshow(wName,currentFrame);
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
-    CandidateDetector cDet;
-    CandidateFilter cFilt;
+ //   CandidateDetector cDet;
+ //   CandidateFilter cFilt;
 
     // Init section
     copyCurrentFrame=currentFrame.clone();
@@ -672,6 +677,8 @@ void Test6()
             // Düzgün dönüşüm matrisi bulunduysa
             cv::Mat mask(prevFrame.size(),CV_8U);
             mask=cv::Scalar(255);
+
+
             // Önceki frame aktif frame çevir
             aligner.process(prevFrame,H,alignedPrevFrame);
             // çevrilmiş önceki frame için maske oluştur
@@ -680,12 +687,37 @@ void Test6()
            // aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,alignedPrevFrame);
 
             cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
+            diffImageList.push_back(currentDiffImage);
+
+            if(diffImageList.size()> nHistory)
+            {
+                diffImageList.erase(diffImageList.begin()); // FIFO
+            }
+            // homography'ye göre eski diffImageleri çevir
+            for(int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
+            {
+                aligner.process(diffImageList[i],H,diffImageList[i]);
+            }
+            if(diffImageList.size()==nHistory)
+            {
+                mhiImage=currentDiffImage.clone();
+                mhiImage=cv::Scalar(0);
+                for(int i=0;i<diffImageList.size();i++) // no need for last inserted
+                {
+                    mhiImage+=diffImageList[i]*weights[i];
+                }
+
+                cv::imshow("Out",mhiImage);
+                cv::threshold(mhiImage,mhiImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+                cv::imshow("Treshed Out",mhiImage);
+            }
+
             cv::threshold(currentDiffImage,currentDiffImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
-      /*      t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+      /*     t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
 
             qDebug()<<"Processing Time :"<<t<<"\n\n";
             */
-            cv::Mat cFrame;
+
 
         //    cv::dilate(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
         //    cv::erode(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
