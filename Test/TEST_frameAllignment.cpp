@@ -159,7 +159,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
     cv::Mat sequentalImageDiffBinary1;
 
     cv::Mat prevFrameAlligned;
-    long sumNonZero = 0;
+    double sumNonZero = 0;
     cv::Mat homograpyMatrix;
 
     long frameCount = 0;
@@ -168,8 +168,8 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
 
     QString         TestDetectorName = "SURF";
-    QString         TestDescriptorName = "SURF";
-    HomograpyMethod TestHomograpyMethod = featureBased;
+    QString         TestDescriptorName = "BRISK";
+    HomograpyMethod TestHomograpyMethod = flowBased;
 
 
 
@@ -270,7 +270,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
     score.TotalTimeSn = timeMeasure(1);
     score.fps = (1.0 * totalProcessedFrameCount) / score.TotalTimeSn;
     score.homograpyFoundPercent = ((homographyFoundFrameCount * 1.0) / totalProcessedFrameCount) * 100;
-    score.whitePixelPerFramePixels = (sumNonZero * 1.0) / homographyFoundFrameCount / (640 * 480);
+    score.whitePixelPerFramePixels = ((sumNonZero * 1.0) / homographyFoundFrameCount)/(640 * 480);
 
 }
 

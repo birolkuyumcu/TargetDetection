@@ -612,6 +612,101 @@ void Test5()
 
 }
 
+/*
+ ** Test for MHI
+ **
+ **/
+
+void Test6()
+
+
+{
+    char Buf[1024];
+    char *wName = (char *)"Test";
+    cv::Mat currentFrame;
+    cv::Mat copyCurrentFrame; // used for orginal current frame not changed
+    cv::Mat prevFrame;
+    cv::Mat alignedPrevFrame;
+    cv::Mat currentDiffImage;
+
+    cv::namedWindow(wName);
+#ifdef WIN32
+    currentFrame=cv::imread("D:/cvs/data/egt1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+#else
+    frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+#endif
+
+    cv::imshow(wName,currentFrame);
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+    CandidateDetector cDet;
+    CandidateFilter cFilt;
+
+    // Init section
+    copyCurrentFrame=currentFrame.clone();
+    calc.process(copyCurrentFrame);
+
+    prevFrame=copyCurrentFrame;
+
+    for(int i=1;i<1820;i+=3)
+    {
+        double t = (double)cv::getTickCount();
+
+#ifdef WIN32
+        sprintf(Buf,"D:/cvs/data/egt1/frame%05d.jpg%c",i,0);
+#else
+        sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
+#endif
+        qDebug()<<Buf<<"\n";
+        currentFrame=cv::imread(Buf,CV_LOAD_IMAGE_GRAYSCALE);
+        if(currentFrame.empty())
+            break;
+         copyCurrentFrame=currentFrame.clone();
+
+        calc.process(copyCurrentFrame);
+
+
+        cv::Mat H;
+        cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
+        if(calc.getHomography(H) == true){
+            // Düzgün dönüşüm matrisi bulunduysa
+            cv::Mat mask(prevFrame.size(),CV_8U);
+            mask=cv::Scalar(255);
+            // Önceki frame aktif frame çevir
+            aligner.process(prevFrame,H,alignedPrevFrame);
+            // çevrilmiş önceki frame için maske oluştur
+            aligner.process(mask,H,mask);
+            mask=copyCurrentFrame&mask;
+           // aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,alignedPrevFrame);
+
+            cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
+            cv::threshold(currentDiffImage,currentDiffImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+      /*      t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+
+            qDebug()<<"Processing Time :"<<t<<"\n\n";
+            */
+            cv::Mat cFrame;
+
+        //    cv::dilate(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
+        //    cv::erode(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
+
+            cv::imshow(wName,currentDiffImage);
+            cv::waitKey(1);
+            qDebug()<<i<<"\n";
+        }
+        else
+        {
+            // i-=2;
+        }
+
+
+
+       // prev.~Mat();
+        prevFrame=copyCurrentFrame;
+    }
+
+}
+
 int main(int argc, char *argv[])
 {
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
@@ -621,7 +716,8 @@ int main(int argc, char *argv[])
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
-    TEST_frameAllignment();
+    // TEST_frameAllignment();
+    Test6();
 
     return 0;
 }
