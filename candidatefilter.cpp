@@ -152,7 +152,7 @@ void CandidateFilter::match()
 
 }
 
-void CandidateFilter::showTargets(cv::Mat &inputImage)
+void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
 {
     // for debuging purposes
 
@@ -206,7 +206,10 @@ void CandidateFilter::showTargets(cv::Mat &inputImage)
                     cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(0,255,255), 1);
     //    cv::circle(inputImage,temp.location.center,3,cv::Scalar(0,0,255),-1);
     }
-    imshow("Targets", inputImage );
+    if(wName==NULL)
+        wName="Candidates";
+    imshow(wName, inputImage );
+
 
 }
 

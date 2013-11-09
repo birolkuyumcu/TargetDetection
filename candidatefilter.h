@@ -54,7 +54,7 @@ public:
     void processUnmatchedCandidates();
     void init();
     void match();
-    void showTargets(cv::Mat& inputImage);
+    void showTargets(cv::Mat& inputImage,char *wName=NULL);
     //
     std::vector<Target> targetList;
     std::vector<cv::RotatedRect> *candidateList;

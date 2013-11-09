@@ -644,8 +644,14 @@ void Test6()
     cv::imshow(wName,currentFrame);
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
- //   CandidateDetector cDet;
- //   CandidateFilter cFilt;
+    CandidateDetector cDet;
+    CandidateDetector cDetMhi;
+    CandidateFilter cFilt;
+    CandidateFilter cFiltMhi;
+
+    // SURF kadar iyisi yok
+    //calc.setDetectorSimple("GridGFTT");
+    //calc.setDescriptorSimple("FREAK");
 
     // Init section
     copyCurrentFrame=currentFrame.clone();
@@ -710,6 +716,13 @@ void Test6()
                 cv::imshow("Out",mhiImage);
                 cv::threshold(mhiImage,mhiImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
                 cv::imshow("Treshed Out",mhiImage);
+
+            //    cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
+                cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
+                cv::erode(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
+                cDetMhi.process(mhiImage);
+                cFiltMhi.process(&cDetMhi.candidateRRectsList);
+                cFiltMhi.showTargets(currentFrame,"mhiTargets");
             }
 
             cv::threshold(currentDiffImage,currentDiffImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
@@ -721,13 +734,17 @@ void Test6()
 
         //    cv::dilate(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
         //    cv::erode(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
-
+            cDet.process(currentDiffImage);
+            cFilt.process(&cDet.candidateRRectsList);
+            cFilt.showTargets(currentFrame);
             cv::imshow(wName,currentDiffImage);
             cv::waitKey(1);
             qDebug()<<i<<"\n";
         }
         else
         {
+            // Eğer dönüşüm matrisi hesaplanamaz ise motion history sıfırlanıyor...
+            diffImageList.clear();
             // i-=2;
         }
 

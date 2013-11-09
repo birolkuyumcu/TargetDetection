@@ -5,8 +5,8 @@ CandidateDetector::CandidateDetector()
     exc.setModuleName("CandidateDetector");
     settings.minWidth = 4;
     settings.maxWidth = 50;
-    settings.minHeight = 10;
-    settings.maxHeight = 100;
+    settings.minHeight = 12;
+    settings.maxHeight = 150;
 
 }
 
@@ -51,7 +51,7 @@ void CandidateDetector::process(cv::Mat inputImage)
 
 }
 
-void CandidateDetector::showCandidates(cv::Mat inputImage)
+void CandidateDetector::showCandidates(cv::Mat inputImage, char *wName)
 {
     // for debuging
 
@@ -70,7 +70,9 @@ void CandidateDetector::showCandidates(cv::Mat inputImage)
         }
         cv::circle(inputImage,candidateRRectsList[i].center,3,cv::Scalar(0,0,255),-1);
     }
-    imshow("Candidates", inputImage );
+    if(wName==NULL)
+        wName="Candidates";
+    imshow(wName, inputImage );
 
 }
 
