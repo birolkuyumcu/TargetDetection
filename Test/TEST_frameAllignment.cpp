@@ -111,6 +111,8 @@ static void reportScoresForVideoFile(AllignementTestScore score)
             out.setFieldWidth(20);
             out<<"wPixelPerFPixels";
             out.setFieldWidth(15);
+            out<<"NumberOfCandidatePerFrame";
+            out.setFieldWidth(15);
             out<<"homogFndPer";
             out.setFieldWidth(10);
             out<<"fps";
@@ -132,6 +134,8 @@ static void reportScoresForVideoFile(AllignementTestScore score)
         out<<score.neighbourhoodFilterSize;
         out.setFieldWidth(20);
         out<<score.whitePixelPerFramePixels;
+        out.setFieldWidth(20);
+        out<<score.nCandidatePerFrame;
         out.setFieldWidth(15);
         out<<score.homograpyFoundPercent;
         out.setFieldWidth(10);
@@ -149,6 +153,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 {
     AlignmentMatrixCalc alignMatrixcalc;
     FrameAlignment frameAlligner;
+    CandidateDetector candidateDetector;
 
     cv::VideoCapture videoCap;
     cv::Mat videoFrame;
@@ -160,6 +165,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
     cv::Mat prevFrameAlligned;
     double sumNonZero = 0;
+    double sumCandidate=0;
     cv::Mat homograpyMatrix;
 
     long frameCount = 0;
@@ -167,9 +173,9 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
     long totalProcessedFrameCount = 0;
 
 
-    QString         TestDetectorName = "SURF";
+    QString         TestDetectorName = "HARRIS";
     QString         TestDescriptorName = "BRISK";
-    HomograpyMethod TestHomograpyMethod = flowBased;
+    HomograpyMethod TestHomograpyMethod = featureBased;
 
 
 
@@ -184,6 +190,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
     alignMatrixcalc.setHomographyCalcMethod(CV_LMEDS);
     alignMatrixcalc.setMatchingType(knnMatch);
+
 
     videoCap.open(videoFileName.toStdString());
     qDebug()<<videoFileName;
@@ -235,7 +242,11 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
                                                                               sequentalImageDiffBinary);
 
             cv::imshow("sequentalImageDiffBinaryPixelNeigh", sequentalImageDiffBinary);
-            sumNonZero += cv::countNonZero(prevFrameAlligned);
+            // Not a correct measure
+            //sumNonZero += cv::countNonZero(prevFrameAlligned);// probably wrong prevFrameAlligned must be sequentalImageDiffBinary
+            candidateDetector.process(sequentalImageDiffBinary);
+            sumCandidate += candidateDetector.candidateList.size();
+            sumNonZero += cv::countNonZero(sequentalImageDiffBinary);
 
 
             cv::putText(videoFrame, "Homograpy status: OK", cvPoint(10,35),
@@ -271,6 +282,7 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
     score.fps = (1.0 * totalProcessedFrameCount) / score.TotalTimeSn;
     score.homograpyFoundPercent = ((homographyFoundFrameCount * 1.0) / totalProcessedFrameCount) * 100;
     score.whitePixelPerFramePixels = ((sumNonZero * 1.0) / homographyFoundFrameCount)/(640 * 480);
+    score.nCandidatePerFrame = sumCandidate / homographyFoundFrameCount ;
 
 }
 

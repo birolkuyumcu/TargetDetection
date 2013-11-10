@@ -7,6 +7,7 @@
 #include "framealigner.h"
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
+#include "candidatedetector.h"
 #include <QFile>
 #include <QTextStream>
 
@@ -17,6 +18,7 @@ typedef struct
     float   fps;
     float   homograpyFoundPercent;
     double  whitePixelPerFramePixels;
+    double  nCandidatePerFrame;
     QString HomographyMethod;
     QString usedDetector;
     QString usedDescriptor;

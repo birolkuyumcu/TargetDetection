@@ -38,7 +38,7 @@ void CandidateDetector::process(cv::Mat inputImage)
             std::vector<cv::Point> tempContour;
             cv::approxPolyDP(cv::Mat(contours[i]),tempContour, 3, true);
             cv::RotatedRect tempRect=cv::minAreaRect(contours[i]);
-            // width not always less than height so for filtering reverse
+            // width not always less than height so for filtering reverse it if required
             int tempWidth;
             int tempHeight;
             if(tempRect.size.width < tempRect.size.height )
