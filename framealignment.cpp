@@ -63,6 +63,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
                                                                          cv::Mat& image2,
                                                                          cv::Mat& outputImage)
 {
+
     int wMin;
     int wMax;
     int hMin;
@@ -76,7 +77,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
 
     unsigned int closePixelFound = 0;
 
-
+    outputImage.create(image1.size(), CV_8UC1);
     outputImage = cv::Scalar(0);
 
 

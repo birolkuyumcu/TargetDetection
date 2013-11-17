@@ -690,7 +690,8 @@ void Test6()
             // çevrilmiş önceki frame için maske oluştur
             aligner.process(mask,H,mask);
             mask=copyCurrentFrame&mask;
-           // aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,alignedPrevFrame);
+
+           // aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,currentDiffImage);
 
             cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
             diffImageList.push_back(currentDiffImage);
@@ -704,6 +705,7 @@ void Test6()
             {
                 aligner.process(diffImageList[i],H,diffImageList[i]);
             }
+
             if(diffImageList.size()==nHistory)
             {
                 mhiImage=currentDiffImage.clone();
@@ -718,8 +720,9 @@ void Test6()
                 cv::imshow("Treshed Out",mhiImage);
 
             //    cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
-                cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
                 cv::erode(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
+                cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
+
                 cDetMhi.process(mhiImage);
                 cFiltMhi.process(&cDetMhi.candidateRRectsList);
                 cFiltMhi.showTargets(currentFrame,"mhiTargets");
@@ -765,8 +768,8 @@ int main(int argc, char *argv[])
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
-     TEST_frameAllignment();
-    //Test6();
+    // TEST_frameAllignment();
+    Test6();
 
     return 0;
 }
