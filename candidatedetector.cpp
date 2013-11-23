@@ -52,7 +52,8 @@ void CandidateDetector::process(cv::Mat inputImage)
                 tempHeight=tempRect.size.width;
             }
 
-            if( (tempWidth < settings.maxWidth  && tempWidth > settings.minWidth) && (tempHeight < settings.maxHeight  && tempHeight > settings.minHeight) )
+            //if( (tempWidth < settings.maxWidth  && tempWidth > settings.minWidth) && (tempHeight < settings.maxHeight  && tempHeight > settings.minHeight) )
+            if( (tempWidth < settings.maxWidth ) && (tempHeight < settings.maxHeight) )
             {
                 candidateList.push_back(tempContour);
                 candidateRRectsList.push_back(tempRect);

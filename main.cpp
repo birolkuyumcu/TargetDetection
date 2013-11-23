@@ -650,8 +650,8 @@ void Test6()
     CandidateFilter cFiltMhi;
 
     // SURF kadar iyisi yok
-    //calc.setDetectorSimple("GridGFTT");
-    //calc.setDescriptorSimple("FREAK");
+   // calc.setDetectorSimple("HARRIS");
+   // calc.setDescriptorSimple("FREAK");
 
     // Init section
     copyCurrentFrame=currentFrame.clone();
@@ -691,9 +691,9 @@ void Test6()
             aligner.process(mask,H,mask);
             mask=copyCurrentFrame&mask;
 
-           // aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,currentDiffImage);
+            aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,currentDiffImage);
 
-            cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
+            //cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
             diffImageList.push_back(currentDiffImage);
 
             if(diffImageList.size()> nHistory)

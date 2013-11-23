@@ -3,8 +3,8 @@
 CandidateFilter::CandidateFilter()
 {
     settings.distanceThreshold = 100;
-    settings.visibilityThreshold = 3;
-    settings.invisibilityThreshold = 9;
+    settings.visibilityThreshold = 5;
+    settings.invisibilityThreshold = 5;
     targetIdCounter = 0;
 }
 

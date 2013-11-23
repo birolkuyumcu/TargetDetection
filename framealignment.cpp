@@ -76,6 +76,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
     unsigned long rgbVectorValueForImg2;
 
     unsigned int closePixelFound = 0;
+    unsigned int closePixelValue = 0;
 
     outputImage.create(image1.size(), CV_8UC1);
     outputImage = cv::Scalar(0);
@@ -116,10 +117,13 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
                     rgbVectorValueForImg2 = 0;
                     rgbVectorValueForImg2 = image2.at<char>(h, w);
 
-                    if( abs((long)(rgbVectorValueForImg2 - rgbVectorValueForImg1)) <= _CVS_IS_PIXEL_DIFFERENT_THRES)
+                    closePixelValue = abs((long)(rgbVectorValueForImg2 - rgbVectorValueForImg1));
+
+                    if(closePixelValue <= _CVS_IS_PIXEL_DIFFERENT_THRES)
                     {
                         //similar color pixel found
                         closePixelFound = 1;
+
                         break;
                     }
                 }
@@ -132,7 +136,7 @@ void FrameAlignment::calculateBinaryDiffImageAccording2pixelNeighborhood(cv::Mat
             if(closePixelFound == 0)
             {
                 //if a similar pixel is not found mark the position
-                outputImage.at<char>(j, i) = 255;
+                outputImage.at<char>(j, i) = abs((long)(image1.at<char>(j, i) - image2.at<char>(j, i)));
             }
 
 
