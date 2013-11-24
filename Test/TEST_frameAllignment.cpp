@@ -322,8 +322,8 @@ void TestforVideos(char * videoFileName)
     CandidateFilter cFiltMhi;
 
     // SURF kadar iyisi yok
-   // calc.setDetectorSimple("HARRIS");
-   // calc.setDescriptorSimple("FREAK");
+    calc.setDetectorSimple("HARRIS");
+    calc.setDescriptorSimple("FREAK");
   //  calc.setHomographyMethod(flowBased);
   //  calc.setDetectorSimple("GridFAST");
 
@@ -390,7 +390,7 @@ void TestforVideos(char * videoFileName)
                 }
 
                 cv::imshow("Out",mhiImage);
-                cv::threshold(mhiImage,mhiImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+                cv::threshold(mhiImage,mhiImage,150,255,cv::THRESH_BINARY);
                 cv::imshow("Treshed Out",mhiImage);
 
             //    cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
@@ -402,7 +402,7 @@ void TestforVideos(char * videoFileName)
                 cFiltMhi.showTargets(currentFrame,"mhiTargets");
             }
 
-            cv::threshold(currentDiffImage,currentDiffImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+            cv::threshold(currentDiffImage,currentDiffImage,150,255,cv::THRESH_BINARY);
       /*     t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
 
             qDebug()<<"Processing Time :"<<t<<"\n\n";

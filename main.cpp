@@ -718,7 +718,7 @@ void Test6()
                 }
 
                 cv::imshow("Out",mhiImage);
-                cv::threshold(mhiImage,mhiImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+                cv::threshold(mhiImage,mhiImage,180,255,cv::THRESH_BINARY);
                 cv::imshow("Treshed Out",mhiImage);
 
             //    cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
@@ -730,7 +730,7 @@ void Test6()
                 cFiltMhi.showTargets(currentFrame,"mhiTargets");
             }
 
-            cv::threshold(currentDiffImage,currentDiffImage,0,255,cv::THRESH_BINARY|cv::THRESH_OTSU);
+            cv::threshold(currentDiffImage,currentDiffImage,180,255,cv::THRESH_BINARY);
       /*     t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
 
             qDebug()<<"Processing Time :"<<t<<"\n\n";
@@ -771,8 +771,8 @@ int main(int argc, char *argv[])
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-    //Test6();
-    TestforVideos("D:/cvs/data/testavi/output1.avi");
+    Test6();
+    //TestforVideos("D:/cvs/data/testavi/output0.avi");
 
     return 0;
 }
