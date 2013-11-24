@@ -127,47 +127,52 @@ void CandidateFilter::match()
 
         }
     }
-    if(matchTable.size() == 0)
+    if(matchTable.size() != 0)
     {
-        return; //multiple return is forbidded
-    }
+        std::sort(matchTable.begin(), matchTable.end());
 
-    std::sort(matchTable.begin(), matchTable.end());
+        std::vector<MatchItem>::iterator tableIndex;
 
-    std::vector<MatchItem>::iterator tableIndex;
-
-    for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); ++tableIndex )
-    {
-        // Eşleştir
-        MatchItem temp = *tableIndex;
-        int mTarget = temp.targetIndex;
-        int mCandidate = temp.candidateIndex;
-
-        // process Matched Targets
-        if(isCandidateMatched[mCandidate] ||targetList.at(mTarget).isMatched ) // daha önceden eşleşen bir Target Yada Candidate ise  bir sonraki iterasyona git
+        for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); ++tableIndex )
         {
-            continue;
-        }
+            // Eşleştir
+            MatchItem temp = *tableIndex;
+            int mTarget = temp.targetIndex;
+            int mCandidate = temp.candidateIndex;
 
-        targetList.at(mTarget).location = candidateList->at(mCandidate);
-        targetList.at(mTarget).isMatched = true;
-        targetList.at(mTarget).statusCounter++;
+            // process Matched Targets
+            if(isCandidateMatched[mCandidate]) // daha önceden eşleşen bir Candidate ise  bir sonraki iterasyona git
+            {
+                continue;
+            }
 
-        if( targetList.at(mTarget).status == candidate )
-        {
-            if(targetList.at(mTarget).statusCounter > settings.visibilityThreshold)
+            if(targetList.at(mTarget).isMatched && (temp.distance <= 1.1*targetList.at(mTarget).matchingDistance )) // daha önceden eşleşen bir Target ise Birleştirme Kıstası
+            {
+                // Eğer yakınlık farkı %10 ve daha az ise o Candidate'i de matched diye işaretle
+                isCandidateMatched[mCandidate] = true;
+                continue;
+            }
+            targetList.at(mTarget).location = candidateList->at(mCandidate);
+            targetList.at(mTarget).isMatched = true;
+            targetList.at(mTarget).statusCounter++;
+            targetList.at(mTarget).matchingDistance=temp.distance;
+
+            if( targetList.at(mTarget).status == candidate )
+            {
+                if(targetList.at(mTarget).statusCounter > settings.visibilityThreshold)
+                {
+                    targetList.at(mTarget).status = visible;
+                }
+            }
+            else if( targetList.at(mTarget).status == invisible )
             {
                 targetList.at(mTarget).status = visible;
-            }
-        }
-        else if( targetList.at(mTarget).status == invisible )
-        {
-            targetList.at(mTarget).status = visible;
-            
-        }
-        // Signing Matched  Candidates so dont match again...
-        isCandidateMatched[mCandidate] = true;
 
+            }
+            // Signing Matched  Candidates so dont match again...
+            isCandidateMatched[mCandidate] = true;
+
+        }
     }
 
 }
@@ -193,17 +198,18 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
         cv::Scalar color;
         if(temp.status == candidate )
         {
-            color=cv::Scalar( 0,0,255);
-            linetype  = 4 ;
-            thickness = 2;
+            color=cv::Scalar( 0,255,255);
+            linetype  = 1 ;
+            thickness = 1;
             targetStatus = "C";
+
 
         }
         else if (temp.status == visible )
         {
             color=cv::Scalar( 0,255,0);
-            linetype  = 8 ;
-            thickness = 3;
+            linetype  = 1 ;
+            thickness = 4;
             targetStatus = "V";
         }
         else
@@ -212,6 +218,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
             linetype  = 4 ;
             thickness = 1;
             targetStatus = "I";
+
         }
 
 
@@ -223,7 +230,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
         char Buf[512];
         sprintf(Buf,"%s-%d%c",targetStatus,temp.targetId,0);
         cv::putText(inputImage,Buf,temp.location.center,
-                    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(0,255,255), 1);
+                    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(255,255,0), 1);
     //    cv::circle(inputImage,temp.location.center,3,cv::Scalar(0,0,255),-1);
     }
     if(wName==NULL)
@@ -258,4 +265,11 @@ void CandidateFilter::processUnmatchedCandidates()
 
     }
 
+}
+
+
+bool Target::isWithin(Target &subTarget)
+{
+  //  if(abs(this->location.center.x-subTarget.location.center.x))
+    return true;
 }

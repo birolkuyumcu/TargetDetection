@@ -29,6 +29,9 @@ public:
     unsigned statusCounter;
     bool isMatched;
     unsigned targetId;
+    float matchingDistance;
+    bool isWithin(Target& subTarget);
+
 
 };
 
