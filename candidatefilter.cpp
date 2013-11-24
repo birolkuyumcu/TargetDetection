@@ -46,17 +46,37 @@ void CandidateFilter::processUnmatchedTargets()
                 it->statusCounter++;
                 if(it->statusCounter > settings.invisibilityThreshold )
                 {
-                    it=targetList.erase(it); // after erase it points to nothing so incrimenting rises a error
-                    if(it != targetList.begin())
-                        --it;
+                    if(targetList.size()== 1)
+                    {
+                        targetList.clear();
+                       // qDebug()<<"Satatus Invisible\n";
+                        break;
+
+                    }
+                    else
+                    {
+                        it=targetList.erase(it); // after erase it points to nothing so incrimenting rises a error
+                        if(it != targetList.begin())
+                            --it;
+                    }
+
                 }
 
             }
             else if (it->status == candidate)
             {
-                it=targetList.erase(it);
-                if(it != targetList.begin())
-                    --it;
+                if(targetList.size()== 1)
+                {
+                    targetList.clear();
+                   // qDebug()<<"Satatus Candidate\n";
+                    break;
+                }
+                else
+                {
+                    it=targetList.erase(it); // after erase it points to nothing so incrimenting rises a error
+                    if(it != targetList.begin())
+                        --it;
+                }
             }
 
 
