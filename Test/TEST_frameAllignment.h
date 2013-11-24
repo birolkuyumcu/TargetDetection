@@ -8,6 +8,7 @@
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
 #include "candidatedetector.h"
+#include "candidatefilter.h"
 #include <QFile>
 #include <QTextStream>
 
@@ -28,6 +29,7 @@ typedef struct
 
 void TEST_frameAllignment();
 long int timeMeasure(int i);
+void TestforVideos(char * videoFileName);
 
 
 

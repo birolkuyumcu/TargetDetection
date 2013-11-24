@@ -652,6 +652,8 @@ void Test6()
     // SURF kadar iyisi yok
    // calc.setDetectorSimple("HARRIS");
    // calc.setDescriptorSimple("FREAK");
+  //  calc.setHomographyMethod(flowBased);
+  //  calc.setDetectorSimple("GridFAST");
 
     // Init section
     copyCurrentFrame=currentFrame.clone();
@@ -691,9 +693,9 @@ void Test6()
             aligner.process(mask,H,mask);
             mask=copyCurrentFrame&mask;
 
-            aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,currentDiffImage);
+      //      aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,currentDiffImage);
 
-            //cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
+            cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
             diffImageList.push_back(currentDiffImage);
 
             if(diffImageList.size()> nHistory)
@@ -720,8 +722,8 @@ void Test6()
                 cv::imshow("Treshed Out",mhiImage);
 
             //    cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
-                cv::erode(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
-                cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
+           //     cv::erode(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
+           //     cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
 
                 cDetMhi.process(mhiImage);
                 cFiltMhi.process(&cDetMhi.candidateRRectsList);
@@ -769,7 +771,8 @@ int main(int argc, char *argv[])
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-    Test6();
+    //Test6();
+    TestforVideos("D:/cvs/data/testavi/output1.avi");
 
     return 0;
 }
