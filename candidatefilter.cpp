@@ -271,5 +271,7 @@ void CandidateFilter::processUnmatchedCandidates()
 bool Target::isWithin(Target &subTarget)
 {
   //  if(abs(this->location.center.x-subTarget.location.center.x))
+    //pointPolygonTest(InputArray contour, Point2f pt, bool measureDist)
+    //
     return true;
 }
