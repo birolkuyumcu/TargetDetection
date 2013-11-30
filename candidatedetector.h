@@ -14,6 +14,14 @@ public:
     int maxHeight;
 };
 
+class Candidate
+{
+    public:
+    std::vector<cv::Point> contour;
+    cv::RotatedRect rRect;
+
+};
+
 class CandidateDetector
 {
 public:
@@ -26,8 +34,9 @@ public:
     void showCandidates(cv::Mat inputImage,char* wName=NULL);
 
     //
-    std::vector<std::vector<cv::Point> > candidateList;
-    std::vector<cv::RotatedRect> candidateRRectsList;
+  //  std::vector<std::vector<cv::Point> > candidateList;
+  //  std::vector<cv::RotatedRect> candidateRRectsList;
+    std::vector<Candidate> candidateList;
 
 private:
     CandidateDetectorSettings   settings;

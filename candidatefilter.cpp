@@ -2,14 +2,14 @@
 
 CandidateFilter::CandidateFilter()
 {
-    settings.distanceThreshold = 100;
+    settings.distanceThreshold = 15;
     settings.visibilityThreshold = 5;
     settings.invisibilityThreshold = 5;
     targetIdCounter = 0;
 }
 
 
-void CandidateFilter::process(std::vector<cv::RotatedRect> *iCandidateList)
+void CandidateFilter::process(std::vector<Candidate> *iCandidateList)
 {
     candidateList = iCandidateList;
 
@@ -91,7 +91,8 @@ void CandidateFilter::init()
     {
 
         Target temp;
-        temp.location = candidateList->at(i);
+        temp.location = candidateList->at(i).rRect;
+        temp.contour =candidateList->at(i).contour;
         temp.status = candidate;
         temp.statusCounter = 1;
         temp.targetId = ++targetIdCounter;
@@ -118,7 +119,7 @@ void CandidateFilter::match()
             MatchItem temp;
             temp.candidateIndex = i;
             temp.targetIndex = j;
-            temp.distance = calculateDistance(candidateList->at(i),targetList.at(j).location);
+            temp.distance = calculateDistance(candidateList->at(i).rRect,targetList.at(j).location);
 
             if(temp.distance <= settings.distanceThreshold ) // distanceThreshold dan büyük olan uzaklıkları tabloya ekleme
             {
@@ -152,7 +153,8 @@ void CandidateFilter::match()
                 isCandidateMatched[mCandidate] = true;
                 continue;
             }
-            targetList.at(mTarget).location = candidateList->at(mCandidate);
+            targetList.at(mTarget).location = candidateList->at(mCandidate).rRect;
+            targetList.at(mTarget).contour = candidateList->at(mCandidate).contour;
             targetList.at(mTarget).isMatched = true;
             targetList.at(mTarget).statusCounter++;
             targetList.at(mTarget).matchingDistance=temp.distance;
@@ -256,7 +258,8 @@ void CandidateFilter::processUnmatchedCandidates()
         {
 
             Target temp;
-            temp.location=candidateList->at(i);
+            temp.location=candidateList->at(i).rRect;
+            temp.contour =candidateList->at(i).contour;
             temp.status=candidate;
             temp.statusCounter=1;
             temp.targetId=++targetIdCounter;

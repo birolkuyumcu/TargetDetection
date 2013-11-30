@@ -591,7 +591,7 @@ void Test5()
             cv::dilate(aPrev,aPrev, element,cv::Point(-1,-1),4 );
             cv::erode(aPrev,aPrev, element,cv::Point(-1,-1),4 );
             cDet.process(aPrev);
-            cFilt.process(&cDet.candidateRRectsList);
+            cFilt.process(&cDet.candidateList);
           //  cDet.showCandidates(frame);
             cFilt.showTargets(frame);
             cv::imshow(wName,aPrev);
@@ -636,7 +636,7 @@ void Test6()
 
     cv::namedWindow(wName);
 #ifdef WIN32
-    currentFrame=cv::imread("D:/cvs/data/egt3/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    currentFrame=cv::imread("D:/cvs/data/egt1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #else
     frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #endif
@@ -666,7 +666,7 @@ void Test6()
         double t = (double)cv::getTickCount();
 
 #ifdef WIN32
-        sprintf(Buf,"D:/cvs/data/egt3/frame%05d.jpg%c",i,0);
+        sprintf(Buf,"D:/cvs/data/egt1/frame%05d.jpg%c",i,0);
 #else
         sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
 #endif
@@ -731,7 +731,7 @@ void Test6()
            //     cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
 
                 cDetMhi.process(mhiImage);
-                cFiltMhi.process(&cDetMhi.candidateRRectsList);
+                cFiltMhi.process(&cDetMhi.candidateList);
                 cFiltMhi.showTargets(currentFrame,"mhiTargets");
             }
 
@@ -750,7 +750,7 @@ void Test6()
         //    cv::dilate(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
         //    cv::erode(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
             cDet.process(currentDiffImage);
-            cFilt.process(&cDet.candidateRRectsList);
+            cFilt.process(&cDet.candidateList);
             cFilt.showTargets(currentFrame);
             cv::imshow(wName,currentDiffImage);
             cv::waitKey(1);
@@ -781,8 +781,8 @@ int main(int argc, char *argv[])
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-     Test6();
-    //TestforVideos("D:/cvs/data/testavi/output3.avi");
+    // Test6();
+    TestforVideos("D:/cvs/data/testavi/output4.avi");
 
     return 0;
 }

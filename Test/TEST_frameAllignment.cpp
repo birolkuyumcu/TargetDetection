@@ -299,7 +299,7 @@ void TestforVideos(char * videoFileName)
     cv::Mat mhiImage;
     std::vector<cv::Mat>diffImageList;
     int nHistory=5;
-    float weights[5]={0.4,0.6,0.8,1,1};
+    float weights[5]={0.6,0.7,0.8,0.9,1};
 
     cv::VideoCapture videoCap;
     cv::Mat videoFrame;
@@ -390,7 +390,7 @@ void TestforVideos(char * videoFileName)
                 }
 
                 cv::imshow("Out",mhiImage);
-                cv::threshold(mhiImage,mhiImage,180,255,cv::THRESH_BINARY);
+                cv::threshold(mhiImage,mhiImage,dynamicThresholdValue(mhiImage),255,cv::THRESH_BINARY);
                 cv::imshow("Treshed Out",mhiImage);
 
             //    cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
@@ -398,11 +398,13 @@ void TestforVideos(char * videoFileName)
            //     cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),4 );
 
                 cDetMhi.process(mhiImage);
-                cFiltMhi.process(&cDetMhi.candidateRRectsList);
+                cFiltMhi.process(&cDetMhi.candidateList);
                 cFiltMhi.showTargets(currentFrame,"mhiTargets");
+               // cDetMhi.showCandidates(currentFrame,"mhiTargets");
+
             }
 
-            cv::threshold(currentDiffImage,currentDiffImage,180,255,cv::THRESH_BINARY);
+            cv::threshold(currentDiffImage,currentDiffImage,dynamicThresholdValue(currentDiffImage),255,cv::THRESH_BINARY);
       /*     t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
 
             qDebug()<<"Processing Time :"<<t<<"\n\n";
@@ -412,8 +414,9 @@ void TestforVideos(char * videoFileName)
         //    cv::dilate(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
         //    cv::erode(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
             cDet.process(currentDiffImage);
-            cFilt.process(&cDet.candidateRRectsList);
+            cFilt.process(&cDet.candidateList);
             cFilt.showTargets(currentFrame);
+           // cDet.showCandidates(currentFrame);
             cv::imshow(wName,currentDiffImage);
             cv::waitKey(1);
         }
@@ -426,7 +429,13 @@ void TestforVideos(char * videoFileName)
 
         prevFrame=copyCurrentFrame;
     }
-
+    qDebug()<<"The End....."<<"\n\n";
 }
 
+double dynamicThresholdValue(cv::Mat &img, int k)
+{
+    cv::Scalar mean, stdDev;
+    cv::meanStdDev(img, mean, stdDev);
+    return (mean.val[0]+k*stdDev.val[0]);
 
+}

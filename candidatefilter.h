@@ -3,6 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "exception.h"
+#include "candidatedetector.h"
 #include <vector>
 #include <list>
 
@@ -25,6 +26,7 @@ class Target
 {
 public:
     cv::RotatedRect location;
+    std::vector<cv::Point> contour;
     TargetState status;
     unsigned statusCounter;
     bool isMatched;
@@ -52,7 +54,7 @@ public:
     void getSettings(CandidateFilterSettings& _settings);
     void saveSettings();
     bool loadSettings();
-    void process(std::vector<cv::RotatedRect> *iCandidateList);
+    void process(std::vector<Candidate> *iCandidateList);
     void processUnmatchedTargets();
     void processUnmatchedCandidates();
     void init();
@@ -60,7 +62,7 @@ public:
     void showTargets(cv::Mat& inputImage,char *wName=NULL);
     //
     std::vector<Target> targetList;
-    std::vector<cv::RotatedRect> *candidateList;
+    std::vector<Candidate> *candidateList;
     std::vector<bool> isCandidateMatched;
 
 private:

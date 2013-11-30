@@ -28,7 +28,7 @@ void CandidateDetector::process(cv::Mat inputImage)
     {
 
         candidateList.clear();
-        candidateRRectsList.clear();
+     //   candidateRRectsList.clear();
 
         findContours( inputImage, contours, hierarchy, CV_RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
@@ -38,6 +38,7 @@ void CandidateDetector::process(cv::Mat inputImage)
             std::vector<cv::Point> tempContour;
             cv::approxPolyDP(cv::Mat(contours[i]),tempContour, 3, true);
             cv::RotatedRect tempRect=cv::minAreaRect(contours[i]);
+            Candidate tempCandidate;
             // width not always less than height so for filtering reverse it if required
             int tempWidth;
             int tempHeight;
@@ -54,8 +55,10 @@ void CandidateDetector::process(cv::Mat inputImage)
 
             if( (tempWidth < settings.maxWidth  && tempWidth > settings.minWidth) && (tempHeight < settings.maxHeight  && tempHeight > settings.minHeight) )
             {
-                candidateList.push_back(tempContour);
-                candidateRRectsList.push_back(tempRect);
+                tempCandidate.contour=tempContour;
+                tempCandidate.rRect=tempRect;
+                candidateList.push_back(tempCandidate);
+             //   candidateRRectsList.push_back(tempRect);
             }
 
         }
@@ -76,12 +79,13 @@ void CandidateDetector::showCandidates(cv::Mat inputImage, char *wName)
     {
 
         cv::Point2f vertices[4];
-        candidateRRectsList[i].points(vertices);
+        //candidateRRectsList[i].points(vertices);
+        candidateList[i].rRect.points(vertices);
         for (int i = 0; i < 4; i++)
         {
             cv::line(inputImage, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
         }
-        cv::circle(inputImage,candidateRRectsList[i].center,3,cv::Scalar(0,0,255),-1);
+        cv::circle(inputImage,candidateList[i].rRect.center,3,cv::Scalar(0,0,255),-1);
     }
     if(wName==NULL)
         wName="Candidates";
