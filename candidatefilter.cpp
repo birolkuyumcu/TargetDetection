@@ -146,11 +146,28 @@ void CandidateFilter::match()
             {
                 continue;
             }
-
+/*
+ *if unmatched candidates near 1.1 distance of matching distance
+set to a matched
+aded to a matched target
+recalculate contour and rRect
+ */
             if(targetList.at(mTarget).isMatched && (temp.distance <= 1.1*targetList.at(mTarget).matchingDistance )) // daha önceden eşleşen bir Target ise Birleştirme Kıstası
             {
                 // Eğer yakınlık farkı %10 ve daha az ise o Candidate'i de matched diye işaretle
                 isCandidateMatched[mCandidate] = true;
+                // Adding to a mTarget
+                for(int i = 0 ; i < candidateList->at(mCandidate).contour.size() ; i++ )
+                {
+                    targetList.at(mTarget).contour.push_back(candidateList->at(mCandidate).contour.at(i));
+                }
+              //  std::vector<cv::Point> newContour
+                std::vector<cv::Point> tempContour;
+                cv::approxPolyDP(targetList.at(mTarget).contour,tempContour, 3, true);
+                cv::RotatedRect tempRect=cv::minAreaRect(targetList.at(mTarget).contour);
+                targetList.at(mTarget).location = tempRect;
+                targetList.at(mTarget).contour = tempContour;
+
                 continue;
             }
             targetList.at(mTarget).location = candidateList->at(mCandidate).rRect;
