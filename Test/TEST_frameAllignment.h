@@ -4,6 +4,7 @@
 
 #include <QString>
 #include <opencv2/opencv.hpp>
+#include "opencv2/video/background_segm.hpp"
 #include "framealigner.h"
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"

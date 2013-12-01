@@ -631,7 +631,7 @@ void Test6()
     cv::Mat mhiImage;
     std::vector<cv::Mat>diffImageList;
     int nHistory=5;
-    float weights[5]={0.4,0.6,0.8,1,1};
+    float weights[5]={0.6,0.77,0.87,0.95,1};
 
 
     cv::namedWindow(wName);
@@ -710,10 +710,12 @@ void Test6()
 
             if(diffImageList.size()==nHistory)
             {
+         //       cv::BackgroundSubtractorMOG2 bg_model;
                 mhiImage=currentDiffImage.clone();
                 mhiImage=cv::Scalar(0);
                 for(int i=0;i<diffImageList.size();i++) // no need for last inserted
                 {
+           //         bg_model(diffImageList[i],mhiImage);
                     mhiImage+=diffImageList[i]*weights[i];
                 }
 
@@ -737,7 +739,7 @@ void Test6()
 
             cv::Scalar meanCurrent, stdDevCurrent;
             cv::meanStdDev(currentDiffImage, meanCurrent, stdDevCurrent);
-            int dynamicThresholdCurrent=meanCurrent.val[0]+2*stdDevCurrent.val[0];
+            int dynamicThresholdCurrent=meanCurrent.val[0]+5*stdDevCurrent.val[0];
             qDebug()<<"dynamicThresholdCurrent :"<<dynamicThresholdCurrent<<"\n";
 
             cv::threshold(currentDiffImage,currentDiffImage,dynamicThresholdCurrent,255,cv::THRESH_BINARY);
@@ -781,8 +783,8 @@ int main(int argc, char *argv[])
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-     Test6();
-  //  TestforVideos("D:/cvs/data/testavi/output4.avi");
+    // Test6();
+    TestforVideos("D:/cvs/data/testavi/output1.avi");
 
     return 0;
 }

@@ -1,6 +1,5 @@
 #include <Test/TEST_frameAllignment.h>
 
-
 #define TEST_VIDEO_FILE_CNT 14
 
 static void processVideoAndGetScores(QString &videoFileName, int startFrame, AllignementTestScore& score);
@@ -299,7 +298,8 @@ void TestforVideos(char * videoFileName)
     cv::Mat mhiImage;
     std::vector<cv::Mat>diffImageList;
     int nHistory=5;
-    float weights[5]={0.6,0.7,0.8,0.9,1};
+    float weights[5]={0.6,0.77,0.87,0.95,1};
+
 
     cv::VideoCapture videoCap;
     cv::Mat videoFrame;
@@ -322,8 +322,8 @@ void TestforVideos(char * videoFileName)
     CandidateFilter cFiltMhi;
 
     // SURF kadar iyisi yok
-   // calc.setDetectorSimple("HARRIS");
-  //  calc.setDescriptorSimple("FREAK");
+    calc.setDetectorSimple("HARRIS");
+    calc.setDescriptorSimple("FREAK");
   //  calc.setHomographyMethod(flowBased);
   //  calc.setDetectorSimple("GridFAST");
 
@@ -347,6 +347,8 @@ void TestforVideos(char * videoFileName)
 
         cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
         copyCurrentFrame=currentFrame.clone();
+        if(copyCurrentFrame.empty())
+            break;
 
         calc.process(copyCurrentFrame);
 
@@ -382,15 +384,17 @@ void TestforVideos(char * videoFileName)
 
             if(diffImageList.size()==nHistory)
             {
+              //  cv::BackgroundSubtractorMOG2 bg_model;
                 mhiImage=currentDiffImage.clone();
                 mhiImage=cv::Scalar(0);
                 for(int i=0;i<diffImageList.size();i++) // no need for last inserted
                 {
+              //      bg_model(diffImageList[i],mhiImage);
                     mhiImage+=diffImageList[i]*weights[i];
                 }
 
                 cv::imshow("Out",mhiImage);
-                cv::threshold(mhiImage,mhiImage,dynamicThresholdValue(mhiImage),255,cv::THRESH_BINARY);
+                cv::threshold(mhiImage,mhiImage,dynamicThresholdValue(mhiImage,5),255,cv::THRESH_BINARY);
                 cv::imshow("Treshed Out",mhiImage);
 
             //    cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
