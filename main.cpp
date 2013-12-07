@@ -636,8 +636,8 @@ void Test6()
 
     cv::namedWindow(wName);
 #ifdef WIN32
-   // currentFrame=cv::imread("D:/cvs/data/egt4/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    currentFrame=cv::imread("D:/cvs/data/pktest4/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    currentFrame=cv::imread("D:/cvs/data/egt1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+ //   currentFrame=cv::imread("D:/cvs/data/pktest1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #else
     frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #endif
@@ -667,8 +667,8 @@ void Test6()
         double t = (double)cv::getTickCount();
 
 #ifdef WIN32
-        //sprintf(Buf,"D:/cvs/data/egt4/frame%05d.jpg%c",i,0);
-        sprintf(Buf,"D:/cvs/data/pktest4/frame%05d.jpg%c",i,0);
+        sprintf(Buf,"D:/cvs/data/egt1/frame%05d.jpg%c",i,0);
+        //sprintf(Buf,"D:/cvs/data/pktest1/frame%05d.jpg%c",i,0);
 #else
         sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
 #endif

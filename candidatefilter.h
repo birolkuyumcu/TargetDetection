@@ -20,6 +20,10 @@ public:
     int visibilityThreshold;
     int invisibilityThreshold;
     float distanceThreshold;
+    bool showCandidate;
+    bool showVisible;
+    bool showInvisible;
+    bool showTargetId;
 };
 
 class Target

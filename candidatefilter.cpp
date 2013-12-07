@@ -5,6 +5,10 @@ CandidateFilter::CandidateFilter()
     settings.distanceThreshold = 15;
     settings.visibilityThreshold = 5;
     settings.invisibilityThreshold = 5;
+    settings.showCandidate=false;
+    settings.showTargetId=false;
+    settings.showVisible=true;
+    settings.showInvisible=false;
     targetIdCounter = 0;
 }
 
@@ -215,6 +219,12 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
         int linetype;
         int thickness;
         cv::Scalar color;
+
+        if((temp.status == candidate ) && (settings.showCandidate == false) ) continue;
+        if((temp.status == visible ) && (settings.showVisible == false) ) continue;
+        if((temp.status == invisible ) && (settings.showInvisible == false) ) continue;
+
+
         if(temp.status == candidate )
         {
             color=cv::Scalar( 0,255,255);
@@ -226,7 +236,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
         }
         else if (temp.status == visible )
         {
-            color=cv::Scalar( 0,255,0);
+            color=cv::Scalar( 0,0,255);
             linetype  = 1 ;
             thickness = 4;
             targetStatus = "V";
@@ -246,11 +256,14 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
             cv::line(inputImage, vertices[i], vertices[(i+1)%4],color,thickness,linetype);
         }
 
-        char Buf[512];
-        sprintf(Buf,"%s-%d%c",targetStatus,temp.targetId,0);
-        cv::putText(inputImage,Buf,temp.location.center,
-                    cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(255,255,0), 1);
-    //    cv::circle(inputImage,temp.location.center,3,cv::Scalar(0,0,255),-1);
+        if( settings.showTargetId == true)
+        {
+            char Buf[512];
+            sprintf(Buf,"%s-%d%c",targetStatus,temp.targetId,0);
+            cv::putText(inputImage,Buf,temp.location.center,
+                        cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(255,255,0), 1);
+        }
+
     }
     if(wName==NULL)
         wName="Candidates";
