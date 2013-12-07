@@ -32,7 +32,7 @@ public:
     bool isMatched;
     unsigned targetId;
     float matchingDistance;
-    bool isWithin(Target& subTarget);
+    bool isWithin(Target& isSubTarget);
 
 
 };
@@ -60,6 +60,7 @@ public:
     void init();
     void match();
     void showTargets(cv::Mat& inputImage,char *wName=NULL);
+
     //
     std::vector<Target> targetList;
     std::vector<Candidate> *candidateList;
@@ -70,6 +71,7 @@ private:
     Exception               exc;
     unsigned targetIdCounter;
     float calculateDistance(cv::RotatedRect& r1,cv::RotatedRect& r2);
+    bool isNewTarget(Target &tempTarget);
 };
 
 #endif // CANDIDATEFILTER_H

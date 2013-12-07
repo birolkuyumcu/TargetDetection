@@ -266,6 +266,22 @@ float CandidateFilter::calculateDistance(cv::RotatedRect &r1, cv::RotatedRect &r
     return sqrtf(deltaX*deltaX+deltaY*deltaY);
 }
 
+bool CandidateFilter::isNewTarget(Target &tempTarget)
+{
+    bool isNew = true;
+    for( int i = 0; i < targetList.size() ; i++ )
+    {
+        if(targetList[i].isWithin(tempTarget))
+        {
+            isNew = false;
+            break;
+        }
+    }
+
+    return isNew;
+
+}
+
 
 void CandidateFilter::processUnmatchedCandidates()
 {
@@ -280,7 +296,10 @@ void CandidateFilter::processUnmatchedCandidates()
             temp.status=candidate;
             temp.statusCounter=1;
             temp.targetId=++targetIdCounter;
-            targetList.push_back(temp);
+            if(isNewTarget(temp)) // if temp is not a subtarget of any other target
+            {
+                targetList.push_back(temp);
+            }
         }
 
     }
@@ -288,10 +307,22 @@ void CandidateFilter::processUnmatchedCandidates()
 }
 
 
-bool Target::isWithin(Target &subTarget)
+bool Target::isWithin(Target &isSubTarget)
 {
-  //  if(abs(this->location.center.x-subTarget.location.center.x))
-    //pointPolygonTest(InputArray contour, Point2f pt, bool measureDist)
-    //
-    return true;
+    cv::Point2f vertices[4];
+    isSubTarget.location.points(vertices);
+    double score=0;
+    for(int i = 0 ; i < 4 ; i++ )
+    {
+        score += cv::pointPolygonTest(this->contour,vertices[i],false);
+    }
+    if (score >= 2)
+    {
+        return true;
+    }
+    else // birden daha fazla noktası contour dışındaysa
+    {
+        return false;
+    }
+
 }

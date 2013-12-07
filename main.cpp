@@ -636,7 +636,8 @@ void Test6()
 
     cv::namedWindow(wName);
 #ifdef WIN32
-    currentFrame=cv::imread("D:/cvs/data/egt1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+   // currentFrame=cv::imread("D:/cvs/data/egt4/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    currentFrame=cv::imread("D:/cvs/data/pktest4/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #else
     frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #endif
@@ -666,7 +667,8 @@ void Test6()
         double t = (double)cv::getTickCount();
 
 #ifdef WIN32
-        sprintf(Buf,"D:/cvs/data/egt1/frame%05d.jpg%c",i,0);
+        //sprintf(Buf,"D:/cvs/data/egt4/frame%05d.jpg%c",i,0);
+        sprintf(Buf,"D:/cvs/data/pktest4/frame%05d.jpg%c",i,0);
 #else
         sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
 #endif
@@ -692,6 +694,7 @@ void Test6()
             // çevrilmiş önceki frame için maske oluştur
             aligner.process(mask,H,mask);
             mask=copyCurrentFrame&mask;
+            cv::imshow("Current Frame",currentFrame);
 
       //      aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,currentDiffImage);
 
@@ -783,8 +786,8 @@ int main(int argc, char *argv[])
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-    // Test6();
-    TestforVideos("D:/cvs/data/testavi/output1.avi");
+     Test6();
+    //TestforVideos("D:/cvs/data/testavi/output1.avi");
 
     return 0;
 }
