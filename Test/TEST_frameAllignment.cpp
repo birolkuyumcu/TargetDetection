@@ -443,3 +443,160 @@ double dynamicThresholdValue(cv::Mat &img, int k)
     return (mean.val[0]+k*stdDev.val[0]);
 
 }
+
+void DemoforVideos()
+
+{
+    const char * videoFileName ="demo.avi";
+    char Buf[1024];
+    char *wName = (char *)"Single Frame Dif";
+    cv::Mat currentFrame;
+    cv::Mat copyCurrentFrame; // used for orginal current frame not changed
+    cv::Mat prevFrame;
+    cv::Mat alignedPrevFrame;
+    cv::Mat currentDiffImage;
+    cv::Mat mhiImage;
+    std::vector<cv::Mat>diffImageList;
+    int nHistory=5;
+    float weights[5]={0.6,0.77,0.87,0.95,1};
+
+
+    cv::VideoCapture videoCap;
+    cv::Mat videoFrame;
+
+
+    cv::namedWindow(wName);
+
+    bool isOpened=videoCap.open(videoFileName);
+    if(isOpened == false)
+    {
+        qDebug()<<videoFileName<< "Not Opened !\n";
+        return;
+    }
+    qDebug()<<videoFileName;
+    videoCap.read(videoFrame);
+    cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
+
+
+    cv::imshow(wName,currentFrame);
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+    CandidateDetector cDet;
+    CandidateDetector cDetMhi;
+    CandidateFilter cFilt;
+    CandidateFilter cFiltMhi;
+
+    // SURF kadar iyisi yok
+    calc.setDetectorSimple("SURF");
+    calc.setDescriptorSimple("SURF");
+
+    // Init section
+    copyCurrentFrame=currentFrame.clone();
+    calc.process(copyCurrentFrame);
+
+    prevFrame=copyCurrentFrame;
+    int counter=0;
+    for(;;)
+    {
+        double t = (double)cv::getTickCount();
+
+
+        videoCap.read(videoFrame);
+
+
+
+        if(currentFrame.empty())
+            break;
+
+        // for frame pass
+        counter++;
+        if(counter%3) continue;
+
+        cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
+        copyCurrentFrame=currentFrame.clone();
+        if(copyCurrentFrame.empty())
+            break;
+
+        calc.process(copyCurrentFrame);
+
+
+        cv::Mat H;
+        cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
+        if(calc.getHomography(H) == true){
+            // Düzgün dönüşüm matrisi bulunduysa
+            cv::Mat mask(prevFrame.size(),CV_8U);
+            mask=cv::Scalar(255);
+
+
+            // Önceki frame aktif frame çevir
+            aligner.process(prevFrame,H,alignedPrevFrame);
+            // çevrilmiş önceki frame için maske oluştur
+            aligner.process(mask,H,mask);
+            mask=copyCurrentFrame&mask;
+
+            cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
+            diffImageList.push_back(currentDiffImage);
+
+            if(diffImageList.size()> nHistory)
+            {
+                diffImageList.erase(diffImageList.begin()); // FIFO
+            }
+            // homography'ye göre eski diffImageleri çevir
+            for(int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
+            {
+                aligner.process(diffImageList[i],H,diffImageList[i]);
+            }
+
+            if(diffImageList.size()==nHistory)
+            {
+                mhiImage=currentDiffImage.clone();
+                mhiImage=cv::Scalar(0);
+                for(int i=0;i<diffImageList.size();i++) // no need for last inserted
+                {
+                    mhiImage+=diffImageList[i]*weights[i];
+                }
+
+                cv::imshow("MHI Image",mhiImage);
+                cv::threshold(mhiImage,mhiImage,dynamicThresholdValue(mhiImage,5),255,cv::THRESH_BINARY);
+
+                cv::morphologyEx(mhiImage,mhiImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),1 );
+                cv::dilate(mhiImage,mhiImage, element,cv::Point(-1,-1),1 );
+                cv::erode(mhiImage,mhiImage, element,cv::Point(-1,-1),1 );
+
+                cv::imshow("Treshed Out",mhiImage);
+
+                cDetMhi.process(mhiImage);
+                cFiltMhi.process(&cDetMhi.candidateList);
+                cFiltMhi.showTargets(videoFrame,"mhiTargets");
+
+
+            }
+
+            cv::threshold(currentDiffImage,currentDiffImage,dynamicThresholdValue(currentDiffImage),255,cv::THRESH_BINARY);
+
+            cv::dilate(currentDiffImage,currentDiffImage, element,cv::Point(-1,-1),1 );
+            cv::erode(currentDiffImage,currentDiffImage, element,cv::Point(-1,-1),1 );
+
+
+            t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+
+            qDebug()<<"Processing Time :"<<t<<"\n\n";
+
+            cDet.process(currentDiffImage);
+            cFilt.process(&cDet.candidateList);
+            cFilt.showTargets(videoFrame,"Single Frame Dif Targets");
+            cv::imshow(wName,currentDiffImage);
+            cv::waitKey(1);
+        }
+        else
+        {
+
+            diffImageList.clear();
+
+        }
+
+        prevFrame=copyCurrentFrame;
+    }
+    qDebug()<<"The End....."<<"\n\n";
+}
+

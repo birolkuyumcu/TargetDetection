@@ -636,7 +636,7 @@ void Test6()
 
     cv::namedWindow(wName);
 #ifdef WIN32
-    currentFrame=cv::imread("D:/cvs/data/egt1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    currentFrame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
  //   currentFrame=cv::imread("D:/cvs/data/pktest1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #else
     frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
@@ -667,7 +667,7 @@ void Test6()
         double t = (double)cv::getTickCount();
 
 #ifdef WIN32
-        sprintf(Buf,"D:/cvs/data/egt1/frame%05d.jpg%c",i,0);
+        sprintf(Buf,"D:/cvs/data/egt2/frame%05d.jpg%c",i,0);
         //sprintf(Buf,"D:/cvs/data/pktest1/frame%05d.jpg%c",i,0);
 #else
         sprintf(Buf,"../uavVideoDataset/egtest02/frame%05d.jpg%c",i,0);
@@ -786,8 +786,9 @@ int main(int argc, char *argv[])
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-     Test6();
+    // Test6();
     //TestforVideos("D:/cvs/data/testavi/output1.avi");
+    DemoforVideos();
 
     return 0;
 }
