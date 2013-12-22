@@ -5,12 +5,21 @@
 #include <opencv2/opencv.hpp>
 #include "exception.h"
 
+/* HomograpyMethod means that calculation of homography based on
+ * for featureBased ; find feature of each frame and calculete homography by using matching of them
+ * for flowBased ; find feature of first Frame then find flow at second frame and calculete homography by using these pairs
+ **/
 enum HomograpyMethod
 {
     featureBased,
     flowBased
 };
 
+/*
+ * firstPass ; Initial stage of calculation gets only first frame
+ * secondPass ; gets second frame calculate homography
+ * onGoing ; second Frame -> first Frame then gets new second frame  calculate homography
+ **/
 enum ProcessStage
 {
     firstPass,
@@ -18,7 +27,10 @@ enum ProcessStage
     onGoing
 };
 
-
+/* MatchingType for featurebased Homography calculation
+ * for detail refer to OpenCv Documentation
+ * radiusMatch not working - OpenCv issue -
+ **/
 enum MatchingType
 {
     normalMatch,

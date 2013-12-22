@@ -1,5 +1,7 @@
 #include "alignmentmatrixcalc.h"
 
+/* constructor sets default settings
+ */
 AlignmentMatrixCalc::AlignmentMatrixCalc()
 {
     exc.setModuleName("AlignmentMatrixCalc");
@@ -29,6 +31,16 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     }
 }
 
+/* inputImage ; always same size ,single channel  and same depth CV_8U - 8-bit unsigned integers ( 0..255 )
+ * main calculation method
+ * gets frame and run with respect to stage of process
+ * for firstPass ; run init()
+ * for secondPass ; if error count above the threshold value bact to firstPass
+ * else - secondPass or onGoing stage - run();
+ *   if run() returns true calculate homography with respect to HomograpyMethod
+ *   else isHomographyCalc set to false;
+ *
+ **/
 void AlignmentMatrixCalc::process(cv::Mat &inputImage)
 {
     if(inputImage.empty())
@@ -94,13 +106,19 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
 
 }
 
+/*delete buffers
+ *set AlignmentMatrixCalc to initial state
+ * Not used, can be removed...
+ */
 void AlignmentMatrixCalc::reset()
 {
-    //delete buffers
-    //set AlignmentMatrixCalc to initial state
+
     prevFrame.release();
 }
 
+/* Internally used
+ * firstPass stage of calculation
+ */
 void AlignmentMatrixCalc::init(cv::Mat &frame)
 {
     qDebug()<<"Init\n\n";
@@ -151,12 +169,18 @@ void AlignmentMatrixCalc::init(cv::Mat &frame)
     }
 }
 
+
+/* Internally used
+ * if current frame points ready retruns true
+ * if not retruns false
+ **/
 bool AlignmentMatrixCalc::run()
 {
     if(hMethod == featureBased)
     {
+        // detect keyoints for current frame
         detector->detect(currentFrame, keypointsCurrent);
-
+        // select best of them with respect to keyRetainFactor
         cv::KeyPointsFilter::retainBest(keypointsCurrent, keyRetainFactor*keypointsCurrent.size() );
 
         if(keypointsCurrent.size() >= numOfPointsMin)
@@ -242,7 +266,7 @@ void AlignmentMatrixCalc::featureBasedHomography()
     else if( matchType == radiusMatch)
     {
         // there is no documentation
-        //matcher->radiusMatch(descriptorsPrev, descriptorsCurrent, kmatchesPrevToCurrent,maxRadius );
+        // matcher->radiusMatch(descriptorsPrev, descriptorsCurrent, kmatchesPrevToCurrent,maxRadius );
         // work but there is no matching back for any maxRadius
         //convertRMatches(kmatchesCurrentToPrev,matchesPassed);
         exc.showException("radiusMatch not working Dont use it!" );
