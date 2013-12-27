@@ -98,7 +98,7 @@ void AlignmentMatrixCalc::process(cv::Mat &inputImage)
         {
             //wayBack();
             isHomographyCalc = false;
-            return;
+        //    return;
         }
 
 
@@ -163,7 +163,7 @@ void AlignmentMatrixCalc::init(cv::Mat &frame)
 
 
 /* Internally used
- * if current frame points ready retruns true
+ * if current frame points ready returns true
  * if not retruns false
  **/
 bool AlignmentMatrixCalc::run()
@@ -225,7 +225,9 @@ bool AlignmentMatrixCalc::run()
 
 }
 
-
+/* Calculation of Homography
+ *
+ **/
 void AlignmentMatrixCalc::featureBasedHomography()
 {
     std::vector<cv::DMatch> matchesPrevToCurrent;
@@ -234,6 +236,7 @@ void AlignmentMatrixCalc::featureBasedHomography()
     std::vector<std::vector<cv::DMatch> > kmatchesCurrentToPrev;
     std::vector<cv::DMatch> matchesPassed;
 
+    // Matching Section begin
     if( matchType == normalMatch )
     {
         matcher->match( descriptorsPrev, descriptorsCurrent, matchesPrevToCurrent );
@@ -244,19 +247,19 @@ void AlignmentMatrixCalc::featureBasedHomography()
     }
     else if( matchType == knnMatch)
     {
-        qDebug()<<"Match : "<<keypointsCurrent.size()<<"  "<<keypointsPrev.size()<<"\n";
+ //       qDebug()<<"Match : "<<keypointsCurrent.size()<<"  "<<keypointsPrev.size()<<"\n";
         matcher->knnMatch(descriptorsPrev, descriptorsCurrent, kmatchesPrevToCurrent,2);
-        qDebug()<<"Ratio Test 1 :"<<kmatchesPrevToCurrent.size()<<"\n";
+ //       qDebug()<<"Ratio Test 1 :"<<kmatchesPrevToCurrent.size()<<"\n";
         ratioTest(kmatchesPrevToCurrent);
-        qDebug()<<"Ratio Test 1 End :"<<kmatchesPrevToCurrent.size()<<"\n";
+ //       qDebug()<<"Ratio Test 1 End :"<<kmatchesPrevToCurrent.size()<<"\n";
         matcher->knnMatch(descriptorsCurrent,descriptorsPrev, kmatchesCurrentToPrev, 2);
-        qDebug()<<"Ratio Test 2 :"<<kmatchesCurrentToPrev.size()<<"\n";
+ //       qDebug()<<"Ratio Test 2 :"<<kmatchesCurrentToPrev.size()<<"\n";
         ratioTest(kmatchesCurrentToPrev);
-        qDebug()<<"Ratio Test 2 End :"<<kmatchesCurrentToPrev.size()<<"\n";
+ //       qDebug()<<"Ratio Test 2 End :"<<kmatchesCurrentToPrev.size()<<"\n";
         // Symmetry Test not working for knn
         //matchesPassed=matchesPrevToCurrent;
         symmetryTest(kmatchesPrevToCurrent,kmatchesCurrentToPrev,matchesPassed);
-        qDebug()<<"Sym Test  :"<<matchesPassed.size()<<"\n";
+ //       qDebug()<<"Sym Test  :"<<matchesPassed.size()<<"\n";
 
     }
     else if( matchType == radiusMatch)
@@ -271,20 +274,20 @@ void AlignmentMatrixCalc::featureBasedHomography()
 
 
     // Matching Section end
+    isHomographyCalc = false;
 
     pointsPrev.clear();
     pointsCurrent.clear();
 
+    // Conversition of matched Keypoints to points
     for (int p = 0; p < (int)matchesPassed.size(); ++p)
     {
         pointsPrev.push_back(keypointsPrev[matchesPassed[p].queryIdx].pt);
         pointsCurrent.push_back(keypointsCurrent[matchesPassed[p].trainIdx].pt);
     }
 
-
-
-
-    if(pointsPrev.size() >=4 && pointsCurrent.size() >= 4)
+    // if enough matched points exist
+    if(pointsPrev.size() >= 4 && pointsCurrent.size() >= 4)
     {
         // Sub-pixsel Accuracy
 
@@ -303,30 +306,20 @@ void AlignmentMatrixCalc::featureBasedHomography()
          */
         if(!homography.empty())
         {
-           isHomographyCalc = true;
-        }
-        else
-        {
-            isHomographyCalc = false;
+            if(isHomographyValid()) //
+            {
+                isHomographyCalc = true;
+            }
         }
 
     }
-    else
+
+    if(isHomographyCalc == false)
     {
-        isHomographyCalc = false;
+        // if valid homography not calculated returns to a second stage....
         stage=secondPass;
-        qDebug()<<"Reset\n";
-        //wayBack();
-        return;
-    }
-    //If Homogrphy not valid
 
-    if(!isHomographyValid())
-    {
-     //   stage=secondPass;
-     //   wayBack();
     }
-
 
 }
 
