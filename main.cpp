@@ -651,9 +651,9 @@ void Test6()
     CandidateFilter cFiltMhi;
 
     // SURF kadar iyisi yok
-   // calc.setDetectorSimple("HARRIS");
+  //  calc.setDetectorSimple("ORB");
    // calc.setDescriptorSimple("FREAK");
-  //  calc.setHomographyMethod(flowBased);
+    calc.setHomographyMethod(flowBased);
   //  calc.setDetectorSimple("GridFAST");
 
     // Init section

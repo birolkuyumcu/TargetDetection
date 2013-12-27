@@ -24,6 +24,7 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
     stage = firstPass;
     numOfPointsMin = 50;
     errorCount=0;
+    flowErrorThreshold=3;
 
     if(!cv::initModule_nonfree())
     {
@@ -225,7 +226,7 @@ bool AlignmentMatrixCalc::run()
 
 }
 
-/* Calculation of Homography
+/* Calculation of Homography for feature based
  *
  **/
 void AlignmentMatrixCalc::featureBasedHomography()
@@ -323,6 +324,9 @@ void AlignmentMatrixCalc::featureBasedHomography()
 
 }
 
+/* Calculation of Homography for flow based
+ *
+ **/
 void AlignmentMatrixCalc::flowBasedHomography()
 {
     std::vector<uchar>status;
@@ -330,11 +334,16 @@ void AlignmentMatrixCalc::flowBasedHomography()
     std::vector<cv::Point2f>tempPrev;
     std::vector<cv::Point2f>tempCurrent;
 
+    isHomographyCalc=false;
+
     pointsCurrent.clear();
+
+    // flow calculation
     calcOpticalFlowPyrLK(prevFrame, currentFrame, pointsPrev, pointsCurrent, status, err);
 
     qDebug()<<"\n\n Prev Frame Features: "<<pointsPrev.size();
 
+    // filtering flow points by threshold
     for (unsigned int i=0; i < pointsPrev.size(); i++)
     {
         if(status[i] && err[i] <= flowErrorThreshold)
@@ -342,39 +351,40 @@ void AlignmentMatrixCalc::flowBasedHomography()
             tempPrev.push_back(pointsPrev[i]);
             tempCurrent.push_back(pointsCurrent[i]);
         }
+        qDebug()<<status[i]<<" "<<err[i]<<"\n";
     }
     qDebug()<<"After Flow Filtered Features : "<<tempCurrent.size();
 
+    // if enough flow points exist
     if(tempPrev.size() >= 4 && tempCurrent.size() >= 4)
     {
         homography = cv::findHomography(tempPrev, tempCurrent, homographyCalcMethod,
                                         ransacReprojThreshold);
-      //  pointsCurrent = tempCurrent;
-        isHomographyCalc=true;
-        isHomographyValid();
+        /*
+         cv::findHomography can return empty matrix in some cases.
+         This seems happen only when cv::RANSAC flag is passed.
+         check the computed homography before using it
+         */
+        if(!homography.empty())
+        {
+            if(isHomographyValid()) //
+            {
+                isHomographyCalc = true;
+            }
+        }
+
+
     }
-    else
+    if(isHomographyCalc == false)
     {
-        isHomographyCalc=false;
+        // if valid homography not calculated returns to a second stage....
+        stage=secondPass;
+
     }
 
 
 
 
-/*
-    // Burda bir kontrol eklenmeli filitrelenen noktaların belli bir sayı altına düştüğünde
-    // yeniden feature bazlı nokta tespit ettirilmeli
-    if(pointsCurrent.size() < 50)
-    {
-        init(currentFrame);
-    }
-
-    //If Homogrphy not valid !
-    /*if(isHomographyValid())
-    {
-      //  wayBack();
-    }
-*/
 }
 
 
