@@ -449,6 +449,10 @@ void AlignmentMatrixCalc::setMatchingType(MatchingType iType)
     matchType = iType;
 }
 
+/* Symmetry Test ; matching accepted if  reverse matching reverse of it
+ * symmetrical matching scheme imposing that, for a match pair to be accepted, both points must be the best matching feature of the other:
+ *
+ **/
 void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCurrent, std::vector<cv::DMatch> &matchesCurrentToPrev, std::vector<cv::DMatch> &matchesPassed)
 {
     for( size_t i = 0; i < matchesPrevToCurrent.size(); i++ )
@@ -465,6 +469,9 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<cv::DMatch> &matchesPrevToCur
     }
 }
 
+/* Symmetry Test ; matching's best match accepted if  reverse matching's best match reverse of it
+ * symmetrical matching scheme imposing that, for a match pair to be accepted, both points must be the other:
+ **/
 void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kmatchesPrevToCurrent,std::vector<std::vector<cv::DMatch> >&kmatchesCurrentToPrev,std::vector< cv::DMatch >& matchesPassed)
 {
 
@@ -485,7 +492,7 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kma
                 continue;
             }
 
-            cv::DMatch forward = (*mPi)[0];
+            cv::DMatch forward = (*mPi)[0]; // [0] best
             cv::DMatch backward = (*mCi)[0];
 
             if((forward.queryIdx == backward.trainIdx) && (backward.queryIdx == forward.trainIdx) )
@@ -498,6 +505,15 @@ void AlignmentMatrixCalc::symmetryTest(std::vector<std::vector<cv::DMatch> >&kma
 
 }
 
+// for knnMatch
+/* for each feature point, we have two candidate matches in the other view. These are
+*  the two best ones based on the distance between their descriptors. If this measured distance
+   is very low for the best match, and much larger for the second best match, we can safely
+   accept the first match as a good one since it is unambiguously the best choice. Reciprocally,
+   if the two best matches are relatively close in distance, then there exists a possibility that we
+   make an error if we select one or the other. In this case, we should reject both matches.
+ *
+ **/
 void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatches)
 {
     for(std::vector<std::vector<cv::DMatch> >::iterator mi=kmatches.begin();
