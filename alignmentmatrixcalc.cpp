@@ -168,56 +168,60 @@ void AlignmentMatrixCalc::init(cv::Mat &frame)
  **/
 bool AlignmentMatrixCalc::run()
 {
+    bool returnValue=true;
+
     if(hMethod == featureBased)
     {
         // detect keyoints for current frame
         detector->detect(currentFrame, keypointsCurrent);
         // select best of them with respect to keyRetainFactor
         cv::KeyPointsFilter::retainBest(keypointsCurrent, keyRetainFactor*keypointsCurrent.size() );
-
+        // if enough points retained
         if(keypointsCurrent.size() >= numOfPointsMin)
         {
             stage = onGoing;
+            descriptor->compute(currentFrame, keypointsCurrent, descriptorsCurrent);
         }
         else
         {
             stage = secondPass;
-            return false;
+            returnValue=false;
         }
-        descriptor->compute(currentFrame, keypointsCurrent, descriptorsCurrent);
+
     }
     else if(hMethod == flowBased)
     {
         detector->detect(prevFrame, keypointsPrev);
 
-        qDebug()<<"Before retainBest :"<<keypointsPrev.size();
+     //   qDebug()<<"Before retainBest :"<<keypointsPrev.size();
         cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
 
       //  cv::KeyPointsFilter::retainBest(keypointsPrev, 80 );
-        qDebug()<<"After retainBest :"<<keypointsPrev.size();
+     //   qDebug()<<"After retainBest :"<<keypointsPrev.size();
 
         if(keypointsPrev.size() >= numOfPointsMin)
         {
             stage = onGoing;
+            pointsPrev.clear();
+
+            for(unsigned int i=0; i < keypointsPrev.size(); i++)
+            {
+                pointsPrev.push_back(keypointsPrev[i].pt);
+            }
+
+            cv::cornerSubPix(prevFrame, pointsPrev, cv::Size(5, 5), cv::Size(-1,-1),
+                             cv::TermCriteria(cv::TermCriteria::MAX_ITER + cv::TermCriteria::EPS,30,0.1));
         }
         else
         {
             stage = secondPass;
-            return false;
+            returnValue=false;
         }
 
-        pointsPrev.clear();
 
-        for(unsigned int i=0; i < keypointsPrev.size(); i++)
-        {
-            pointsPrev.push_back(keypointsPrev[i].pt);
-        }
-
-        cv::cornerSubPix(prevFrame, pointsPrev, cv::Size(5, 5), cv::Size(-1,-1),
-                         cv::TermCriteria(cv::TermCriteria::MAX_ITER + cv::TermCriteria::EPS,30,0.1));
 
     }
-    return true;
+    return returnValue;
 
 }
 
