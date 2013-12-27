@@ -34,8 +34,8 @@ AlignmentMatrixCalc::AlignmentMatrixCalc()
 /* inputImage ; always same size ,single channel  and same depth CV_8U - 8-bit unsigned integers ( 0..255 )
  * main calculation method
  * gets frame and run with respect to stage of process
- * for firstPass ; run init()
- * for secondPass ; if error count above the threshold value bact to firstPass
+ * if firstPass ; run init()
+ * elseif secondPass ; if error count above the threshold value bact to firstPass
  * else - secondPass or onGoing stage - run();
  *   if run() returns true calculate homography with respect to HomograpyMethod
  *   else isHomographyCalc set to false;
@@ -129,42 +129,34 @@ void AlignmentMatrixCalc::init(cv::Mat &frame)
         detector->detect(prevFrame, keypointsPrev);
 
         cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
-
+        // if enough points retained
         if(keypointsPrev.size() >= numOfPointsMin)
         {
             stage = secondPass;
-        }
-        else
-        {
-            return;
+            descriptor->compute(prevFrame, keypointsPrev, descriptorsPrev);
         }
 
-        descriptor->compute(prevFrame, keypointsPrev, descriptorsPrev);
     }
     else if(hMethod == flowBased)
     {
         detector->detect(prevFrame, keypointsPrev);
 
         cv::KeyPointsFilter::retainBest(keypointsPrev, keyRetainFactor*keypointsPrev.size() );
-
+        // if enough points retained
         if(keypointsPrev.size() >= numOfPointsMin)
         {
             stage = secondPass;
-        }
-        else
-        {
-            return;
-        }
+            pointsPrev.clear();
 
-        pointsPrev.clear();
+            for(unsigned int i = 0; i<keypointsPrev.size(); i++)
+            {
+                pointsPrev.push_back(keypointsPrev[i].pt);
+            }
 
-        for(unsigned int i = 0; i<keypointsPrev.size(); i++)
-        {
-            pointsPrev.push_back(keypointsPrev[i].pt);
+            cv::cornerSubPix(prevFrame, pointsPrev, cv::Size(5,5), cv::Size(-1,-1),
+                             cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS, 30, 0.1));
+
         }
-
-        cv::cornerSubPix(prevFrame, pointsPrev, cv::Size(5,5), cv::Size(-1,-1),
-                         cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS, 30, 0.1));
 
     }
 }

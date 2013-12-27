@@ -787,8 +787,8 @@ int main(int argc, char *argv[])
 
     // TEST_frameAllignment();
     // Test6();
-    //TestforVideos("D:/cvs/data/testavi/output1.avi");
-    DemoforVideos();
+    TestforVideos("D:/cvs/data/testavi/output1.avi");
+    //DemoforVideos();
 
     return 0;
 }
