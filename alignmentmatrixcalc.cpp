@@ -387,53 +387,80 @@ void AlignmentMatrixCalc::flowBasedHomography()
 
 }
 
+// Setters
 
+/* Feature Detector setter used for both of them flowbased featurbased
+ * setting by cv::Ptr
+ **/
 void AlignmentMatrixCalc::setDetector(cv::Ptr<cv::FeatureDetector> idetector)
 {
     detector = idetector;
 }
 
+/* Feature Detector setter used for both of them flowbased featurbased
+ * setting by Name
+ **/
 void AlignmentMatrixCalc::setDetectorSimple(QString detectorName)
 {
     setDetector(cv::FeatureDetector::create(detectorName.toStdString()));
 }
 
+/* Feature Detector Discriptor setter used for featurbased
+ * setting by cv::Ptr
+ **/
 void AlignmentMatrixCalc::setDescriptor(cv::Ptr<cv::DescriptorExtractor> idescriptor)
 {
     descriptor = idescriptor;
 }
 
+/* Feature Detector Discriptor setter used for featurbased
+ * setting by Name
+ **/
 void AlignmentMatrixCalc::setDescriptorSimple(QString descriptorName)
 {
     setDescriptor(cv::DescriptorExtractor::create(descriptorName.toStdString()));
 }
 
+/* Discriptor Matcher setter used for featurbased
+ * setting by cv::Ptr
+ **/
 void AlignmentMatrixCalc::setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher)
 {
     matcher = imatcher;
 }
 
+/* Discriptor Matcher setter used for featurbased
+ * setting by Name
+ **/
 void AlignmentMatrixCalc::setMatcherSimple(const char *matcherName)
 {
     setMatcher(cv::DescriptorMatcher::create(matcherName));
 }
 
+/* HomograpyMethod means that calculation of homography based on
+ * for featureBased ; find feature of each frame and calculete homography by using matching of them
+ * for flowBased ; find feature of first Frame then find flow at second frame and calculete homography by using these pairs
+ **/
 void AlignmentMatrixCalc::setHomographyMethod(HomograpyMethod ihMethod)
 {
     hMethod = ihMethod;
 }
 
+/* Homography Calculation Method see findHomography documentation
+– 0 - a regular method using all the points
+– CV_RANSAC - RANSAC-based robust method
+– CV_LMEDS - Least-Median robust method
+*/
 void AlignmentMatrixCalc::setHomographyCalcMethod(int ihomographyCalcMethod)
 {
-    /*
-    – 0 - a regular method using all the points
-    – CV_RANSAC - RANSAC-based robust method
-    – CV_LMEDS - Least-Median robust method
-    */
+
 
     homographyCalcMethod = ihomographyCalcMethod;
 }
 
+/* Retruns true if homography calculated and set to gHomography
+ * else retruns false
+ **/
 bool AlignmentMatrixCalc::getHomography(cv::Mat &gHomography)
 {
     if(isHomographyCalc)
@@ -444,6 +471,10 @@ bool AlignmentMatrixCalc::getHomography(cv::Mat &gHomography)
     return isHomographyCalc;
 }
 
+/* MatchingType for featurebased Homography calculation
+ * for detail refer to OpenCv Documentation
+ * radiusMatch not working - OpenCv issue -
+ **/
 void AlignmentMatrixCalc::setMatchingType(MatchingType iType)
 {
     matchType = iType;
@@ -542,6 +573,11 @@ void AlignmentMatrixCalc::ratioTest(std::vector<std::vector<cv::DMatch> > &kmatc
     }
 }
 
+/* check calculated homography
+ * calculate a aligned corners by using homography
+ * calculate aligned rows and cols
+ * if dfference over the 0.1 set to  false
+ **/
 bool AlignmentMatrixCalc::isHomographyValid()
 {
     std::vector<cv::Point2f> inputCorners(4);
@@ -570,19 +606,15 @@ bool AlignmentMatrixCalc::isHomographyValid()
     {
        isHomographyCalc = false;
        qDebug()<<"Homography Matrix is Invalid : "<<colsDifference<<" "<<rowsDifference ;
-    /*   errorCount++;
-       if(errorCount >= 4)
-       {
-           stage=firstPass;
-           errorCount=0;
-       }
-       */
+
     }
 
     return isHomographyCalc;
 
 }
 
+/* Not used - crash the code
+ **/
 void AlignmentMatrixCalc::wayBack()
 {
     if(hMethod == featureBased)
