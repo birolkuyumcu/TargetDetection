@@ -475,6 +475,7 @@ void DemoforVideos()
     }
     qDebug()<<videoFileName;
     videoCap.read(videoFrame);
+    cv::resize(videoFrame, videoFrame, cv::Size(320,240));
     cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
 
 
@@ -485,6 +486,7 @@ void DemoforVideos()
     CandidateDetector cDetMhi;
     CandidateFilter cFilt;
     CandidateFilter cFiltMhi;
+    cFiltMhi.settings.visibilityThreshold=2;
 
     // SURF kadar iyisi yok
     calc.setDetectorSimple("SURF");
@@ -505,8 +507,9 @@ void DemoforVideos()
 
 
 
-        if(currentFrame.empty())
+        if(videoFrame.empty())
             break;
+        cv::resize(videoFrame, videoFrame, cv::Size(320,240));
 
         // for frame pass
         counter++;

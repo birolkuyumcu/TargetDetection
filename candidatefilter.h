@@ -69,9 +69,10 @@ public:
     std::vector<Target> targetList;
     std::vector<Candidate> *candidateList;
     std::vector<bool> isCandidateMatched;
+    CandidateFilterSettings settings;
 
 private:
-    CandidateFilterSettings settings;
+
     Exception               exc;
     unsigned targetIdCounter;
     float calculateDistance(cv::RotatedRect& r1,cv::RotatedRect& r2);
