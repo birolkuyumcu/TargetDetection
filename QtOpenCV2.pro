@@ -21,7 +21,7 @@ win32:debug {
 INCLUDEPATH +=D:/OpenCv-2.4.6/opencv/build/include
 INCLUDEPATH +=D:/cvs/qtopencv
 
-LIBS += -LC:\\opencv-2.4.6\\opencv\\build\\x86\\vc11\\lib -lopencv_core246d -lopencv_highgui246d -lopencv_imgproc246d -lopencv_features2d246d -lopencv_video246d -lopencv_nonfree246d -lopencv_calib3d246d
+LIBS += -LD:/OpenCv-2.4.6/opencv/build/x86/vc11/lib -lopencv_core246d -lopencv_highgui246d -lopencv_imgproc246d -lopencv_features2d246d -lopencv_video246d -lopencv_nonfree246d -lopencv_calib3d246d
 
  }
 

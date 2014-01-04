@@ -630,18 +630,25 @@ void Test6()
     cv::Mat currentDiffImage;
     cv::Mat mhiImage;
     std::vector<cv::Mat>diffImageList;
-    int nHistory=5;
+    unsigned int nHistory=5;
     float weights[5]={0.6,0.77,0.87,0.95,1};
 
 
-    cv::namedWindow(wName);
+
 #ifdef WIN32
  //   currentFrame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
     currentFrame=cv::imread("D:/cvs/data/pktest1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #else
-    frame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    currentframe=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #endif
 
+    if(currentFrame.empty())
+    {
+        qDebug()<<"First Image is not Opened"<<"\n";
+        return;
+    }
+
+    cv::namedWindow(wName);
     cv::imshow(wName,currentFrame);
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
@@ -653,7 +660,7 @@ void Test6()
     // SURF kadar iyisi yok
   //  calc.setDetectorSimple("ORB");
    // calc.setDescriptorSimple("FREAK");
-    calc.setHomographyMethod(flowBased);
+  //  calc.setHomographyMethod(flowBased);
   //  calc.setDetectorSimple("GridFAST");
 
     // Init section
@@ -706,7 +713,7 @@ void Test6()
                 diffImageList.erase(diffImageList.begin()); // FIFO
             }
             // homography'ye göre eski diffImageleri çevir
-            for(int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
+            for(unsigned int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
             {
                 aligner.process(diffImageList[i],H,diffImageList[i]);
             }
@@ -716,7 +723,7 @@ void Test6()
          //       cv::BackgroundSubtractorMOG2 bg_model;
                 mhiImage=currentDiffImage.clone();
                 mhiImage=cv::Scalar(0);
-                for(int i=0;i<diffImageList.size();i++) // no need for last inserted
+                for(unsigned int i=0;i<diffImageList.size();i++) // no need for last inserted
                 {
            //         bg_model(diffImageList[i],mhiImage);
                     mhiImage+=diffImageList[i]*weights[i];
@@ -759,7 +766,7 @@ void Test6()
             cFilt.showTargets(currentFrame);
             cv::imshow(wName,currentDiffImage);
             cv::waitKey(1);
-            qDebug()<<i<<"\n";
+   //         qDebug()<<i<<"\n";
         }
         else
         {
@@ -786,9 +793,11 @@ int main(int argc, char *argv[])
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-   //  Test6();
+    qDebug()<<"Started..."<<"\n";
+     Test6();
+    qDebug()<<"Finished..."<<"\n";
    // TestforVideos("D:/cvs/data/testavi/output1.avi");
-    DemoforVideos();
+   // DemoforVideos();
 
     return 0;
 }

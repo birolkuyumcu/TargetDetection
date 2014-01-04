@@ -91,7 +91,7 @@ void CandidateFilter::processUnmatchedTargets()
 
 void CandidateFilter::init()
 {
-    for(int i = 0; i<candidateList->size(); i++)
+    for(unsigned int i = 0; i<candidateList->size(); i++)
     {
 
         Target temp;
@@ -113,11 +113,11 @@ void CandidateFilter::match()
     isCandidateMatched.reserve(candidateList->size());
     isCandidateMatched.assign(candidateList->size(), false);
 
-    for(int j=0; j<targetList.size(); j++)
+    for(unsigned int j=0; j<targetList.size(); j++)
     {
         targetList.at(j).isMatched = false;
 
-        for(int i = 0; i < candidateList->size(); i++)
+        for(unsigned int i = 0; i < candidateList->size(); i++)
         {
 
             MatchItem temp;
@@ -161,7 +161,7 @@ recalculate contour and rRect
                 // Eğer yakınlık farkı %10 ve daha az ise o Candidate'i de matched diye işaretle
                 isCandidateMatched[mCandidate] = true;
                 // Adding to a mTarget
-                for(int i = 0 ; i < candidateList->at(mCandidate).contour.size() ; i++ )
+                for(unsigned int i = 0 ; i < candidateList->at(mCandidate).contour.size() ; i++ )
                 {
                     targetList.at(mTarget).contour.push_back(candidateList->at(mCandidate).contour.at(i));
                 }
@@ -210,7 +210,7 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
     }
 
     char *targetStatus;
-    for( int i = 0; i < targetList.size() ; i++ )
+    for(unsigned int i = 0; i < targetList.size() ; i++ )
     {
         Target temp=targetList[i];
 
@@ -282,7 +282,7 @@ float CandidateFilter::calculateDistance(cv::RotatedRect &r1, cv::RotatedRect &r
 bool CandidateFilter::isNewTarget(Target &tempTarget)
 {
     bool isNew = true;
-    for( int i = 0; i < targetList.size() ; i++ )
+    for(unsigned int i = 0; i < targetList.size() ; i++ )
     {
         if(targetList[i].isWithin(tempTarget))
         {
@@ -298,7 +298,7 @@ bool CandidateFilter::isNewTarget(Target &tempTarget)
 
 void CandidateFilter::processUnmatchedCandidates()
 {
-    for(int i = 0; i<candidateList->size(); i++)
+    for(unsigned int i = 0; i<candidateList->size(); i++)
     {
         if(isCandidateMatched[i] == false )
         {

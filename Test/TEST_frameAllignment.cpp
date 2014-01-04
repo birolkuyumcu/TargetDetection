@@ -288,7 +288,6 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 void TestforVideos(char * videoFileName)
 
 {
-    char Buf[1024];
     char *wName = (char *)"Test";
     cv::Mat currentFrame;
     cv::Mat copyCurrentFrame; // used for orginal current frame not changed
@@ -297,7 +296,7 @@ void TestforVideos(char * videoFileName)
     cv::Mat currentDiffImage;
     cv::Mat mhiImage;
     std::vector<cv::Mat>diffImageList;
-    int nHistory=5;
+    unsigned int nHistory=5;
     float weights[5]={0.6,0.77,0.87,0.95,1};
 
 
@@ -377,7 +376,7 @@ void TestforVideos(char * videoFileName)
                 diffImageList.erase(diffImageList.begin()); // FIFO
             }
             // homography'ye göre eski diffImageleri çevir
-            for(int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
+            for(unsigned int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
             {
                 aligner.process(diffImageList[i],H,diffImageList[i]);
             }
@@ -387,7 +386,7 @@ void TestforVideos(char * videoFileName)
               //  cv::BackgroundSubtractorMOG2 bg_model;
                 mhiImage=currentDiffImage.clone();
                 mhiImage=cv::Scalar(0);
-                for(int i=0;i<diffImageList.size();i++) // no need for last inserted
+                for(unsigned int i=0;i<diffImageList.size();i++) // no need for last inserted
                 {
               //      bg_model(diffImageList[i],mhiImage);
                     mhiImage+=diffImageList[i]*weights[i];
@@ -448,7 +447,6 @@ void DemoforVideos()
 
 {
     const char * videoFileName ="demo.avi";
-    char Buf[1024];
     char *wName = (char *)"Single Frame Dif";
     cv::Mat currentFrame;
     cv::Mat copyCurrentFrame; // used for orginal current frame not changed
@@ -457,7 +455,7 @@ void DemoforVideos()
     cv::Mat currentDiffImage;
     cv::Mat mhiImage;
     std::vector<cv::Mat>diffImageList;
-    int nHistory=5;
+    unsigned int nHistory=5;
     float weights[5]={0.6,0.77,0.87,0.95,1};
 
 
@@ -545,7 +543,7 @@ void DemoforVideos()
                 diffImageList.erase(diffImageList.begin()); // FIFO
             }
             // homography'ye göre eski diffImageleri çevir
-            for(int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
+            for(unsigned int i=0;i<diffImageList.size()-1;i++) // no need for last inserted
             {
                 aligner.process(diffImageList[i],H,diffImageList[i]);
             }
@@ -554,7 +552,7 @@ void DemoforVideos()
             {
                 mhiImage=currentDiffImage.clone();
                 mhiImage=cv::Scalar(0);
-                for(int i=0;i<diffImageList.size();i++) // no need for last inserted
+                for(unsigned int i=0;i<diffImageList.size();i++) // no need for last inserted
                 {
                     mhiImage+=diffImageList[i]*weights[i];
                 }

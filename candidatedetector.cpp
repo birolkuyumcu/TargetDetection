@@ -33,7 +33,7 @@ void CandidateDetector::process(cv::Mat inputImage)
         findContours( inputImage, contours, hierarchy, CV_RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
 
-        for(int i=0 ; i < contours.size() ; i++ )
+        for(unsigned int i=0 ; i < contours.size() ; i++ )
         {
             std::vector<cv::Point> tempContour;
             cv::approxPolyDP(cv::Mat(contours[i]),tempContour, 3, true);
@@ -75,17 +75,18 @@ void CandidateDetector::showCandidates(cv::Mat inputImage, char *wName)
     {
         cv::cvtColor(inputImage,inputImage,CV_GRAY2RGB);
     }
-    for( int i = 0; i < candidateList.size() ; i++ )
+
+    for(unsigned int j = 0; j < candidateList.size() ; j++ )
     {
 
         cv::Point2f vertices[4];
         //candidateRRectsList[i].points(vertices);
-        candidateList[i].rRect.points(vertices);
+        candidateList[j].rRect.points(vertices);
         for (int i = 0; i < 4; i++)
         {
             cv::line(inputImage, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
         }
-        cv::circle(inputImage,candidateList[i].rRect.center,3,cv::Scalar(0,0,255),-1);
+        cv::circle(inputImage,candidateList[j].rRect.center,3,cv::Scalar(0,0,255),-1);
     }
     if(wName==NULL)
         wName="Candidates";
