@@ -119,7 +119,10 @@ void CandidateFilter::init()
         temp.status = candidate;
         temp.statusCounter = 1;
         temp.targetId = ++targetIdCounter;
-        targetList.push_back(temp);
+        if(isNewTarget(temp)) // if temp is not a subtarget of any other target
+        {
+            targetList.push_back(temp);
+        }
 
     }
  }
