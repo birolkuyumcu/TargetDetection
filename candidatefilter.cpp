@@ -1,5 +1,8 @@
 #include "candidatefilter.h"
 
+/* Constructor
+ * Initiate default settings
+*/
 CandidateFilter::CandidateFilter()
 {
     settings.distanceThreshold = 15;
@@ -12,6 +15,12 @@ CandidateFilter::CandidateFilter()
     targetIdCounter = 0;
 }
 
+/* gets CandidateList
+ * if targetList empty call init()
+ * match candidates and targtes call match ()
+ * process Unmatched Targets call processUnmatchedTargets()
+ * process Unmatched Candidates call processUnmatchedCandidates()
+*/
 
 void CandidateFilter::process(std::vector<Candidate> *iCandidateList)
 {
@@ -30,6 +39,13 @@ void CandidateFilter::process(std::vector<Candidate> *iCandidateList)
 
 }
 
+/*
+ * for unmatched targets
+ * if visible set to invisible
+ * if invisible and  statuscounter > invisibilityThreshold  remove from targetList
+ * if candidate remove from targetList
+ *
+*/
 void CandidateFilter::processUnmatchedTargets()
 {
     std::vector<Target>::iterator it;
@@ -89,6 +105,9 @@ void CandidateFilter::processUnmatchedTargets()
 
 }
 
+/*
+ * all records  from candidateList aded to targetList with status candidate
+*/
 void CandidateFilter::init()
 {
     for(unsigned int i = 0; i<candidateList->size(); i++)
@@ -105,6 +124,16 @@ void CandidateFilter::init()
     }
  }
 
+/*
+ * calculate a match table
+ * for each target
+ * to all candidate
+ * calculate distance
+ * if distance lower than  distanceThreshold
+ * sort matchTable respect to distance
+ * process table see below
+ *
+*/
 void CandidateFilter::match()
 {
 
@@ -132,6 +161,12 @@ void CandidateFilter::match()
 
         }
     }
+
+
+    /*
+     * Process Matching Table
+     */
+
     if(matchTable.size() != 0)
     {
         std::sort(matchTable.begin(), matchTable.end());
@@ -140,22 +175,23 @@ void CandidateFilter::match()
 
         for( tableIndex = matchTable.begin(); tableIndex != matchTable.end(); ++tableIndex )
         {
-            // Eşleştir
+            // for each element of table
             MatchItem temp = *tableIndex;
             int mTarget = temp.targetIndex;
             int mCandidate = temp.candidateIndex;
 
-            // process Matched Targets
+            // if canidate is matched before go next iteration
             if(isCandidateMatched[mCandidate]) // daha önceden eşleşen bir Candidate ise  bir sonraki iterasyona git
             {
                 continue;
             }
-/*
- *if unmatched candidates near 1.1 distance of matching distance
-set to a matched
-aded to a matched target
-recalculate contour and rRect
- */
+            /* if Target matched before
+             * if candidates near 1.1 distance of matching distance
+             * set to a matched
+             * aded to a matched target
+             * recalculate contour and rRect
+             * to unifying near candidates
+            */
             if(targetList.at(mTarget).isMatched && (temp.distance <= 1.1*targetList.at(mTarget).matchingDistance )) // daha önceden eşleşen bir Target ise Birleştirme Kıstası
             {
                 // Eğer yakınlık farkı %10 ve daha az ise o Candidate'i de matched diye işaretle
@@ -174,32 +210,44 @@ recalculate contour and rRect
 
                 continue;
             }
+            /* if matching Target and Canddate is not matched before
+             * target.isMatched set to true;
+             * isCandidateMatched[mCandidate] set to true;
+            */
             targetList.at(mTarget).location = candidateList->at(mCandidate).rRect;
             targetList.at(mTarget).contour = candidateList->at(mCandidate).contour;
             targetList.at(mTarget).isMatched = true;
             targetList.at(mTarget).statusCounter++;
             targetList.at(mTarget).matchingDistance=temp.distance;
+            // Signing Matched  Candidates so dont match again...
+            isCandidateMatched[mCandidate] = true;
 
-            if( targetList.at(mTarget).status == candidate )
+            // change target status if required
+            if( targetList.at(mTarget).status == candidate ) // if candidate
             {
-                if(targetList.at(mTarget).statusCounter > settings.visibilityThreshold)
+                if(targetList.at(mTarget).statusCounter > settings.visibilityThreshold) // becomes visible
                 {
                     targetList.at(mTarget).status = visible;
                 }
             }
             else if( targetList.at(mTarget).status == invisible )
             {
-                targetList.at(mTarget).status = visible;
+                targetList.at(mTarget).status = visible; // becomes visible
 
             }
-            // Signing Matched  Candidates so dont match again...
-            isCandidateMatched[mCandidate] = true;
+
 
         }
     }
 
 }
 
+/* for Debugging Purposes
+ * draw center and outer lines of Targets and Id from List
+ * to inputImage
+ * respect to show settings
+ * and show it wName Window
+*/
 void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
 {
     // for debuging purposes
@@ -272,13 +320,21 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
 
 }
 
+/*
+ * Simple distance calculate
+*/
 float CandidateFilter::calculateDistance(cv::RotatedRect &r1, cv::RotatedRect &r2)
 {
     float deltaX=(r1.center.x-r2.center.x);
     float deltaY=(r1.center.y-r2.center.y);
     return sqrtf(deltaX*deltaX+deltaY*deltaY);
 }
-
+/*
+ * if tempTarget is not a sub of any Target from Target List
+ * return true
+ * else
+ * return false
+*/
 bool CandidateFilter::isNewTarget(Target &tempTarget)
 {
     bool isNew = true;
@@ -295,7 +351,10 @@ bool CandidateFilter::isNewTarget(Target &tempTarget)
 
 }
 
-
+/*
+ * unmatched candidate if isNewTarget()
+ * add to target List as candidate
+*/
 void CandidateFilter::processUnmatchedCandidates()
 {
     for(unsigned int i = 0; i<candidateList->size(); i++)
@@ -320,22 +379,39 @@ void CandidateFilter::processUnmatchedCandidates()
 }
 
 
+/*
+ * if isSubTarget is within this Target
+ * return true
+*/
+
 bool Target::isWithin(Target &isSubTarget)
 {
     cv::Point2f vertices[4];
     isSubTarget.location.points(vertices);
-    double score=0;
+    int score=0;
     for(int i = 0 ; i < 4 ; i++ )
     {
-        score += cv::pointPolygonTest(this->contour,vertices[i],false);
+        /* Performs a point-in-contour test
+         * determines whether the point is inside a contour, outside, or lies on an edge (or coincides with a vertex).
+         * It returns positive (inside), negative (outside), or zero (on an edge) value, correspondingly.
+         * When measureDist=false , the return value is +1, -1, and 0, respectively.
+         * Otherwise, the return value is a signed distance between the point and
+         * the nearest contour edge.
+       */
+        if(cv::pointPolygonTest(this->contour,vertices[i],false) < 0.0 )
+        {
+             score +=1 ;
+        }
+
     }
+
     if (score >= 2)
     {
-        return true;
-    }
-    else // birden daha fazla noktası contour dışındaysa
-    {
         return false;
+    }
+    else
+    {
+        return true;
     }
 
 }

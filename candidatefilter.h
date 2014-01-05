@@ -7,6 +7,11 @@
 #include <vector>
 #include <list>
 
+/* Target states
+ * candidate ; initial stage
+ * visible   ; candidate becomes visible after statuscounter reached visibility theshold
+ * invisible ; visible becomes  invsible if unmatched
+*/
 enum TargetState
 {
     candidate,
@@ -14,12 +19,15 @@ enum TargetState
     invisible
 };
 
+
 class CandidateFilterSettings
 {
 public:
-    int visibilityThreshold;
-    int invisibilityThreshold;
-    float distanceThreshold;
+
+    int visibilityThreshold;  // status from candidate to visible
+    int invisibilityThreshold; // status from invisible to remove
+    float distanceThreshold; // minmatching distance
+    // showTargets settings
     bool showCandidate;
     bool showVisible;
     bool showInvisible;
@@ -37,7 +45,6 @@ public:
     unsigned targetId;
     float matchingDistance;
     bool isWithin(Target& isSubTarget);
-
 
 };
 
