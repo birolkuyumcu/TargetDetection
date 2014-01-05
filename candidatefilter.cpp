@@ -35,8 +35,9 @@ void CandidateFilter::process(std::vector<Candidate> *iCandidateList)
         match();
         processUnmatchedTargets();
         processUnmatchedCandidates();
-    }
 
+    }
+    refine();
 }
 
 /*
@@ -320,6 +321,27 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
         wName="Candidates";
     imshow(wName, inputImage );
 
+
+}
+
+/*
+ * Refines  Target List by removing sub targets
+ * not working as required
+*/
+void CandidateFilter::refine()
+{
+    std::vector<Target>::iterator it;
+
+    for(it = targetList.begin() ; it < targetList.end() ; ++it)
+    {
+
+        if(!isNewTarget(*it)) // if temp is a subtarget of any other target
+        {
+            it=targetList.erase(it); // remove from List
+            if(it != targetList.begin())
+                --it;
+        }
+    }
 
 }
 

@@ -71,6 +71,7 @@ public:
     void init();
     void match();
     void showTargets(cv::Mat& inputImage,char *wName=NULL);
+    void refine();
 
     //
     std::vector<Target> targetList;
