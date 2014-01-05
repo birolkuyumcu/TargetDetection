@@ -8,6 +8,7 @@ class CandidateDetectorSettings
 {
 public:
     int dummy;
+    //dimentional upper and lowaer limits
     int minWidth;
     int maxWidth;
     int minHeight;

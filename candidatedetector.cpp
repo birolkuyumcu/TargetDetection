@@ -1,5 +1,8 @@
 #include "candidatedetector.h"
 
+/* Constructor
+ * Initiate default settings
+*/
 CandidateDetector::CandidateDetector()
 {
     exc.setModuleName("CandidateDetector");
@@ -10,7 +13,13 @@ CandidateDetector::CandidateDetector()
 
 }
 
-
+/* find contours from image
+ * approx to Poly and Rotated Rect
+ * and filter by using dimentional filter
+ * put them into candidateList
+ * inputImage ; must be gray level and single channel
+ *
+*/
 void CandidateDetector::process(cv::Mat inputImage)
 {
     std::vector<cv::Vec4i> hierarchy;
@@ -28,8 +37,7 @@ void CandidateDetector::process(cv::Mat inputImage)
     {
 
         candidateList.clear();
-     //   candidateRRectsList.clear();
-
+        // CV_RETR_EXTERNAL retrieves only the extreme outer contours.
         findContours( inputImage, contours, hierarchy, CV_RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
 
@@ -58,7 +66,6 @@ void CandidateDetector::process(cv::Mat inputImage)
                 tempCandidate.contour=tempContour;
                 tempCandidate.rRect=tempRect;
                 candidateList.push_back(tempCandidate);
-             //   candidateRRectsList.push_back(tempRect);
             }
 
         }
@@ -67,6 +74,11 @@ void CandidateDetector::process(cv::Mat inputImage)
 
 }
 
+/* for Debugging Purposes
+ * draw center and outer lines of RRects of Candidates from List
+ * to inputImage
+ * and show it wName Window
+*/
 void CandidateDetector::showCandidates(cv::Mat inputImage, char *wName)
 {
     // for debuging
@@ -80,7 +92,6 @@ void CandidateDetector::showCandidates(cv::Mat inputImage, char *wName)
     {
 
         cv::Point2f vertices[4];
-        //candidateRRectsList[i].points(vertices);
         candidateList[j].rRect.points(vertices);
         for (int i = 0; i < 4; i++)
         {
