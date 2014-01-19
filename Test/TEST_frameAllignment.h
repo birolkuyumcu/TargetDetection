@@ -33,6 +33,7 @@ long int timeMeasure(int i);
 void TestforVideos(char * videoFileName);
 double dynamicThresholdValue(cv::Mat &img, int k=5);
 void DemoforVideos();
+void moveVector(char * videoFileName);
 
 
 

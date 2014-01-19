@@ -601,3 +601,132 @@ void DemoforVideos()
     qDebug()<<"The End....."<<"\n\n";
 }
 
+// Genel Hareket Vektörü Hesabı
+
+std::vector<cv::Point2f> pointsPrev;
+
+void moveVectorInit()
+{
+
+    for(int i=20 ; i < 640 ; i+=20)
+    {
+        for(int j=20 ; j < 480 ; j+=20)
+        {
+            pointsPrev.push_back(cvPoint(i,j));
+        }
+
+    }
+    qDebug()<<"Init"<<"\n\n";
+}
+
+
+void moveVectorCalc(cv::Mat prevFrame, cv::Mat currentFrame,double& mDeltaX , double& mDeltaY)
+{
+
+    std::vector<cv::Point2f> pointsCurrent;
+    std::vector<uchar>status;
+    std::vector<float>err;
+    std::vector<cv::Point2f>tempPrev;
+    std::vector<cv::Point2f>tempCurrent;
+
+    std::vector<float>dXList;
+    std::vector<float>dYList;
+    double sumdX = 0;
+    double sumdY = 0;
+    int nPoints =0;
+
+
+//    qDebug()<<"Calc : "<<pointsPrev.size()<<"\n\n";
+
+
+    // flow calculation
+    cv::calcOpticalFlowPyrLK(prevFrame, currentFrame, pointsPrev, pointsCurrent, status, err);
+
+ //   qDebug()<<"after OF  "<<"\n\n";
+
+    //
+    for (unsigned int i=0; i < pointsPrev.size(); i++)
+    {
+        if(status[i])  // Sadece OF hesaplananlar
+        {
+            double tempdX=pointsCurrent[i].x - pointsPrev[i].x;
+            double tempdY=pointsCurrent[i].y - pointsPrev[i].y;
+            dXList.push_back(tempdX);
+            dYList.push_back(tempdY);
+          //  qDebug()<<"tempdX : "<<tempdX<<"\n\n";
+            sumdX += tempdX;
+            sumdY += tempdY;
+            nPoints += 1;
+
+        }
+
+    }
+
+    mDeltaX = sumdX / nPoints ;
+    mDeltaY = sumdY / nPoints ;
+
+  //  qDebug()<<"Calc : "<<nPoints<<"\n\n";
+
+   // qDebug()<<"sumdX : "<<sumdX<<"\n\n";
+
+
+}
+
+void moveVector(char * videoFileName)
+{
+    char *wName = (char *)"Hareket Vektörü";
+    cv::Mat currentFrame;
+    cv::Mat prevFrame;
+
+
+    cv::VideoCapture videoCap;
+    cv::Mat videoFrame;
+
+
+    cv::namedWindow(wName);
+
+    videoCap.open(videoFileName);
+    qDebug()<<videoFileName;
+    videoCap.read(videoFrame);
+
+    if(videoFrame.empty())
+        return;
+    cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+    cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
+
+
+    cv::imshow(wName,videoFrame);
+    moveVectorInit();
+
+
+    prevFrame=currentFrame.clone();
+    double mDeltaX = 0;
+    double mDeltaY = 0;
+    int i=1;
+    for(;;)
+    {
+        double t = (double)cv::getTickCount();
+        videoCap.read(videoFrame);
+        if(videoFrame.empty())
+            break;
+        cv::resize(videoFrame, videoFrame, cv::Size(640,480));
+        if(i++%1) continue;
+        cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
+
+        moveVectorCalc(prevFrame,currentFrame,mDeltaX ,mDeltaY);
+        if( mDeltaX < -110 || mDeltaX > 110 ) continue ;
+        if( mDeltaY < -80 || mDeltaY > 80 ) continue ;
+
+        cv::line(videoFrame,cv::Point(320,240) ,cv::Point(cvRound(320+15*mDeltaX), cvRound(240+15*mDeltaY)),cv::Scalar(255,0,0),2);
+        cv::line(videoFrame,cv::Point(320,240) ,cv::Point(cvRound(320+1*mDeltaX), cvRound(240+1*mDeltaY)),cv::Scalar(0,0,255),4);
+        qDebug()<<"DeltaX : "<<mDeltaX<<"DeltaY : "<<mDeltaY<<"\n\n";
+
+        cv::imshow(wName,videoFrame);
+        cv::waitKey(20);
+
+        prevFrame=currentFrame.clone();
+
+    }
+
+
+}

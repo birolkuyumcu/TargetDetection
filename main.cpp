@@ -788,7 +788,7 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
     // cvUseOptimized(true); // faydası görünmüyor
-     Test5();
+    // Test5();
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
@@ -798,6 +798,8 @@ int main(int argc, char *argv[])
     qDebug()<<"Finished..."<<"\n";
    // TestforVideos("D:/cvs/data/testavi/output3.avi");
    // DemoforVideos();
+
+    moveVector("D:/cvs/data/testavi/rvid-04.avi");
 
     return 0;
 }
