@@ -32,6 +32,7 @@ public:
     bool showVisible;
     bool showInvisible;
     bool showTargetId;
+    bool showVector;
 };
 
 class Target
@@ -43,8 +44,14 @@ public:
     unsigned statusCounter;
     bool isMatched;
     unsigned targetId;
+    // vector of Move
     float matchingDistance;
+    float movingAngle;
+    float deltaX;
+    float deltaY;
+    //
     bool isWithin(Target& isSubTarget);
+    void setMovingAngle(cv::RotatedRect r);
 
 };
 

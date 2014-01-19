@@ -8,10 +8,11 @@ CandidateFilter::CandidateFilter()
     settings.distanceThreshold = 15;
     settings.visibilityThreshold = 5;
     settings.invisibilityThreshold = 5;
-    settings.showCandidate=false;
-    settings.showTargetId=false;
-    settings.showVisible=true;
-    settings.showInvisible=false;
+    settings.showCandidate = false;
+    settings.showTargetId = false;
+    settings.showVisible = true;
+    settings.showInvisible = false;
+    settings.showVector = true;
     targetIdCounter = 0;
 }
 
@@ -120,6 +121,10 @@ void CandidateFilter::init()
         temp.status = candidate;
         temp.statusCounter = 1;
         temp.targetId = ++targetIdCounter;
+        temp.deltaX = 0 ;
+        temp.deltaY = 0 ;
+        temp.movingAngle = 0 ;
+
         if(isNewTarget(temp)) // if temp is not a subtarget of any other target
         {
             targetList.push_back(temp);
@@ -218,6 +223,9 @@ void CandidateFilter::match()
              * target.isMatched set to true;
              * isCandidateMatched[mCandidate] set to true;
             */
+            // First set vector of Move
+            targetList.at(mTarget).setMovingAngle(candidateList->at(mCandidate).rRect);
+            // than set new position
             targetList.at(mTarget).location = candidateList->at(mCandidate).rRect;
             targetList.at(mTarget).contour = candidateList->at(mCandidate).contour;
             targetList.at(mTarget).isMatched = true;
@@ -315,6 +323,10 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
             cv::putText(inputImage,Buf,temp.location.center,
                         cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(255,255,0), 1);
         }
+        if( settings.showVector == true)
+        {
+           cv::line(inputImage,temp.location.center ,cv::Point(cvRound(temp.location.center.x+temp.deltaX), cvRound(temp.location.center.y+temp.deltaY)),cv::Scalar(255,255,0),2,linetype);
+        }
 
     }
     if(wName==NULL)
@@ -393,6 +405,9 @@ void CandidateFilter::processUnmatchedCandidates()
             temp.status=candidate;
             temp.statusCounter=1;
             temp.targetId=++targetIdCounter;
+            temp.deltaX = 0 ;
+            temp.deltaY = 0 ;
+            temp.movingAngle = 0;
             if(isNewTarget(temp)) // if temp is not a subtarget of any other target
             {
                 targetList.push_back(temp);
@@ -439,4 +454,13 @@ bool Target::isWithin(Target &isSubTarget)
         return true;
     }
 
+}
+
+/* vector of Move from this.location.center to r.center
+*/
+void Target::setMovingAngle(cv::RotatedRect r)
+{
+    deltaX=location.center.x - r.center.x ;
+    deltaY=location.center.y - r.center.y ;
+    movingAngle = atan2(deltaY , deltaX);
 }

@@ -788,15 +788,15 @@ int main(int argc, char *argv[])
     //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
     //targetDetection.exec();
     // cvUseOptimized(true); // faydası görünmüyor
-     //Test5();
+     Test5();
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
     qDebug()<<"Started..."<<"\n";
-     Test6();
+   //  Test6();
     qDebug()<<"Finished..."<<"\n";
-   // TestforVideos("D:/cvs/data/testavi/output1.avi");
+   // TestforVideos("D:/cvs/data/testavi/output3.avi");
    // DemoforVideos();
 
     return 0;
