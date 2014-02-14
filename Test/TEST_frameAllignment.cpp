@@ -321,9 +321,9 @@ void TestforVideos(char * videoFileName)
     CandidateFilter cFiltMhi;
 
     // SURF kadar iyisi yok
-    calc.setDetectorSimple("HARRIS");
-    calc.setDescriptorSimple("FREAK");
-  //  calc.setHomographyMethod(flowBased);
+   // calc.setDetectorSimple("GFTT");
+  //  calc.setDescriptorSimple("FREAK");
+   // calc.setHomographyMethod(flowBased);
   //  calc.setDetectorSimple("GridFAST");
 
     // Init section
@@ -672,7 +672,7 @@ void moveVectorCalc(cv::Mat prevFrame, cv::Mat currentFrame,double& mDeltaX , do
 
 }
 
-void moveVector(char * videoFileName)
+void moveVectorShow(char * videoFileName)
 {
     char *wName = (char *)"Hareket Vektörü";
     cv::Mat currentFrame;
@@ -728,5 +728,54 @@ void moveVector(char * videoFileName)
 
     }
 
+
+}
+
+void writeRunParameters(char * pFileName)
+{
+    cv::FileStorage fs(pFileName, cv::FileStorage::WRITE);
+
+    fs<<"Detector"<<"SURF";
+    fs<<"Descriptor"<<"SURF";
+    fs<<"Matcher"<<"BruteForce-L1";
+    fs.release();
+
+}
+
+
+void readRunParameters(char *pFileName)
+{
+    cv::FileStorage fs(pFileName, cv::FileStorage::READ);
+    std::string dect, desc, match;
+    fs["Detector"]>>dect;
+    fs["Descriptor"]>>desc;
+    fs["Matcher"]>>match;
+    fs.release();
+    std::cout<<dect<<desc<<match ;
+
+
+}
+
+
+void moveVectorClassShow(char *videoFileName)
+{
+    MoveVector mov;
+    cv::VideoCapture videoCap;
+    cv::Mat videoFrame;
+    cv::Mat currentFrame;
+
+    videoCap.open(videoFileName);
+    qDebug()<<videoFileName;
+
+    while(videoCap.read(videoFrame))
+    {
+        if(videoFrame.cols != 0 )
+        {
+            cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
+            mov.process(currentFrame);
+            mov.show();
+        }
+
+    }
 
 }

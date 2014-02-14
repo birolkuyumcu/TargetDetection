@@ -4,12 +4,14 @@
 
 #include <QString>
 #include <opencv2/opencv.hpp>
+#include "opencv2/core/core.hpp"
 #include "opencv2/video/background_segm.hpp"
 #include "framealigner.h"
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
 #include "candidatedetector.h"
 #include "candidatefilter.h"
+#include "movevector.h"
 #include <QFile>
 #include <QTextStream>
 
@@ -33,7 +35,10 @@ long int timeMeasure(int i);
 void TestforVideos(char * videoFileName);
 double dynamicThresholdValue(cv::Mat &img, int k=5);
 void DemoforVideos();
-void moveVector(char * videoFileName);
+void moveVectorShow(char * videoFileName);
+void writeRunParameters(char * pFileName);
+void readRunParameters(char * pFileName);
+void moveVectorClassShow(char * videoFileName);
 
 
 

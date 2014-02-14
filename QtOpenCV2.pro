@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     alignmentmatrixcalc.cpp \
     alarmgenerator.cpp \
     preprocess.cpp \
-    Test/TEST_frameAllignment.cpp
+    Test/TEST_frameAllignment.cpp\
+    movevector.cpp
 
 HEADERS  += mainwindow.h \
             exception.h \
@@ -64,6 +65,7 @@ HEADERS  += mainwindow.h \
     alarmgenerator.h \
     alignmentmatrixcalc.h \
     preprocess.h \
-    Test/TEST_frameAllignment.h
+    Test/TEST_frameAllignment.h \
+    movevector.h
 
 FORMS    += mainwindow.ui
