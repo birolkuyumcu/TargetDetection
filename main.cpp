@@ -796,12 +796,12 @@ int main(int argc, char *argv[])
     qDebug()<<"Started..."<<"\n";
    //  Test6();
     qDebug()<<"Finished..."<<"\n";
-   // TestforVideos("D:/cvs/data/testavi/egt4.avi");
+    TestforVideos1("D:/cvs/data/testavi/egt4.avi");
    // DemoforVideos();
   //   writeRunParameters("deneme.xml");
    // readRunParameters("deneme.xml");
    // moveVectorShow("D:/cvs/data/testavi/rvid-04.avi");
-    moveVectorClassShow("D:/cvs/data/testavi/egt4.avi");
+   // moveVectorClassShow("D:/cvs/data/testavi/egt4.avi");
 
     return 0;
 }

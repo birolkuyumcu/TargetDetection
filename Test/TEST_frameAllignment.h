@@ -33,6 +33,7 @@ typedef struct
 void TEST_frameAllignment();
 long int timeMeasure(int i);
 void TestforVideos(char * videoFileName);
+void TestforVideos1(char * videoFileName);
 double dynamicThresholdValue(cv::Mat &img, int k=5);
 void DemoforVideos();
 void moveVectorShow(char * videoFileName);

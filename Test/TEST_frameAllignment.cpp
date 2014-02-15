@@ -285,6 +285,132 @@ static void processVideoAndGetScores(QString &videoFileName, int startFrame, All
 
 }
 
+void TestforVideos1(char * videoFileName)
+
+{
+    char *wName = (char *)"Test";
+    cv::Mat currentFrame;
+    cv::Mat copyCurrentFrame; // used for orginal current frame not changed
+    cv::Mat prevFrame;
+    cv::Mat alignedPrevFrame;
+    cv::Mat currentDiffImage;
+    cv::Mat mhiImage;
+    std::vector<cv::Mat>diffImageList;
+    unsigned int nHistory=5;
+    float weights[5]={0.6,0.77,0.87,0.95,1};
+
+
+    cv::VideoCapture videoCap;
+    cv::Mat videoFrame;
+
+
+    cv::namedWindow(wName);
+
+    videoCap.open(videoFileName);
+    qDebug()<<videoFileName;
+    videoCap.read(videoFrame);
+    cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
+
+
+    cv::imshow(wName,currentFrame);
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+    CandidateDetector cDet;
+    CandidateDetector cDetMhi;
+    CandidateFilter cFilt;
+    CandidateFilter cFiltMhi;
+
+    // SURF kadar iyisi yok
+    calc.setDetectorSimple("HARRIS");
+    //calc.setDescriptorSimple("SURF");
+    calc.setHomographyMethod(flowBased);
+  //  calc.setDetectorSimple("GridFAST");
+
+    cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 5, 5 ) );
+
+    // Init section
+    copyCurrentFrame=currentFrame.clone();
+
+    // Preprocess
+    cv::morphologyEx(copyCurrentFrame,copyCurrentFrame,cv::MORPH_GRADIENT, element,cv::Point(-1,-1),1 );
+//    cv::threshold(copyCurrentFrame,copyCurrentFrame,dynamicThresholdValue(copyCurrentFrame),255,cv::THRESH_BINARY);
+    //
+
+    calc.process(copyCurrentFrame);
+
+    prevFrame=copyCurrentFrame;
+
+    for(;;)
+    {
+        double t = (double)cv::getTickCount();
+
+
+        videoCap.read(videoFrame);
+
+
+
+        if(currentFrame.empty())
+            break;
+
+        cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
+        copyCurrentFrame=currentFrame.clone();
+
+        cv::Mat H;
+
+
+
+        if(copyCurrentFrame.empty())
+            break;
+
+        // Preprocess
+        cv::morphologyEx(copyCurrentFrame,copyCurrentFrame,cv::MORPH_GRADIENT, element,cv::Point(-1,-1),1 );
+  //      cv::threshold(copyCurrentFrame,copyCurrentFrame,dynamicThresholdValue(copyCurrentFrame),255,cv::THRESH_BINARY);
+        //
+
+        calc.process(copyCurrentFrame);
+
+
+
+        if(calc.getHomography(H) == true){
+            // Düzgün dönüşüm matrisi bulunduysa
+            cv::Mat mask(prevFrame.size(),CV_8U);
+            mask=cv::Scalar(255);
+
+
+            // Önceki frame aktif frame çevir
+            aligner.process(prevFrame,H,alignedPrevFrame);
+            // çevrilmiş önceki frame için maske oluştur
+            aligner.process(mask,H,mask);
+            mask=copyCurrentFrame&mask;
+
+      //      aligner.calculateBinaryDiffImageAccording2pixelNeighborhood(alignedPrevFrame,mask,currentDiffImage);
+
+            cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
+  //          cv::dilate(currentDiffImage,currentDiffImage, element,cv::Point(-1,-1),1 );
+
+  //          cv::threshold(currentDiffImage,currentDiffImage,dynamicThresholdValue(currentDiffImage),255,cv::THRESH_BINARY);
+      /*     t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+
+            qDebug()<<"Processing Time :"<<t<<"\n\n";
+            */
+
+
+
+        //    cv::erode(alignedPrevFrame,alignedPrevFrame, element,cv::Point(-1,-1),4 );
+            cDet.process(currentDiffImage);
+        //    cFilt.process(&cDet.candidateList);
+        //    cFilt.showTargets(currentFrame);
+            cDet.showCandidates(currentFrame,"without Matching");
+            cv::imshow(wName,currentDiffImage);
+            cv::imshow("Preprocssed",copyCurrentFrame);
+            cv::waitKey(1);
+        }
+        prevFrame=copyCurrentFrame;
+    }
+    qDebug()<<"The End....."<<"\n\n";
+}
+
+
 void TestforVideos(char * videoFileName)
 
 {
@@ -326,8 +452,15 @@ void TestforVideos(char * videoFileName)
    // calc.setHomographyMethod(flowBased);
   //  calc.setDetectorSimple("GridFAST");
 
+    cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
+
     // Init section
     copyCurrentFrame=currentFrame.clone();
+
+    // Preprocess
+    //cv::morphologyEx(copyCurrentFrame,copyCurrentFrame,cv::MORPH_GRADIENT, element,cv::Point(-1,-1),4 );
+    //
+
     calc.process(copyCurrentFrame);
 
     prevFrame=copyCurrentFrame;
@@ -346,14 +479,22 @@ void TestforVideos(char * videoFileName)
 
         cv::cvtColor(videoFrame, currentFrame, CV_BGR2GRAY);
         copyCurrentFrame=currentFrame.clone();
+
+        cv::Mat H;
+
+
+
         if(copyCurrentFrame.empty())
             break;
+
+        // Preprocess
+       // cv::morphologyEx(copyCurrentFrame,copyCurrentFrame,cv::MORPH_GRADIENT, element,cv::Point(-1,-1),4 );
+        //
 
         calc.process(copyCurrentFrame);
 
 
-        cv::Mat H;
-        cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
+
         if(calc.getHomography(H) == true){
             // Düzgün dönüşüm matrisi bulunduysa
             cv::Mat mask(prevFrame.size(),CV_8U);
