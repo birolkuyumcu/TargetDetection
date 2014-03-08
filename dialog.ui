@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>596</width>
+    <height>599</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>cvsTargetDetector</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>560</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>581</width>
+     <height>551</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Images</string>
+    </attribute>
+    <widget class="QLabel" name="OrjFrame">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>320</width>
+       <height>240</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ProcFrame">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>320</width>
+       <height>240</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Adjustments</string>
+    </attribute>
+    <widget class="QComboBox" name="comboBoxDiscriptorHMethod">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>140</y>
+       <width>121</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>Feature Based</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Optical Flow Based </string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBoxMatcher">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>110</y>
+       <width>121</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>BruteForce</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BruteForce-L1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BruteForce-SL2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BruteForce-Hamming</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BruteForce-Hamming(2)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>FlannBased</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Decriptor</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBoxDetector">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>50</y>
+       <width>121</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>HARRIS</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>FAST</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>STAR</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>SIFT</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>SURF</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>ORB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>GFTT</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BRISK</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Dense</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>SimpleBlob</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>170</y>
+       <width>161</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Homography Calc Method</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Detector</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Matcher</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBoxDiscriptorHMethodC">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>170</y>
+       <width>121</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>Ransac</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Regular</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Least - Median</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBoxDiscriptor">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>80</y>
+       <width>121</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>ORB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>SIFT</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>SURF</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BRISK</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BRIEF</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>FREAK</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>161</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Homography Method</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_videoFileName">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>20</y>
+       <width>311</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>D:/cvs/data/test.avi</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_videoFileName">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Video File Name</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>20</y>
+       <width>31</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

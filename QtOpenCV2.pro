@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     alarmgenerator.cpp \
     preprocess.cpp \
     Test/TEST_frameAllignment.cpp\
-    movevector.cpp
+    movevector.cpp \
+    dialog.cpp
 
 HEADERS  += mainwindow.h \
             exception.h \
@@ -66,6 +67,8 @@ HEADERS  += mainwindow.h \
     alignmentmatrixcalc.h \
     preprocess.h \
     Test/TEST_frameAllignment.h \
-    movevector.h
+    movevector.h \
+    dialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialog.ui

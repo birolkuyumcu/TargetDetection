@@ -1,5 +1,6 @@
 #include "cvs_uavtargetdetectionapp.h"
 //
+#include "dialog.h"
 #include "framealigner.h"
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
@@ -785,24 +786,30 @@ void Test6()
 
 int main(int argc, char *argv[])
 {
-    CVS_UAVTargetDetectionApp targetDetection(argc, argv);
-    targetDetection.exec();
+ //   CVS_UAVTargetDetectionApp targetDetection(argc, argv);
+ //   targetDetection.exec();
     // cvUseOptimized(true); // faydası görünmüyor
     // Test5();
     //ArtificalPeformanceTester();
     //PlayAvi("D:/cvs/data/testavi/output2.avi");
 
     // TEST_frameAllignment();
-    qDebug()<<"Started..."<<"\n";
+ //   qDebug()<<"Started..."<<"\n";
    //  Test6();
-    qDebug()<<"Finished..."<<"\n";
-    TestforVideos1("D:/cvs/data/testavi/egt4.avi");
+ //   qDebug()<<"Finished..."<<"\n";
+ //   TestforVideos1("D:/cvs/data/testavi/egt4.avi");
    // DemoforVideos();
   //   writeRunParameters("deneme.xml");
    // readRunParameters("deneme.xml");
    // moveVectorShow("D:/cvs/data/testavi/rvid-04.avi");
    // moveVectorClassShow("D:/cvs/data/testavi/egt4.avi");
 
-    return 0;
+    QApplication a(argc, argv);
+    Dialog w;
+    w.show();
+
+    return a.exec();
+
+  //  return 0;
 }
 
