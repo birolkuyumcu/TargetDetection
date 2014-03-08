@@ -785,8 +785,8 @@ void Test6()
 
 int main(int argc, char *argv[])
 {
-    //CVS_UAVTargetDetectionApp targetDetection(argc, argv);
-    //targetDetection.exec();
+    CVS_UAVTargetDetectionApp targetDetection(argc, argv);
+    targetDetection.exec();
     // cvUseOptimized(true); // faydası görünmüyor
     // Test5();
     //ArtificalPeformanceTester();

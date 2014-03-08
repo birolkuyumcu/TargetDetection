@@ -12,6 +12,10 @@ public:
     void process(cv::Mat& inputImage);
     void show();
 
+    // Calculated Vector values for X an Y axes
+    double mDeltaX;
+    double mDeltaY;
+
 private:
     Exception exc;
     cv::Mat currentFrame;
@@ -19,8 +23,7 @@ private:
     std::vector<cv::Point2f> pointsPrev;
     int stepX;
     int stepY;
-    double mDeltaX;
-    double mDeltaY;
+
     int centerX;
     int centerY;
 
