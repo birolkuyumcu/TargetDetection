@@ -50,7 +50,8 @@ SOURCES += main.cpp\
     preprocess.cpp \
     Test/TEST_frameAllignment.cpp\
     movevector.cpp \
-    dialog.cpp
+    dialog.cpp \
+    frameproducer.cpp
 
 HEADERS  += mainwindow.h \
             exception.h \
@@ -68,7 +69,8 @@ HEADERS  += mainwindow.h \
     preprocess.h \
     Test/TEST_frameAllignment.h \
     movevector.h \
-    dialog.h
+    dialog.h \
+    frameproducer.h
 
 FORMS    += mainwindow.ui \
     dialog.ui
