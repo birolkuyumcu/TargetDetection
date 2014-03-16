@@ -5,7 +5,7 @@ FrameProducer::FrameProducer(QObject *parent) :    QThread(parent)
         exc.setModuleName("FrameProducer");
 }
 
-void FrameProducer::openVideoFile(QString _videoFileName, std::queue<cv::Mat> *iframeBuffer, cv::Size size_, int iBufferLimit)
+void FrameProducer::openVideoFile(QString _videoFileName, std::queue<cv::Mat> *iframeBuffer, cv::Size _size, int iBufferLimit)
 {
     if(capture.isOpened())
     {
@@ -46,6 +46,7 @@ void FrameProducer::run()
             if(!capturedFrame.data)
             {
                 exc.showException("Frame alinamadi..");
+                break;
             }
             else
             {
@@ -56,9 +57,12 @@ void FrameProducer::run()
                 }
 
                 frameBuffer->push(capturedFrame);
+                emit framePushed();
+                qDebug()<<frameBuffer->size()<<"Frame Buffer\n";
             }
 
             QThread::msleep(1000./fps);
         }
     }
 }
+

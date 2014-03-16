@@ -4,6 +4,7 @@
 #include <QThread>
 #include <queue>
 #include "exception.h"
+#include <opencv2/opencv.hpp>
 
 class FrameProducer : public QThread
 {
@@ -18,11 +19,13 @@ private:
 
     Q_OBJECT
 public:
+    bool Stop;
     explicit FrameProducer(QObject *parent = 0);
     void openVideoFile(QString _videoFileName, std::queue<cv::Mat> *iframeBuffer , cv::Size size_=cv::Size(320,240), int iBufferLimit=15);
     void run();
     
 signals:
+    void framePushed();
     
 public slots:
     
