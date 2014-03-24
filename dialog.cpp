@@ -26,7 +26,17 @@ void Dialog::on_FramePushed()
      Mat2QImage(frame,img);
      ui->OrjFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->OrjFrame->size(),Qt::KeepAspectRatio) );
   //   QThread::msleep(100);
-    frameBuffer.pop();
+ //    frameBuffer.pop();
+}
+
+void Dialog::on_FrameProcessed()
+{
+    cv::Mat frame = processedFrameBuffer.front();
+    QImage img;
+    Mat2QImage(frame,img);
+    ui->ProcFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame->size(),Qt::KeepAspectRatio) );
+    processedFrameBuffer.pop();
+    qDebug()<<"on Frame Processed Side\n";
 }
 
 void Dialog::on_pushButton_clicked()
@@ -63,6 +73,16 @@ void Dialog::Mat2QImage(cv::Mat src, QImage &dst)
     dst=QImage((const unsigned char*)(src.data),src.cols,src.rows,src.step,f);
 }
 
+
+void Dialog::setParameters()
+{
+    calc.setDetectorSimple(ui->comboBoxDetector->currentText());
+    calc.setDescriptorSimple(ui->comboBoxDiscriptor->currentText());
+
+
+
+}
+
 void Dialog::on_startButton_clicked()
 {
     QString filename=ui->lineEdit_videoFileName->text();
@@ -71,4 +91,10 @@ void Dialog::on_startButton_clicked()
     connect(reader,SIGNAL(framePushed()),this,SLOT(on_FramePushed()));
     ui->tabWidget->setCurrentIndex(0);
     reader->start();
+
+    processor =new FrameConsumer(this);
+    processor->setBuffers(&frameBuffer,&processedFrameBuffer);
+    connect(processor,SIGNAL(frameProcessed()),this,SLOT(on_FrameProcessed()));
+    processor->start();
+
 }

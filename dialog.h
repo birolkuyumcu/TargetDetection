@@ -3,6 +3,11 @@
 
 #include <QDialog>
 #include "frameproducer.h"
+#include "frameconsumer.h"
+#include "framealigner.h"
+#include "alignmentmatrixcalc.h"
+#include "framealignment.h"
+#include "Test/TEST_frameAllignment.h"
 
 namespace Ui {
 class Dialog;
@@ -14,12 +19,19 @@ class Dialog : public QDialog
     
 public:
     FrameProducer *reader;
+    FrameConsumer *processor;
+    AlignmentMatrixCalc calc;
+    FrameAlignment aligner;
+    CandidateDetector cDet;
+    CandidateFilter cFilt;
     std::queue<cv::Mat> frameBuffer;
+    std::queue<cv::Mat> processedFrameBuffer;
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
 
 public slots:
     void on_FramePushed();
+    void on_FrameProcessed();
     
 private slots:
     void on_pushButton_clicked();
@@ -29,6 +41,7 @@ private slots:
 private:
     Ui::Dialog *ui;
     void Mat2QImage(cv::Mat src, QImage& dst);
+    void setParameters();
 };
 
 #endif // DIALOG_H

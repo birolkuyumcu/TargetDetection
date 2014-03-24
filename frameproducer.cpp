@@ -61,7 +61,7 @@ void FrameProducer::run()
                 qDebug()<<frameBuffer->size()<<"Frame Buffer\n";
             }
 
-            QThread::msleep(1000./fps);
+          //  QThread::msleep(1000./fps);
         }
     }
 }
