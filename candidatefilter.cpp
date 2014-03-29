@@ -38,7 +38,7 @@ void CandidateFilter::process(std::vector<Candidate> *iCandidateList)
         processUnmatchedCandidates();
 
     }
-    refine();
+   // refine();
 }
 
 /*
@@ -78,6 +78,7 @@ void CandidateFilter::processUnmatchedTargets()
                     else
                     {
                         it=targetList.erase(it); // after erase it points to nothing so incrimenting rises a error
+                        qDebug()<<"CandidateFilter 81\n";
                         if(it != targetList.begin())
                             --it;
                     }
@@ -96,6 +97,7 @@ void CandidateFilter::processUnmatchedTargets()
                 else
                 {
                     it=targetList.erase(it); // after erase it points to nothing so incrimenting rises a error
+                    qDebug()<<"CandidateFilter 100\n";
                     if(it != targetList.begin())
                         --it;
                 }
@@ -329,9 +331,8 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
         }
 
     }
-    if(wName==NULL)
-        wName="Candidates";
-    imshow(wName, inputImage );
+    if(wName != NULL)
+      imshow(wName, inputImage );
 
 
 }
@@ -350,6 +351,7 @@ void CandidateFilter::refine()
         if(!isNewTarget(*it)) // if temp is a subtarget of any other target
         {
             it=targetList.erase(it); // remove from List
+            qDebug()<<"CandidateFilter 354\n";
             if(it != targetList.begin())
                 --it;
         }
