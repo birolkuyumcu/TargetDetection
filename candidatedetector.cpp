@@ -79,7 +79,7 @@ void CandidateDetector::process(cv::Mat inputImage)
  * to inputImage
  * and show it wName Window
 */
-void CandidateDetector::showCandidates(cv::Mat inputImage, char *wName)
+void CandidateDetector::showCandidates(cv::Mat& inputImage, char *wName)
 {
     // for debuging
 
@@ -99,9 +99,8 @@ void CandidateDetector::showCandidates(cv::Mat inputImage, char *wName)
         }
         cv::circle(inputImage,candidateList[j].rRect.center,3,cv::Scalar(0,0,255),-1);
     }
-    if(wName==NULL)
-        wName="Candidates";
-    imshow(wName, inputImage );
+    if(wName!= NULL)
+      imshow(wName, inputImage );
 
 }
 
