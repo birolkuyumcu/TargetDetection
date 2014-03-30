@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>596</width>
-    <height>599</height>
+    <width>720</width>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,12 +18,12 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>581</width>
+     <width>711</width>
      <height>551</height>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -52,6 +52,38 @@
      <property name="geometry">
       <rect>
        <x>10</x>
+       <y>260</y>
+       <width>320</width>
+       <height>240</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ProcFrame_2">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>10</y>
+       <width>320</width>
+       <height>240</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ProcFrame_3">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
        <y>260</y>
        <width>320</width>
        <height>240</height>
@@ -329,7 +361,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>D:/cvs/data/testavi/egt4.avi</string>
+      <string>D:/cvs/data/testavi/output4.avi</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_videoFileName">
@@ -363,14 +395,14 @@
   <widget class="QPushButton" name="startButton">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>580</x>
      <y>560</y>
      <width>131</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Stat Processing</string>
+    <string>Start Processing</string>
    </property>
   </widget>
  </widget>

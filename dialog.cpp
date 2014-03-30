@@ -36,7 +36,26 @@ void Dialog::on_FrameProcessed()
     Mat2QImage(frame,img);
     ui->ProcFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame->size(),Qt::KeepAspectRatio) );
     processedFrameBuffer.pop();
+
+    frame = processedFrameBuffer.front();
+    Mat2QImage(frame,img);
+    ui->ProcFrame_2->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_2->size(),Qt::KeepAspectRatio) );
+    processedFrameBuffer.pop();
+
+    frame = processedFrameBuffer.front();
+    Mat2QImage(frame,img);
+    ui->ProcFrame_3->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_3->size(),Qt::KeepAspectRatio) );
+    processedFrameBuffer.pop();
+
     qDebug()<<"on Frame Processed Side\n";
+}
+
+void Dialog::on_ProcessingEnd()
+{
+    // clean threads an make a start button actieve
+    delete reader;
+    delete processor;
+    ui->startButton->setEnabled(true);
 }
 
 void Dialog::on_pushButton_clicked()
@@ -78,9 +97,6 @@ void Dialog::setParameters()
 {
     calc.setDetectorSimple(ui->comboBoxDetector->currentText());
     calc.setDescriptorSimple(ui->comboBoxDiscriptor->currentText());
-
-
-
 }
 
 void Dialog::on_startButton_clicked()
@@ -95,6 +111,10 @@ void Dialog::on_startButton_clicked()
     processor =new FrameConsumer(this);
     processor->setBuffers(&frameBuffer,&processedFrameBuffer);
     connect(processor,SIGNAL(frameProcessed()),this,SLOT(on_FrameProcessed()));
+    connect(processor,SIGNAL(processingEnd()),this,SLOT(on_ProcessingEnd()));
     processor->start();
+
+    // to avoid re-enter
+    ui->startButton->setDisabled(true);
 
 }

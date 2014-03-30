@@ -32,6 +32,7 @@ public:
 public slots:
     void on_FramePushed();
     void on_FrameProcessed();
+    void on_ProcessingEnd();
     
 private slots:
     void on_pushButton_clicked();

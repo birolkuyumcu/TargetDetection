@@ -31,6 +31,7 @@ public:
     
 signals:
     void frameProcessed();
+    void processingEnd();
     
 public slots:
     
