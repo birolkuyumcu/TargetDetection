@@ -21,6 +21,7 @@ private:
     CandidateDetector cDet;
     CandidateFilter cFilt;
     cv::Mat pFrame;
+    int nPass;
 
 
     Q_OBJECT

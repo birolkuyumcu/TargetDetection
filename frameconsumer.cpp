@@ -5,6 +5,8 @@ FrameConsumer::FrameConsumer(QObject *parent) :
     QThread(parent)
 {
             exc.setModuleName("FrameConsumer");
+            nPass=5;
+
 }
 
 void FrameConsumer::run()
@@ -79,7 +81,10 @@ void FrameConsumer::run()
             // End Processing
 
       //      QThread::msleep(1000./25);
-            frameBuffer->pop();
+            for(int i=0;i<nPass && frameBuffer->size();i++) // to by pass some frame
+              frameBuffer->pop();
+
+
         }
         else
             break;
