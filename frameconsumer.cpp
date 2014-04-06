@@ -95,3 +95,32 @@ void FrameConsumer::setBuffers(std::queue<cv::Mat> *iframeBuffer, std::queue<cv:
         frameBuffer = iframeBuffer;
         processedFrameBuffer = iprocessedFrameBuffer;
 }
+
+void FrameConsumer::setParameters(QVector<QString> &parameterTexts)
+{
+    calc.setDetectorSimple(parameterTexts[0]);
+    calc.setDescriptorSimple(parameterTexts[1]);
+    calc.setMatcherSimple(parameterTexts[2]);
+
+    if(parameterTexts[3] == "Feature Based")
+    {
+        calc.setHomographyMethod(featureBased);
+    }
+    else // Optical Flow Based
+    {
+        calc.setHomographyMethod(flowBased);
+    }
+
+    if(parameterTexts[4] == "Ransac")
+    {
+        calc.setHomographyCalcMethod(CV_RANSAC);
+    }
+    else if(parameterTexts[4] == "Least - Median")
+    {
+        calc.setHomographyCalcMethod(CV_LMEDS);
+    }
+    else // Regular
+    {
+        calc.setHomographyCalcMethod(0);
+    }
+}

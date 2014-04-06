@@ -12,6 +12,7 @@ Dialog::Dialog(QWidget *parent) :
 {
     ui->setupUi(this);
     pFileName = "Parameters.xml";
+    on_buttonLoadParameters_clicked();
 
 }
 
@@ -96,11 +97,17 @@ void Dialog::Mat2QImage(cv::Mat src, QImage &dst)
 
 void Dialog::setParameters()
 {
-
+    parameterTexts.clear();
+    parameterTexts.push_back(ui->comboBoxDetector->currentText());
+    parameterTexts.push_back(ui->comboBoxDescriptor->currentText());
+    parameterTexts.push_back(ui->comboBoxMatcher->currentText());
+    parameterTexts.push_back(ui->comboBoxDescriptorHMethod->currentText());
+    parameterTexts.push_back(ui->comboBoxDescriptorHMethodC->currentText());
 }
 
 void Dialog::on_startButton_clicked()
 {
+
     QString filename=ui->lineEdit_videoFileName->text();
     reader=new FrameProducer(this);
     reader->openVideoFile(filename,&frameBuffer);
@@ -112,6 +119,8 @@ void Dialog::on_startButton_clicked()
     processor->setBuffers(&frameBuffer,&processedFrameBuffer);
     connect(processor,SIGNAL(frameProcessed()),this,SLOT(on_FrameProcessed()));
     connect(processor,SIGNAL(processingEnd()),this,SLOT(on_ProcessingEnd()));
+    setParameters();
+    processor->setParameters(parameterTexts);
     processor->start();
 
     // to avoid re-enter

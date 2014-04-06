@@ -432,9 +432,9 @@ void AlignmentMatrixCalc::setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher)
 /* Discriptor Matcher setter used for featurbased
  * setting by Name
  **/
-void AlignmentMatrixCalc::setMatcherSimple(const char *matcherName)
+void AlignmentMatrixCalc::setMatcherSimple(QString matcherName)
 {
-    setMatcher(cv::DescriptorMatcher::create(matcherName));
+    setMatcher(cv::DescriptorMatcher::create(matcherName.toStdString()));
 }
 
 /* HomograpyMethod means that calculation of homography based on

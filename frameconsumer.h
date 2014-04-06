@@ -29,6 +29,7 @@ public:
     explicit FrameConsumer(QObject *parent = 0);
     void run();
     void setBuffers(std::queue<cv::Mat> *iframeBuffer,std::queue<cv::Mat> *iprocessedFrameBuffer);
+    void setParameters(QVector<QString> &parameterTexts );
     
 signals:
     void frameProcessed();

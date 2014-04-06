@@ -48,7 +48,8 @@ private:
     void Mat2QImage(cv::Mat src, QImage& dst);
     void setParameters();
     std::string pFileName;
-    std::vector<std::string> parameterTexts;
+   // std::vector<std::string> parameterTexts;
+    QVector<QString> parameterTexts;
 };
 
 #endif // DIALOG_H

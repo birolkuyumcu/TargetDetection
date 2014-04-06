@@ -104,7 +104,7 @@ public:
     void setDescriptor(cv::Ptr<cv::DescriptorExtractor> idescriptor);
     void setDescriptorSimple(QString descriptorName);
     void setMatcher(cv::Ptr<cv::DescriptorMatcher> imatcher);
-    void setMatcherSimple(const char* matcherName);
+    void setMatcherSimple(QString matcherName);
     void setHomographyMethod(HomograpyMethod ihMethod);
     void setHomographyCalcMethod(int ihomographyCalcMethod);
     void setMatchingType(MatchingType iType);
