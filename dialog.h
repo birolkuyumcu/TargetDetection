@@ -39,10 +39,16 @@ private slots:
 
     void on_startButton_clicked();
 
+    void on_buttonSaveParameters_clicked();
+
+    void on_buttonLoadParameters_clicked();
+
 private:
     Ui::Dialog *ui;
     void Mat2QImage(cv::Mat src, QImage& dst);
     void setParameters();
+    std::string pFileName;
+    std::vector<std::string> parameterTexts;
 };
 
 #endif // DIALOG_H

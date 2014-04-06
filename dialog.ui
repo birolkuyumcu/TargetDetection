@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
-    <height>596</height>
+    <width>718</width>
+    <height>629</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>711</width>
-     <height>551</height>
+     <height>581</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -33,7 +33,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>60</y>
        <width>320</width>
        <height>240</height>
       </rect>
@@ -52,7 +52,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>260</y>
+       <y>310</y>
        <width>320</width>
        <height>240</height>
       </rect>
@@ -68,7 +68,7 @@
      <property name="geometry">
       <rect>
        <x>350</x>
-       <y>10</y>
+       <y>60</y>
        <width>320</width>
        <height>240</height>
       </rect>
@@ -84,7 +84,7 @@
      <property name="geometry">
       <rect>
        <x>350</x>
-       <y>260</y>
+       <y>310</y>
        <width>320</width>
        <height>240</height>
       </rect>
@@ -96,17 +96,56 @@
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="label_videoFileName">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Video File Name</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>20</y>
+       <width>31</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_videoFileName">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>20</y>
+       <width>311</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>D:/cvs/data/testavi/output4.avi</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
      <string>Adjustments</string>
     </attribute>
-    <widget class="QComboBox" name="comboBoxDiscriptorHMethod">
+    <widget class="QComboBox" name="comboBoxDescriptorHMethod">
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>140</y>
-       <width>121</width>
+       <y>110</y>
+       <width>161</width>
        <height>22</height>
       </rect>
      </property>
@@ -125,8 +164,8 @@
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>110</y>
-       <width>121</width>
+       <y>80</y>
+       <width>161</width>
        <height>22</height>
       </rect>
      </property>
@@ -165,21 +204,21 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>50</y>
        <width>71</width>
        <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>Decriptor</string>
+      <string>Descriptor</string>
      </property>
     </widget>
     <widget class="QComboBox" name="comboBoxDetector">
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>50</y>
-       <width>121</width>
+       <y>20</y>
+       <width>161</width>
        <height>22</height>
       </rect>
      </property>
@@ -238,7 +277,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>140</y>
        <width>161</width>
        <height>21</height>
       </rect>
@@ -251,7 +290,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>20</y>
        <width>131</width>
        <height>21</height>
       </rect>
@@ -264,7 +303,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
+       <y>80</y>
        <width>71</width>
        <height>21</height>
       </rect>
@@ -273,12 +312,12 @@
       <string>Matcher</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBoxDiscriptorHMethodC">
+    <widget class="QComboBox" name="comboBoxDescriptorHMethodC">
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>170</y>
-       <width>121</width>
+       <y>140</y>
+       <width>161</width>
        <height>22</height>
       </rect>
      </property>
@@ -298,12 +337,12 @@
       </property>
      </item>
     </widget>
-    <widget class="QComboBox" name="comboBoxDiscriptor">
+    <widget class="QComboBox" name="comboBoxDescriptor">
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>80</y>
-       <width>121</width>
+       <y>50</y>
+       <width>161</width>
        <height>22</height>
       </rect>
      </property>
@@ -342,7 +381,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>140</y>
+       <y>110</y>
        <width>161</width>
        <height>21</height>
       </rect>
@@ -351,43 +390,30 @@
       <string>Homography Method</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_videoFileName">
+    <widget class="QPushButton" name="buttonSaveParameters">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>390</x>
        <y>20</y>
-       <width>311</width>
-       <height>23</height>
+       <width>101</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>D:/cvs/data/testavi/output4.avi</string>
+      <string>Save Parameters</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_videoFileName">
+    <widget class="QPushButton" name="buttonLoadParameters">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>111</width>
-       <height>16</height>
+       <x>390</x>
+       <y>60</y>
+       <width>101</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Video File Name</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>500</x>
-       <y>20</y>
-       <width>31</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>...</string>
+      <string>Load Parameters</string>
      </property>
     </widget>
    </widget>
@@ -396,7 +422,7 @@
    <property name="geometry">
     <rect>
      <x>580</x>
-     <y>560</y>
+     <y>590</y>
      <width>131</width>
      <height>31</height>
     </rect>

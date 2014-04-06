@@ -11,6 +11,7 @@ Dialog::Dialog(QWidget *parent) :
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
+    pFileName = "Parameters.xml";
 
 }
 
@@ -95,8 +96,7 @@ void Dialog::Mat2QImage(cv::Mat src, QImage &dst)
 
 void Dialog::setParameters()
 {
-    calc.setDetectorSimple(ui->comboBoxDetector->currentText());
-    calc.setDescriptorSimple(ui->comboBoxDiscriptor->currentText());
+
 }
 
 void Dialog::on_startButton_clicked()
@@ -116,5 +116,37 @@ void Dialog::on_startButton_clicked()
 
     // to avoid re-enter
     ui->startButton->setDisabled(true);
+
+}
+
+void Dialog::on_buttonSaveParameters_clicked()
+{
+    cv::FileStorage fs(pFileName, cv::FileStorage::WRITE);
+    fs<<"Detector"<<ui->comboBoxDetector->currentText().toStdString();
+    fs<<"Descriptor"<<ui->comboBoxDescriptor->currentText().toStdString();
+    fs<<"Matcher"<<ui->comboBoxMatcher->currentText().toStdString();
+    fs<<"HomographyMethod"<<ui->comboBoxDescriptorHMethod->currentText().toStdString();
+    fs<<"HomographyCalcMethod"<<ui->comboBoxDescriptorHMethodC->currentText().toStdString();
+
+    fs.release();
+
+}
+
+void Dialog::on_buttonLoadParameters_clicked()
+{
+    cv::FileStorage fs(pFileName, cv::FileStorage::READ);
+    std::string det, desc, match,hMet,hMetC ;
+    fs["Detector"]>>det;
+    fs["Descriptor"]>>desc;
+    fs["Matcher"]>>match;
+    fs["HomographyMethod"]>>hMet;
+    fs["HomographyCalcMethod"]>>hMetC;
+
+    fs.release();
+    ui->comboBoxDetector->setCurrentText(det.c_str());
+    ui->comboBoxDescriptor->setCurrentText(desc.c_str());
+    ui->comboBoxMatcher->setCurrentText(match.c_str());
+    ui->comboBoxDescriptorHMethod->setCurrentText(hMet.c_str());
+    ui->comboBoxDescriptorHMethodC->setCurrentText(hMetC.c_str());
 
 }
