@@ -5,7 +5,8 @@ FrameConsumer::FrameConsumer(QObject *parent) :
     QThread(parent)
 {
             exc.setModuleName("FrameConsumer");
-            nPass=5;
+            nPass = 5;
+            isReadingEnd = false;
 
 }
 
@@ -26,9 +27,10 @@ void FrameConsumer::run()
             cv::Mat frame = frameBuffer->front();
             //Do Processing
             pFrame = frame.clone();
-            cv::cvtColor(pFrame,pFrame,CV_RGB2GRAY);
+            cv::cvtColor(pFrame,pFrame,CV_BGR2GRAY);
 
             cv::Mat copyCurrentFrame=pFrame.clone();
+            cv::equalizeHist(copyCurrentFrame,copyCurrentFrame);
             cv::Mat H;
             calc.process(copyCurrentFrame);
 
@@ -80,6 +82,10 @@ void FrameConsumer::run()
       //      QThread::msleep(1000./25);
             for(int i=0;i<nPass && frameBuffer->size();i++) // to by pass some frame
               frameBuffer->pop();
+        }
+        else if(isReadingEnd == true)
+        {
+            break;
         }
         else
         {

@@ -3,6 +3,7 @@
 FrameProducer::FrameProducer(QObject *parent) :    QThread(parent)
 {
         exc.setModuleName("FrameProducer");
+
 }
 
 void FrameProducer::openVideoFile(QString _videoFileName, std::queue<cv::Mat> *iframeBuffer, cv::Size _size, int iBufferLimit)
@@ -64,5 +65,6 @@ void FrameProducer::run()
           //  QThread::msleep(1000./fps);
         }
     }
+    emit readingEnd();
 }
 

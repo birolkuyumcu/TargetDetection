@@ -60,6 +60,11 @@ void Dialog::on_ProcessingEnd()
     ui->startButton->setEnabled(true);
 }
 
+void Dialog::on_ReadingEnd()
+{
+    processor->isReadingEnd = true;
+}
+
 void Dialog::on_pushButton_clicked()
 {
     QString filename=QFileDialog::getOpenFileName(this,tr("Open Video Stream "),".",tr("Video Files(*avi *mp4 *mpg)"));
@@ -112,6 +117,7 @@ void Dialog::on_startButton_clicked()
     reader=new FrameProducer(this);
     reader->openVideoFile(filename,&frameBuffer);
     connect(reader,SIGNAL(framePushed()),this,SLOT(on_FramePushed()));
+    connect(reader,SIGNAL(readingEnd()),this,SLOT ( on_ReadingEnd()));
     ui->tabWidget->setCurrentIndex(0);
     reader->start();
 

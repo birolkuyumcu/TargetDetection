@@ -30,10 +30,11 @@ public:
     void run();
     void setBuffers(std::queue<cv::Mat> *iframeBuffer,std::queue<cv::Mat> *iprocessedFrameBuffer);
     void setParameters(QVector<QString> &parameterTexts );
+    bool isReadingEnd;
     
 signals:
     void frameProcessed();
-    void processingEnd();
+    void processingEnd();    
     
 public slots:
     

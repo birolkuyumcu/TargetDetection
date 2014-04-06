@@ -26,6 +26,7 @@ public:
     
 signals:
     void framePushed();
+    void readingEnd();
     
 public slots:
     
