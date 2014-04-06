@@ -15,11 +15,10 @@ void FrameConsumer::run()
     cv::Mat alignedPrevFrame;
     cv::Mat currentDiffImage;
 
-    QThread::msleep(100);
+
 
     while(1)
     {
-
 
          qDebug()<<frameBuffer->size()<<"Consumer Side\n";
         if(frameBuffer->size() > 0 )
@@ -60,8 +59,6 @@ void FrameConsumer::run()
                 cv::dilate(currentDiffImage,currentDiffImage, element,cv::Point(-1,-1),4 );
                 cv::erode(currentDiffImage,currentDiffImage, element,cv::Point(-1,-1),4 );
 
-
-
     //            processedFrameBuffer->push(currentDiffImage.clone());
                 //
                 cDet.process(currentDiffImage);
@@ -83,11 +80,11 @@ void FrameConsumer::run()
       //      QThread::msleep(1000./25);
             for(int i=0;i<nPass && frameBuffer->size();i++) // to by pass some frame
               frameBuffer->pop();
-
-
         }
         else
-            break;
+        {
+           QThread::msleep(100);
+        }
     }
     // emit a signal to GUI when processing Ends
     emit processingEnd();
