@@ -15,7 +15,6 @@ class FrameConsumer : public QThread
 private:
     Exception exc;
     std::queue<cv::Mat> *frameBuffer;
-    std::queue<cv::Mat> *processedFrameBuffer;
     AlignmentMatrixCalc calc;
     FrameAlignment aligner;
     CandidateDetector cDet;
@@ -28,9 +27,14 @@ private:
 public:
     explicit FrameConsumer(QObject *parent = 0);
     void run();
-    void setBuffers(std::queue<cv::Mat> *iframeBuffer,std::queue<cv::Mat> *iprocessedFrameBuffer);
+    void setBuffers(std::queue<cv::Mat> *iframeBuffer);
     void setParameters(QVector<QString> &parameterTexts );
     bool isReadingEnd;
+
+    cv::Mat processedFrame2UiTargets;
+    cv::Mat processedFrame2UiAbsDiff;
+    cv::Mat processedFrame2UiCandidates;
+
     
 signals:
     void frameProcessed();

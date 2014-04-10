@@ -4,9 +4,9 @@
 FrameConsumer::FrameConsumer(QObject *parent) :
     QThread(parent)
 {
-            exc.setModuleName("FrameConsumer");
-            nPass = 5;
-            isReadingEnd = false;
+    exc.setModuleName("FrameConsumer");
+    nPass = 5;
+    isReadingEnd = false;
 
 }
 
@@ -16,20 +16,20 @@ void FrameConsumer::run()
     cv::Mat alignedPrevFrame;
     cv::Mat currentDiffImage;
 
-
-
     while(1)
     {
 
-         qDebug()<<frameBuffer->size()<<"Consumer Side\n";
         if(frameBuffer->size() > 0 )
         {
-            cv::Mat frame = frameBuffer->front();
+            cv::Mat frame_ = frameBuffer->front();
+
+            cv::Mat frame = frame_.clone();
+
             //Do Processing
             pFrame = frame.clone();
             cv::cvtColor(pFrame,pFrame,CV_BGR2GRAY);
 
-            cv::Mat copyCurrentFrame=pFrame.clone();
+            cv::Mat copyCurrentFrame = pFrame.clone();
             cv::equalizeHist(copyCurrentFrame,copyCurrentFrame);
             cv::Mat H;
             calc.process(copyCurrentFrame);
@@ -50,56 +50,46 @@ void FrameConsumer::run()
                 aligner.process(mask,H,mask);
                 mask=copyCurrentFrame&mask;
                 cv::absdiff(alignedPrevFrame,mask,currentDiffImage);
-                processedFrameBuffer->push(currentDiffImage.clone());
+                processedFrame2UiAbsDiff = currentDiffImage.clone();
                 cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT,cv::Size( 3, 3 ),cv::Point( 1, 1 ) );
-           //     processedFrameBuffer->push(currentDiffImage.clone());
-                //
+
 
                 cv::threshold(currentDiffImage,currentDiffImage,dynamicThresholdValue(currentDiffImage),255,cv::THRESH_BINARY);
-        //        cv::morphologyEx(currentDiffImage,currentDiffImage,cv::MORPH_CLOSE, element,cv::Point(-1,-1),4 );
-       //
                 cv::dilate(currentDiffImage,currentDiffImage, element,cv::Point(-1,-1),4 );
                 cv::erode(currentDiffImage,currentDiffImage, element,cv::Point(-1,-1),4 );
 
-    //            processedFrameBuffer->push(currentDiffImage.clone());
-                //
                 cDet.process(currentDiffImage);
                 cDet.showCandidates(canImg);
                 cFilt.process(&cDet.candidateList);
                 cFilt.showTargets(tarImg);
 
-                processedFrameBuffer->push(canImg.clone());
-                processedFrameBuffer->push(tarImg.clone());
-                emit frameProcessed();
+                processedFrame2UiCandidates = canImg.clone();
+                processedFrame2UiTargets = tarImg.clone();
 
             }
-            prevFrame=copyCurrentFrame;
+            prevFrame = copyCurrentFrame;
+
+            emit frameProcessed();
 
 
+            for(int i=0; i < nPass && frameBuffer->size(); i++) // to by pass some frame
+            {
+                frameBuffer->pop();
+            }
 
-            // End Processing
-
-      //      QThread::msleep(1000./25);
-            for(int i=0;i<nPass && frameBuffer->size();i++) // to by pass some frame
-              frameBuffer->pop();
-        }
-        else if(isReadingEnd == true)
-        {
-            break;
         }
         else
         {
            QThread::msleep(100);
         }
     }
-    // emit a signal to GUI when processing Ends
-    emit processingEnd();
+
 }
 
-void FrameConsumer::setBuffers(std::queue<cv::Mat> *iframeBuffer, std::queue<cv::Mat> *iprocessedFrameBuffer)
+void FrameConsumer::setBuffers(std::queue<cv::Mat> *iframeBuffer)
 {
         frameBuffer = iframeBuffer;
-        processedFrameBuffer = iprocessedFrameBuffer;
+
 }
 
 void FrameConsumer::setParameters(QVector<QString> &parameterTexts)

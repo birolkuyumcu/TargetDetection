@@ -640,7 +640,7 @@ void Test6()
  //   currentFrame=cv::imread("D:/cvs/data/egt2/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
     currentFrame=cv::imread("D:/cvs/data/pktest1/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #else
-    currentframe=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+    currentFrame=cv::imread("../uavVideoDataset/egtest02/frame00000.jpg",CV_LOAD_IMAGE_GRAYSCALE);
 #endif
 
     if(currentFrame.empty())

@@ -3,7 +3,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <opencv2/opencv.hpp>
-
+#include <QDebug>
 
 
 Dialog::Dialog(QWidget *parent) :
@@ -23,33 +23,33 @@ Dialog::~Dialog()
 
 void Dialog::on_FramePushed()
 {
-    cv::Mat frame=frameBuffer.front();
+     cv::Mat frame_ = reader->frameBuffer.front();
+     cv::Mat frame = frame_.clone();
+
      QImage img;
-     Mat2QImage(frame,img);
+
+     Mat2QImage(frame, img);
+
      ui->OrjFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->OrjFrame->size(),Qt::KeepAspectRatio) );
-  //   QThread::msleep(100);
- //    frameBuffer.pop();
 }
 
 void Dialog::on_FrameProcessed()
 {
-    cv::Mat frame = processedFrameBuffer.front();
+
     QImage img;
+    cv::Mat frame = processor->processedFrame2UiAbsDiff.clone();
+
     Mat2QImage(frame,img);
     ui->ProcFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame->size(),Qt::KeepAspectRatio) );
-    processedFrameBuffer.pop();
 
-    frame = processedFrameBuffer.front();
+    frame = processor->processedFrame2UiCandidates.clone();
     Mat2QImage(frame,img);
     ui->ProcFrame_2->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_2->size(),Qt::KeepAspectRatio) );
-    processedFrameBuffer.pop();
 
-    frame = processedFrameBuffer.front();
+    frame = processor->processedFrame2UiTargets.clone();
     Mat2QImage(frame,img);
     ui->ProcFrame_3->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_3->size(),Qt::KeepAspectRatio) );
-    processedFrameBuffer.pop();
 
-    qDebug()<<"on Frame Processed Side\n";
 }
 
 void Dialog::on_ProcessingEnd()
@@ -68,11 +68,13 @@ void Dialog::on_ReadingEnd()
 void Dialog::on_pushButton_clicked()
 {
     QString filename=QFileDialog::getOpenFileName(this,tr("Open Video Stream "),".",tr("Video Files(*avi *mp4 *mpg)"));
+
     if(!QFile::exists(filename))
+    {
         return;
+    }
 
     ui->lineEdit_videoFileName->setText(filename);
-
 
 }
 
@@ -89,7 +91,8 @@ void Dialog::Mat2QImage(cv::Mat src, QImage &dst)
        // Siyah Beyaz ise Sadece formatı değiştiriyoruz.
        f=QImage::Format_Indexed8;
     }
-    else{
+    else
+    {
         // Üsteki iki tip dışındaki formatlar gösterilmek için uygun değil...
         QMessageBox msgBox;
         msgBox.setText("Görüntü Kanal sayısı uyumsuz !");
@@ -115,14 +118,15 @@ void Dialog::on_startButton_clicked()
 
     QString filename=ui->lineEdit_videoFileName->text();
     reader=new FrameProducer(this);
-    reader->openVideoFile(filename,&frameBuffer);
+    reader->openVideoFile(filename);
     connect(reader,SIGNAL(framePushed()),this,SLOT(on_FramePushed()));
-    connect(reader,SIGNAL(readingEnd()),this,SLOT ( on_ReadingEnd()));
     ui->tabWidget->setCurrentIndex(0);
     reader->start();
 
     processor =new FrameConsumer(this);
-    processor->setBuffers(&frameBuffer,&processedFrameBuffer);
+
+    processor->setBuffers(&reader->frameBuffer);
+
     connect(processor,SIGNAL(frameProcessed()),this,SLOT(on_FrameProcessed()));
     connect(processor,SIGNAL(processingEnd()),this,SLOT(on_ProcessingEnd()));
     setParameters();
