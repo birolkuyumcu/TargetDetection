@@ -128,7 +128,6 @@ void Dialog::on_startButton_clicked()
     processor->setBuffers(&reader->frameBuffer);
 
     connect(processor,SIGNAL(frameProcessed()),this,SLOT(on_FrameProcessed()));
-    connect(processor,SIGNAL(processingEnd()),this,SLOT(on_ProcessingEnd()));
     setParameters();
     processor->setParameters(parameterTexts);
     processor->start();
@@ -167,5 +166,12 @@ void Dialog::on_buttonLoadParameters_clicked()
     ui->comboBoxMatcher->setCurrentText(match.c_str());
     ui->comboBoxDescriptorHMethod->setCurrentText(hMet.c_str());
     ui->comboBoxDescriptorHMethodC->setCurrentText(hMetC.c_str());
+
+}
+
+void Dialog::on_Dialog_destroyed()
+{
+    reader->terminate();
+    processor->terminate();
 
 }

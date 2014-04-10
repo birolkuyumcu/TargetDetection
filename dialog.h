@@ -35,12 +35,11 @@ public slots:
     
 private slots:
     void on_pushButton_clicked();
-
     void on_startButton_clicked();
-
     void on_buttonSaveParameters_clicked();
-
     void on_buttonLoadParameters_clicked();
+
+    void on_Dialog_destroyed();
 
 private:
     Ui::Dialog *ui;
