@@ -18,17 +18,17 @@ LIBS += `pkg-config opencv --cflags --libs`
 CONFIG += debug_and_release
 win32:debug {
      CONFIG += console
-INCLUDEPATH +=D:/OpenCv-2.4.6/opencv/build/include
+INCLUDEPATH +=D:/cvs/opencv/include
 INCLUDEPATH +=D:/cvs/qtopencv
 
-LIBS += -LD:/OpenCv-2.4.6/opencv/build/x86/mingw/lib -lopencv_core246.dll -lopencv_highgui246.dll -lopencv_imgproc246.dll -lopencv_features2d246.dll -lopencv_video246.dll -lopencv_nonfree246.dll -lopencv_calib3d246.dll
+LIBS += -LD:/cvs/opencv/lib -lopencv_core248.dll -lopencv_highgui248.dll -lopencv_imgproc248.dll -lopencv_features2d248.dll -lopencv_video248.dll -lopencv_nonfree248.dll -lopencv_calib3d248.dll
 
  }
 
 win32:release {
-INCLUDEPATH +=D:/OpenCv-2.4.6/opencv/build/include
+INCLUDEPATH +=D:/cvs/opencv/include
 INCLUDEPATH +=D:/cvs/qtopencv
-LIBS += -LD:/OpenCv-2.4.6/opencv/build/x86/mingw/lib -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246 -lopencv_features2d246 -lopencv_video246 -lopencv_nonfree246 -lopencv_calib3d246
+LIBS += -LD:/cvs/opencv/lib -lopencv_core248.dll -lopencv_highgui248.dll -lopencv_imgproc248.dll -lopencv_features2d248.dll -lopencv_video248.dll -lopencv_nonfree248.dll -lopencv_calib3d248.dll
 
 
 }
