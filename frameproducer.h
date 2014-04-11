@@ -15,14 +15,13 @@ private:
     unsigned int        nBufferLimit;
     cv::Size            frameResolution;
     cv::VideoCapture    capture;
-    std::queue<cv::Mat> *frameBuffer;
-
     Q_OBJECT
 public:
     bool Stop;
     explicit FrameProducer(QObject *parent = 0);
-    void openVideoFile(QString _videoFileName, std::queue<cv::Mat> *iframeBuffer , cv::Size size_=cv::Size(320,240), int iBufferLimit=15);
+    void openVideoFile(QString _videoFileName, cv::Size size_=cv::Size(320,240), int iBufferLimit=5);
     void run();
+    std::queue<cv::Mat> frameBuffer;
     
 signals:
     void framePushed();

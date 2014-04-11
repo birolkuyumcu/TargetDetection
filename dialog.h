@@ -24,8 +24,6 @@ public:
     FrameAlignment aligner;
     CandidateDetector cDet;
     CandidateFilter cFilt;
-    std::queue<cv::Mat> frameBuffer;
-    std::queue<cv::Mat> processedFrameBuffer;
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
 
@@ -37,19 +35,17 @@ public slots:
     
 private slots:
     void on_pushButton_clicked();
-
     void on_startButton_clicked();
-
     void on_buttonSaveParameters_clicked();
-
     void on_buttonLoadParameters_clicked();
+
+    void on_Dialog_destroyed();
 
 private:
     Ui::Dialog *ui;
     void Mat2QImage(cv::Mat src, QImage& dst);
     void setParameters();
     std::string pFileName;
-   // std::vector<std::string> parameterTexts;
     QVector<QString> parameterTexts;
 };
 

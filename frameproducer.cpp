@@ -6,7 +6,7 @@ FrameProducer::FrameProducer(QObject *parent) :    QThread(parent)
 
 }
 
-void FrameProducer::openVideoFile(QString _videoFileName, std::queue<cv::Mat> *iframeBuffer, cv::Size _size, int iBufferLimit)
+void FrameProducer::openVideoFile(QString _videoFileName, cv::Size _size, int iBufferLimit)
 {
     if(capture.isOpened())
     {
@@ -15,7 +15,6 @@ void FrameProducer::openVideoFile(QString _videoFileName, std::queue<cv::Mat> *i
 
     videoFileName = _videoFileName;
     frameResolution = _size;
-    frameBuffer = iframeBuffer;
     nBufferLimit = iBufferLimit;
 
 
@@ -27,7 +26,7 @@ void FrameProducer::openVideoFile(QString _videoFileName, std::queue<cv::Mat> *i
     }
     else
     {
-        fps = capture.get(CV_CAP_PROP_FPS);
+        fps = 10;//capture.get(CV_CAP_PROP_FPS);
     }
 
 
@@ -39,7 +38,7 @@ void FrameProducer::run()
 
     while(1)
     {
-        if(frameBuffer->size() < nBufferLimit )
+        if(frameBuffer.size() < nBufferLimit )
         {
 
             capture >> capturedFrame;
@@ -57,14 +56,13 @@ void FrameProducer::run()
 
                 }
 
-                frameBuffer->push(capturedFrame);
-                emit framePushed();
-                qDebug()<<frameBuffer->size()<<"Frame Buffer\n";
+                frameBuffer.push(capturedFrame);
             }
 
-          //  QThread::msleep(1000./fps);
+            emit framePushed();
         }
+
+       QThread::msleep(1000./fps);
     }
-    emit readingEnd();
 }
 

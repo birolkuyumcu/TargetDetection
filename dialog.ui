@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -132,7 +132,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>D:/cvs/data/testavi/egt2.avi</string>
+      <string>/media/348CD0608CD01E64/UAVBlueKid/video/uav 72789383.mp4</string>
      </property>
     </widget>
    </widget>
