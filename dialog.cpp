@@ -6,6 +6,7 @@
 #include <QDebug>
 
 
+
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
@@ -24,32 +25,45 @@ Dialog::~Dialog()
 
 void Dialog::on_FramePushed()
 {
-     cv::Mat frame_ = reader->frameBuffer.front();
-     cv::Mat frame = frame_.clone();
+    if(fullScreen == false )
+    {
+        cv::Mat frame_ = reader->frameBuffer.front();
+        cv::Mat frame = frame_.clone();
 
-     QImage img;
+        QImage img;
 
-     Mat2QImage(frame, img);
+        Mat2QImage(frame, img);
 
-     ui->OrjFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->OrjFrame->size(),Qt::KeepAspectRatio) );
+        ui->OrjFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->OrjFrame->size(),Qt::KeepAspectRatio) );
+    }
 }
 
 void Dialog::on_FrameProcessed()
 {
 
     QImage img;
-    cv::Mat frame = processor->processedFrame2UiAbsDiff.clone();
+    cv::Mat frame;
+    if(fullScreen == false )
+    {
+        frame = processor->processedFrame2UiAbsDiff.clone();
 
-    Mat2QImage(frame,img);
-    ui->ProcFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame->size(),Qt::KeepAspectRatio) );
+        Mat2QImage(frame,img);
+        ui->ProcFrame->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame->size(),Qt::KeepAspectRatio) );
 
-    frame = processor->processedFrame2UiCandidates.clone();
-    Mat2QImage(frame,img);
-    ui->ProcFrame_2->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_2->size(),Qt::KeepAspectRatio) );
+        frame = processor->processedFrame2UiCandidates.clone();
+        Mat2QImage(frame,img);
+        ui->ProcFrame_2->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_2->size(),Qt::KeepAspectRatio) );
 
-    frame = processor->processedFrame2UiTargets.clone();
-    Mat2QImage(frame,img);
-    ui->ProcFrame_3->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_3->size(),Qt::KeepAspectRatio) );
+        frame = processor->processedFrame2UiTargets.clone();
+        Mat2QImage(frame,img);
+        ui->ProcFrame_3->setPixmap(QPixmap::fromImage(img).scaled(ui->ProcFrame_3->size(),Qt::KeepAspectRatio) );
+    }
+    else
+    {
+        frame = processor->processedFrame2UiTargets.clone();
+        Mat2QImage(frame,img);
+        fDialog->setFrame(img);
+    }
 
 }
 
@@ -183,4 +197,8 @@ void Dialog::on_Dialog_destroyed()
 void Dialog::on_pushButton_FullScreen_clicked()
 {
     fullScreen = true ;
+    fDialog = new DialogFullScreen();
+    fDialog->exec();
+    fullScreen = false;
+
 }

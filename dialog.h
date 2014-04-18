@@ -8,6 +8,7 @@
 #include "alignmentmatrixcalc.h"
 #include "framealignment.h"
 #include "Test/TEST_frameAllignment.h"
+#include "dialogfullscreen.h"
 
 namespace Ui {
 class Dialog;
@@ -25,6 +26,7 @@ public:
     CandidateDetector cDet;
     CandidateFilter cFilt;
     bool fullScreen;
+    DialogFullScreen *fDialog;
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
 
