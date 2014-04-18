@@ -431,6 +431,19 @@
     <string>Start Processing</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_FullScreen">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>590</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&amp;FullScreen</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

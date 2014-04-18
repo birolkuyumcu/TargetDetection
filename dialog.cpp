@@ -13,6 +13,7 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
     pFileName = "Parameters.xml";
     on_buttonLoadParameters_clicked();
+    fullScreen = false;
 
 }
 
@@ -174,4 +175,9 @@ void Dialog::on_Dialog_destroyed()
     reader->terminate();
     processor->terminate();
 
+}
+
+void Dialog::on_pushButton_FullScreen_clicked()
+{
+    fullScreen = true ;
 }

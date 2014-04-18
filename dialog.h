@@ -24,6 +24,7 @@ public:
     FrameAlignment aligner;
     CandidateDetector cDet;
     CandidateFilter cFilt;
+    bool fullScreen;
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
 
@@ -40,6 +41,10 @@ private slots:
     void on_buttonLoadParameters_clicked();
 
     void on_Dialog_destroyed();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_FullScreen_clicked();
 
 private:
     Ui::Dialog *ui;
