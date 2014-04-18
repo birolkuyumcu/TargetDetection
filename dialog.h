@@ -42,8 +42,6 @@ private slots:
 
     void on_Dialog_destroyed();
 
-    void on_pushButton_2_clicked();
-
     void on_pushButton_FullScreen_clicked();
 
 private:

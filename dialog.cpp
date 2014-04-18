@@ -146,6 +146,7 @@ void Dialog::on_buttonSaveParameters_clicked()
     fs<<"Matcher"<<ui->comboBoxMatcher->currentText().toStdString();
     fs<<"HomographyMethod"<<ui->comboBoxDescriptorHMethod->currentText().toStdString();
     fs<<"HomographyCalcMethod"<<ui->comboBoxDescriptorHMethodC->currentText().toStdString();
+    fs<<"FileName"<<ui->lineEdit_videoFileName->text().toStdString();
 
     fs.release();
 
@@ -154,12 +155,13 @@ void Dialog::on_buttonSaveParameters_clicked()
 void Dialog::on_buttonLoadParameters_clicked()
 {
     cv::FileStorage fs(pFileName, cv::FileStorage::READ);
-    std::string det, desc, match,hMet,hMetC ;
+    std::string det, desc, match,hMet,hMetC,fileName ;
     fs["Detector"]>>det;
     fs["Descriptor"]>>desc;
     fs["Matcher"]>>match;
     fs["HomographyMethod"]>>hMet;
     fs["HomographyCalcMethod"]>>hMetC;
+    fs["FileName"]>>fileName;
 
     fs.release();
     ui->comboBoxDetector->setCurrentText(det.c_str());
@@ -167,6 +169,7 @@ void Dialog::on_buttonLoadParameters_clicked()
     ui->comboBoxMatcher->setCurrentText(match.c_str());
     ui->comboBoxDescriptorHMethod->setCurrentText(hMet.c_str());
     ui->comboBoxDescriptorHMethodC->setCurrentText(hMetC.c_str());
+    ui->lineEdit_videoFileName->setText(fileName.c_str());
 
 }
 
