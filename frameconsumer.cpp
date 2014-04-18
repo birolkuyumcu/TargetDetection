@@ -71,11 +71,24 @@ void FrameConsumer::run()
 
             emit frameProcessed();
 
+            frameBuffer->pop();
 
-            for(int i=0; i < nPass && frameBuffer->size(); i++) // to by pass some frame
+/* causes a error "Debug Assertion Failed!" and
+ * "Expression: deque iterator not dereferencable."
+ * mutex not solved
+
+            QMutex mutex;
+            mutex.lock();
+            for(int i=0; i < nPass ; i++) // to by pass some frame
             {
-                frameBuffer->pop();
+                qDebug()<<"frame Buffersize : " <<frameBuffer->size()<<"\n";
+                if(frameBuffer->size() < 1)
+                    break;
+                else
+                    frameBuffer->pop();
             }
+            mutex.unlock();
+*/
 
         }
         else
