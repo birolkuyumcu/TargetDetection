@@ -52,7 +52,8 @@ SOURCES += main.cpp\
     movevector.cpp \
     dialog.cpp \
     frameproducer.cpp \
-    frameconsumer.cpp
+    frameconsumer.cpp \
+    dialogfullscreen.cpp
 
 HEADERS  += mainwindow.h \
             exception.h \
@@ -72,7 +73,9 @@ HEADERS  += mainwindow.h \
     movevector.h \
     dialog.h \
     frameproducer.h \
-    frameconsumer.h
+    frameconsumer.h \
+    dialogfullscreen.h
 
 FORMS    += mainwindow.ui \
-    dialog.ui
+    dialog.ui \
+    dialogfullscreen.ui
