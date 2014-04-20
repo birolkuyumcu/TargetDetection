@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <opencv2/opencv.hpp>
 #include <QDebug>
+#include <QEvent>
 
 
 
@@ -15,7 +16,8 @@ Dialog::Dialog(QWidget *parent) :
     pFileName = "Parameters.xml";
     on_buttonLoadParameters_clicked();
     fullScreen = false;
-
+    connect(this,SIGNAL(doubleClicked()),SLOT(onDoubleClicked()));
+    ui->ProcFrame_3->installEventFilter(this);
 }
 
 Dialog::~Dialog()
@@ -80,6 +82,11 @@ void Dialog::on_ReadingEnd()
     processor->isReadingEnd = true;
 }
 
+void Dialog::onDoubleClicked()
+{
+    on_pushButton_FullScreen_clicked();
+}
+
 void Dialog::on_pushButton_clicked()
 {
     QString filename=QFileDialog::getOpenFileName(this,tr("Open Video Stream "),".",tr("Video Files(*avi *mp4 *mpg)"));
@@ -126,6 +133,15 @@ void Dialog::setParameters()
     parameterTexts.push_back(ui->comboBoxMatcher->currentText());
     parameterTexts.push_back(ui->comboBoxDescriptorHMethod->currentText());
     parameterTexts.push_back(ui->comboBoxDescriptorHMethodC->currentText());
+}
+
+bool Dialog::eventFilter(QObject *target, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonDblClick)
+    {
+         emit doubleClicked();
+    }
+    return QDialog::eventFilter(target,event);
 }
 
 void Dialog::on_startButton_clicked()
