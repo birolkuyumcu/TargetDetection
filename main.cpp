@@ -262,10 +262,10 @@ void Vivid2Avi(const char *header,int max,const char*aviName)
     char Buf[1024];
 
     cv::VideoWriter w;
-
+    sprintf(Buf,"%sframe%05d.jpg%c",header,0,0);
+    frame=cv::imread(Buf,CV_LOAD_IMAGE_COLOR);
     sprintf(Buf,"%s%5s.avi%c",header,aviName,0);
-
-    w.open(Buf,-1,23,cv::Size(640,480));
+    w.open(Buf,-1,23, frame.size());
 
     for(int i = 0 ; i < max+1 ; i++)
     {
@@ -802,14 +802,13 @@ int main(int argc, char *argv[])
   //   writeRunParameters("deneme.xml");
    // readRunParameters("deneme.xml");
    // moveVectorShow("D:/cvs/data/testavi/rvid-04.avi");
-   // moveVectorClassShow("D:/cvs/data/testavi/egt4.avi");
-
+   // moveVectorClassShow("D:/cvs/data/testavi/egt4.avi");    
+   // Vivid2Avi("D:/cvs/data/redteam/",1917,"redteam");
     QApplication a(argc, argv);
     Dialog w;
     w.show();
 
     return a.exec();
 
-  //  return 0;
 }
 
