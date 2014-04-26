@@ -17,6 +17,7 @@ class Dialog;
 class Dialog : public QDialog
 {
     Q_OBJECT
+
     
 public:
     FrameProducer *reader;
@@ -35,6 +36,9 @@ public slots:
     void on_FrameProcessed();
     void on_ProcessingEnd();
     void on_ReadingEnd();
+    void onDoubleClicked();
+signals:
+    void doubleClicked();
     
 private slots:
     void on_pushButton_clicked();
@@ -52,6 +56,8 @@ private:
     void setParameters();
     std::string pFileName;
     QVector<QString> parameterTexts;
+protected:
+    bool eventFilter(QObject *target, QEvent *event);
 };
 
 #endif // DIALOG_H
