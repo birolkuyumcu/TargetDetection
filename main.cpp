@@ -745,7 +745,7 @@ void Test6()
 
                 cDetMhi.process(mhiImage);
                 cFiltMhi.process(&cDetMhi.candidateList);
-                cFiltMhi.showTargets(currentFrame,"mhiTargets");
+                cFiltMhi.showTargets(currentFrame,1,"mhiTargets");
             }
 
             cv::Scalar meanCurrent, stdDevCurrent;

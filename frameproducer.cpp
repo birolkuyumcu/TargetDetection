@@ -50,12 +50,12 @@ void FrameProducer::run()
             }
             else
             {
-                if(capturedFrame.size() != frameResolution)
+               /* if(capturedFrame.size() != frameResolution)
                 {
                     cv::resize(capturedFrame, capturedFrame, frameResolution);
 
                 }
-
+                */
                 frameBuffer.push(capturedFrame);
             }
 

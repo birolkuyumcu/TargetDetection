@@ -543,7 +543,7 @@ void TestforVideos(char * videoFileName)
 
                 cDetMhi.process(mhiImage);
                 cFiltMhi.process(&cDetMhi.candidateList);
-                cFiltMhi.showTargets(currentFrame,"mhiTargets");
+                cFiltMhi.showTargets(currentFrame,1,"mhiTargets");
                // cDetMhi.showCandidates(currentFrame,"mhiTargets");
 
             }
@@ -709,7 +709,7 @@ void DemoforVideos()
 
                 cDetMhi.process(mhiImage);
                 cFiltMhi.process(&cDetMhi.candidateList);
-                cFiltMhi.showTargets(videoFrame,"mhiTargets");
+                cFiltMhi.showTargets(videoFrame,1,"mhiTargets");
 
 
             }
@@ -726,7 +726,7 @@ void DemoforVideos()
 
             cDet.process(currentDiffImage);
             cFilt.process(&cDet.candidateList);
-            cFilt.showTargets(videoFrame,"Single Frame Dif Targets");
+            cFilt.showTargets(videoFrame,1,"Single Frame Dif Targets");
             cv::imshow(wName,currentDiffImage);
             cv::waitKey(1);
         }

@@ -27,7 +27,9 @@ void FrameConsumer::run()
 
             //Do Processing
             pFrame = frame.clone();
+            cv::resize(pFrame, pFrame, cv::Size(320,240));
             cv::cvtColor(pFrame,pFrame,CV_BGR2GRAY);
+
 
             cv::Mat copyCurrentFrame = pFrame.clone();
             cv::equalizeHist(copyCurrentFrame,copyCurrentFrame);
@@ -61,7 +63,7 @@ void FrameConsumer::run()
                 cDet.process(currentDiffImage);
                 cDet.showCandidates(canImg);
                 cFilt.process(&cDet.candidateList);
-                cFilt.showTargets(tarImg);
+                cFilt.showTargets(tarImg,cDet.scaleFactor);
 
                 processedFrame2UiCandidates = canImg.clone();
                 processedFrame2UiTargets = tarImg.clone();

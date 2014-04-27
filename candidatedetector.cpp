@@ -10,7 +10,8 @@ CandidateDetector::CandidateDetector()
     settings.maxWidth = 50;
     settings.minHeight = 3;
     settings.maxHeight = 150;
-
+    iWidth = 0; // means uninitialized
+    scaleFactor = 0.0;  // means uninitialized
 }
 
 /* find contours from image
@@ -35,6 +36,12 @@ void CandidateDetector::process(cv::Mat inputImage)
     }
     else
     {
+        // record Width of Input image to predicta scale factor
+        // aspect ratio dont be changed
+        if(iWidth == 0)
+        {
+            iWidth = inputImage.size().width;
+        }
 
         candidateList.clear();
         // CV_RETR_EXTERNAL retrieves only the extreme outer contours.
@@ -83,6 +90,11 @@ void CandidateDetector::showCandidates(cv::Mat& inputImage, char *wName)
 {
     // for debuging
 
+    if ( scaleFactor == 0.0)
+    {
+        scaleFactor = inputImage.size().width / iWidth;
+    }
+
     if(inputImage.channels() == 1)
     {
         cv::cvtColor(inputImage,inputImage,CV_GRAY2RGB);
@@ -95,9 +107,9 @@ void CandidateDetector::showCandidates(cv::Mat& inputImage, char *wName)
         candidateList[j].rRect.points(vertices);
         for (int i = 0; i < 4; i++)
         {
-            cv::line(inputImage, vertices[i], vertices[(i+1)%4], cv::Scalar(0,255,0));
+            cv::line(inputImage, scaleFactor*vertices[i], scaleFactor*vertices[(i+1)%4], cv::Scalar(0,255,0));
         }
-        cv::circle(inputImage,candidateList[j].rRect.center,3,cv::Scalar(0,0,255),-1);
+        cv::circle(inputImage,scaleFactor*candidateList[j].rRect.center,3,cv::Scalar(0,0,255),-1);
     }
     if(wName!= NULL)
       imshow(wName, inputImage );

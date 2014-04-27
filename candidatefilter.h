@@ -53,6 +53,8 @@ public:
     bool isWithin(Target& isSubTarget);
     void setMovingAngle(cv::RotatedRect r);
 
+
+
 };
 
 class MatchItem
@@ -77,7 +79,7 @@ public:
     void processUnmatchedCandidates();
     void init();
     void match();
-    void showTargets(cv::Mat& inputImage,char *wName=NULL);
+    void showTargets(cv::Mat& inputImage,float scaleFactor=1 , char *wName=NULL);
     void refine();
 
     //
@@ -92,6 +94,7 @@ private:
     unsigned targetIdCounter;
     float calculateDistance(cv::RotatedRect& r1,cv::RotatedRect& r2);
     bool isNewTarget(Target &tempTarget);
+
 };
 
 #endif // CANDIDATEFILTER_H

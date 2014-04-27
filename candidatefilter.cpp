@@ -14,6 +14,7 @@ CandidateFilter::CandidateFilter()
     settings.showInvisible = false;
     settings.showVector = true;
     targetIdCounter = 0;
+
 }
 
 /* gets CandidateList
@@ -262,7 +263,7 @@ void CandidateFilter::match()
  * respect to show settings
  * and show it wName Window
 */
-void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
+void CandidateFilter::showTargets(cv::Mat &inputImage, float scaleFactor, char *wName)
 {
     // for debuging purposes
 
@@ -315,19 +316,19 @@ void CandidateFilter::showTargets(cv::Mat &inputImage, char *wName)
 
         for (int i = 0; i < 4; i++)
         {
-            cv::line(inputImage, vertices[i], vertices[(i+1)%4],color,thickness,linetype);
+            cv::line(inputImage, scaleFactor*vertices[i], scaleFactor*vertices[(i+1)%4],color,thickness,linetype);
         }
 
         if( settings.showTargetId == true)
         {
             char Buf[512];
             sprintf(Buf,"%s-%d%c",targetStatus,temp.targetId,0);
-            cv::putText(inputImage,Buf,temp.location.center,
+            cv::putText(inputImage,Buf,scaleFactor*temp.location.center,
                         cv::FONT_HERSHEY_COMPLEX_SMALL, 0.6,cv::Scalar(255,255,0), 1);
         }
         if( settings.showVector == true)
         {
-           cv::line(inputImage,temp.location.center ,cv::Point(cvRound(temp.location.center.x+temp.deltaX), cvRound(temp.location.center.y+temp.deltaY)),cv::Scalar(255,255,0),2,linetype);
+           cv::line(inputImage,scaleFactor*temp.location.center ,scaleFactor*cv::Point(cvRound(temp.location.center.x+temp.deltaX), cvRound(temp.location.center.y+temp.deltaY)),cv::Scalar(255,255,0),2,linetype);
         }
 
     }

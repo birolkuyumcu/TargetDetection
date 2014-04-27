@@ -33,6 +33,7 @@ public:
     bool loadSettings();
     void process(cv::Mat inputImage);
     void showCandidates(cv::Mat& inputImage,char* wName=NULL);
+    float scaleFactor;
 
     //
   //  std::vector<std::vector<cv::Point> > candidateList;
@@ -42,6 +43,8 @@ public:
 private:
     CandidateDetectorSettings   settings;
     Exception                   exc;
+    int iWidth ;
+    int iHeight;
 };
 
 #endif // CANDIDATEDETECTOR_H
