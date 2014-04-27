@@ -92,7 +92,7 @@ void CandidateDetector::showCandidates(cv::Mat& inputImage, char *wName)
 
     if ( scaleFactor == 0.0)
     {
-        scaleFactor = inputImage.size().width / iWidth;
+        scaleFactor = (float)inputImage.size().width / iWidth;
     }
 
     if(inputImage.channels() == 1)

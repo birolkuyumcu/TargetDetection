@@ -16,6 +16,10 @@ void FrameConsumer::run()
     cv::Mat alignedPrevFrame;
     cv::Mat currentDiffImage;
 
+    int w = 320;
+    int h = 240;
+    float f = 0.0;
+
     while(1)
     {
 
@@ -27,7 +31,14 @@ void FrameConsumer::run()
 
             //Do Processing
             pFrame = frame.clone();
-            cv::resize(pFrame, pFrame, cv::Size(320,240));
+            if( f == 0.0)
+            {
+                f = (float) frame.size().width / 320 ;
+                w = cvRound(f*frame.size().width);
+                h = cvRound(f*frame.size().height);
+            }
+
+            cv::resize(pFrame, pFrame, cv::Size(w,h));
             cv::cvtColor(pFrame,pFrame,CV_BGR2GRAY);
 
 
