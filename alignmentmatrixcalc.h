@@ -1,3 +1,11 @@
+/*
+ * Target Detection 
+ * 
+ * Copyright (C) Volkan Salma volkansalma@gmail.com
+ * 				 Birol Kuyumcu  bluekid70@gmail.com
+ * GPL v3 - https://github.com/birolkuyumcu/TargetDetection
+ */
+ 
 #ifndef ALIGNMENTMATRIXCALC_H
 #define ALIGNMENTMATRIXCALC_H
 
